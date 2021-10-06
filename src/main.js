@@ -1,0 +1,472 @@
+// Copyright [2021] [Banana.ch SA - Lugano Switzerland]
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// @id = ch.banana.application.invoice.default
+// @api = 1.0
+// @pubdate = 2021-10-06
+// @publisher = Banana.ch SA
+// @description = Estimates and Invoices application
+// @doctype = *
+// @task = application.invoice
+
+// @includejs = base/utils.js
+// @includejs = base/invoice.js
+// @includejs = base/contacts.js
+// @includejs = base/documentchange.js
+
+var JsAction = class JsAction {
+
+    constructor() {
+        this.version = '1.0';
+        this.uiFileName = 'ui/DlgInvoice.qml';
+    }
+
+    // API JsBanAction
+
+    /**
+     * This method is used to update the row after the object is changed.
+     * It return a json patch document to be applied, null if no changes, or an Error object.
+     */
+    create(tabPos, id) {
+        return JSON.stringify(invoiceCreateNew(tabPos, id));
+    }
+
+    /**
+     * This method is used to update the row after the object is changed.
+     * It return a json patch document to be applied, null if no changes, or an Error object.
+     */
+    updateRow(tabPos) {
+        var row = null;
+        var table = Banana.document.table(tabPos.tableName);
+        if (tabPos.rowNr < table.rowCount) {
+            row = table.row(tabPos.rowNr);
+        }
+
+        var invoiceObj = null;
+        var changedRowFields = null;
+        var docChange = null;
+
+        if (tabPos.tableName === "Invoices" || tabPos.tableName === "Estimates") {
+            if (tabPos.columnName === "RowId") {
+                changedRowFields = {};
+                var rowId = row.value("RowId");
+                invoiceObj = invoiceObjGet(tabPos);
+
+                if (tabPos.changeSource === "edit_paste" && !invoiceObj) {
+
+                    // If InvoiceData is empty and another invoice with the same number exists
+                    // copy the InvoiceData too.
+                    var rowIdIs = function(rowObj,rowNr,table) {
+                       return rowObj.value('RowId') === rowId && rowObj.rowNr !== tabPos.rowNr;
+                    }
+                    var rows = table.findRows(rowIdIs);
+                    if (rows.length > 0) {
+                        var newRowId = table.progressiveNumber('RowId');
+                        try {
+                            var invoiceFieldObj = JSON.parse(rows[0].value("InvoiceData"));
+                            invoiceObj = JSON.parse(invoiceFieldObj.invoice_json);
+                            invoiceObj.document_info.number = newRowId;
+                            changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                            changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                        }
+                        catch(e) {
+                            // Continue
+                        }
+
+                        if (!invoiceObj) {
+                            invoiceObj = invoiceCreateNew(tabPos);
+                            invoiceObj.document_info.number = newRowId;
+                            changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                            changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                        }
+                    }
+
+                } else {
+                    // Update invoice
+                    invoiceObj = invoiceObjGet(tabPos);
+                    if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                    invoiceObj.document_info.number = rowId;
+                    changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+
+                }
+
+                // Create docChange
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "InvoiceDate") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+
+                // Adjust expiration date (keep days differences between invoice date and due date)
+                invoiceSetDate(invoiceObj, row.value("InvoiceDate"));
+
+                // Create docChange
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "InvoiceDateExpiration") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.payment_info.due_date = row.value("InvoiceDateExpiration");
+
+                // Create docChange
+                changedRowFields = {};
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "ContactsId") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+
+                var customer_id = table.value(tabPos.rowNr, "ContactsId");
+                invoiceObj.customer_info = contactAddressGet(customer_id);
+                invoiceObj.document_info.locale = contactLocaleGet(customer_id);
+
+                // Create docChange
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "Description") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.document_info.description = row.value("Description");
+
+                // Create docChange
+                changedRowFields = {};
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "Notes") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.note = [{
+                    'date': null,
+                    'description': row.value("Notes")
+                }];
+
+                // Create docChange
+                changedRowFields = {};
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "InvoiceDiscountPercentage") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.billing_info.discount = {
+                    'amount': null,
+                    'percent': row.value("InvoiceDiscountPercentage")
+                }
+
+                // Recalculate invoice
+                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+
+                // Create docChange
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "InvoiceDiscountAmount") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.billing_info.discount = {
+                    'amount': row.value("InvoiceDiscountAmount"),
+                    'percent': null
+                }
+
+                // Create docChange
+                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "InvoiceData") {
+                // Read invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+
+                // Create docChange
+                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "_CompleteRowData") {
+                // Read invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+
+                // Create docChange
+                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            } else if (tabPos.columnName === "_AllRowDataChanged") {
+                // Read invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+
+                // Create docChange
+                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+                changedRowFields = invoiceChangedFieldsGet(invoiceObj, row);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Edits the invoice, return a json patch document to be applied or null if the user discard the changes.
+     */
+    edit(tabPos, isModified) {
+        var isNewDocument = false
+        var invoiceObj = invoiceObjGet(tabPos);
+        if (!invoiceObj) {
+            invoiceObj = invoiceCreateNew(tabPos);
+            isNewDocument = true;
+        }
+
+        var rowObj = null;
+        var table = Banana.document.table(tabPos.tableName);
+        if (tabPos.rowNr >= 0 && tabPos.rowNr < table.rowCount) {
+            rowObj = table.row(tabPos.rowNr);
+        }
+
+        var docChange = new DocumentChange();
+
+        var editor = Banana.Ui.createQml(this.uiFileName);
+        editor.qmlObject.setInvoice(invoiceObj);
+        editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setDocumentChange(docChange);
+        if (isModified) {
+            editor.qmlObject.setIsModified(true);
+        }
+        if (isNewDocument) {
+            editor.qmlObject.setIsModified(true);
+            editor.qmlObject.setIsNew(true);
+        }
+        if (tabPos.tableName === "Estimates") {
+            editor.qmlObject.setIsEstimate(true);
+        }
+
+        // Open dialog
+        editor.exec();
+
+        // The editor return a no empty DocumentChange object if some
+        // changes have to be applied
+        if (docChange.isEmpty()) {
+            return null;
+        }
+
+        //Banana.Ui.showText(JSON.stringify(docChange.getDocChange(), null, "   "));
+
+        return docChange.getDocChange();
+    }
+
+    /**
+     * Execute the given command and return true if succesfull or an Error object.
+     *  [{id: "export", descr: "Export"}, ...]
+     */
+    executeCommand(commandId, fromTabPos, toTabPos) {  // TODO: Array di tabpos
+        if (commandId === "createFromEstimate") {
+            return this.createFromEstimate(fromTabPos);
+
+        } else if (commandId === "duplicate") {
+            return this.duplicate(fromTabPos);
+
+        } else if (commandId === "print") {
+            var invoiceObj = invoiceObjGet(fromTabPos);
+            if (invoiceObj) {
+                invoicePrint(invoiceObj);
+            }
+            return null;
+
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns a list of commands that can be executed and inserted in the menu as an array.
+     *  [{id: "export", descr: "Export"}, ...]
+     */
+    getCommands() {
+        return [
+            {
+                id: "print",
+                descr: qsTr("Print invoice")
+            }
+        ];
+    }
+
+    /**
+     * Return the info to show in the info panel as object (see class InfoMessage):
+     *
+     * {
+     *   level = 'info'|'warning'|'error';
+     *   dataType = 'amount'|''; // see enum TipoValoreCampo
+     *   value;
+     *   text;
+     *   msgId;
+     *   amount1;
+     *   amount2;
+     *   currency;
+     *   amount3;
+     *   amount4;
+     * }
+     */
+    getInfo(tabPos) {
+        var invoiceObj = invoiceObjGet(tabPos);
+        if (!invoiceObj) {
+            return null;
+        }
+
+        var infoObj = [];
+        invoiceInfoSummaryGet(invoiceObj, infoObj);
+        return infoObj;
+    }
+
+    /**
+     * Edits the options of the application, return true if the user accepted the changes, otherwise false.
+     */
+    settings() {
+    }
+
+
+    // API JsInvoicesAction
+
+    /**
+     * This method is used to create an invoice from an estimate.
+     */
+    createFromEstimate(tabPos) {
+        var invoiceObj = invoiceCreateFromEstimate(tabPos);
+
+        tabPos.tableName = "Invoices"
+        // Set rowNr to a new row
+        tabPos.rowNr = Banana.document.table("Invoices").rowCount
+
+        var docChange = new DocumentChange();
+
+        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        editor.qmlObject.setInvoice(invoiceObj);
+        editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setDocumentChange(docChange);
+        editor.qmlObject.setIsModified(true);
+        editor.qmlObject.setIsNew(true);
+
+        // Open dialog
+        editor.exec();
+
+        // The editor return a no empty DocumentChange object if some
+        // changes have to be applied
+        if (docChange.isEmpty()) {
+            return null;
+        }
+
+        //Banana.Ui.showText(JSON.stringify(docChange.getDocChange(), null, "   "));
+
+        return docChange.getDocChange();
+    }
+
+    /**
+     * This method is used to duplicate an invoice or an estimate.
+     */
+    duplicate(tabPos) {
+        var duplicatedObj = invoiceDuplicate(tabPos);
+        if (!duplicatedObj)
+            return null;
+
+        // Set rowNr to a new row
+        tabPos.rowNr = Banana.document.table(tabPos.tableName).rowCount
+
+        var docChange = new DocumentChange();
+
+        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        editor.qmlObject.setInvoice(duplicatedObj);
+        editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setDocumentChange(docChange);
+        editor.qmlObject.setIsModified(true);
+        editor.qmlObject.setIsNew(true);
+        if (tabPos.tableName === "Estimates") {
+            editor.qmlObject.setIsEstimate(true);
+        }
+
+        // Open dialog
+        editor.exec();
+
+        // The editor return a no empty DocumentChange object if some
+        // changes have to be applied
+        if (docChange.isEmpty()) {
+            return null;
+        }
+
+        //Banana.Ui.showText(JSON.stringify(docChange.getDocChange(), null, "   "));
+
+        return docChange.getDocChange();
+    }
+
+}
+
+Date.prototype.addDays=function(d) {
+    return new Date(this.valueOf()+24*60*60*1000*d);
+};
+
+Date.prototype.diff=function(d) {
+    const diffTime = Math.abs(d - this);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+};
+
