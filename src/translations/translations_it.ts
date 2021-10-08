@@ -818,7 +818,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Courtesy</source>
-        <translation>Cortesia</translation>
+        <translation type="vanished">Cortesia</translation>
     </message>
     <message>
         <source>First name</source>
@@ -976,6 +976,10 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
         <source>US Dollar</source>
         <translation>Dollari americani</translation>
     </message>
+    <message>
+        <source>Prefix</source>
+        <translation>Prefisso</translation>
+    </message>
 </context>
 <context>
     <name>WdgSettings</name>
@@ -1113,7 +1117,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Courtesy</source>
-        <translation>Cortesia</translation>
+        <translation type="vanished">Cortesia</translation>
     </message>
     <message>
         <source>First and last name</source>
@@ -1230,6 +1234,10 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <message>
         <source>Advanced plan</source>
         <translation>Piano Advanced</translation>
+    </message>
+    <message>
+        <source>Prefix</source>
+        <translation>Prefisso</translation>
     </message>
 </context>
 <context>

@@ -923,7 +923,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Courtesy")
+                        text: qsTr("Prefix")
                         Layout.fillWidth: true
                     }
 

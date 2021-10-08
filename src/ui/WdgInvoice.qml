@@ -795,7 +795,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_courtesy", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             Keys.onReturnPressed: focus = false
-                            placeholderText: qsTr("Courtesy")
+                            placeholderText: qsTr("Prefix")
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.customer_info.courtesy = text
