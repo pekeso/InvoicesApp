@@ -374,15 +374,18 @@ function invoicePrint(invoiceObj) {
     }
 }
 
+/**
+ * Adapt for printing via invoice templates
+ */
 function invoicePrepareForPrinting(invoiceObj) {
-    // Adapt for printing via invoice templates
-
     // Document title
     invoiceObj.document_info.title = invoiceObj.document_info.description;
 
-    // Document type
+    // Items
     for (let i = 0; i < invoiceObj.items.length; ++i) {
         let item = invoiceObj.items[i];
+
+        // Document type
         if (!item.item_type || item.item_type === "" || item.item_type === "note" || item.item_type === "item") {
             // Don't let change "total" types
             if (item.total_amount_vat_exclusive || item.total_amount_vat_inclusive || item.quantity) {
@@ -391,6 +394,9 @@ function invoicePrepareForPrinting(invoiceObj) {
                 item.item_type = "note";
             }
         }
+
+        // Item number
+        item.item = item.number
     }
 
 }
