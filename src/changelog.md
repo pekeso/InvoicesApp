@@ -1,6 +1,6 @@
 # Changelog
    
-## 2021-10-06 [Beta1]
+## 2021-10-08 [Beta1]
 
 ### Main changes
 
