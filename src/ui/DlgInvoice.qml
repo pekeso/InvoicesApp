@@ -24,7 +24,7 @@ import "./components"
 Item {
     id: window
 
-    width: 800 * Stylesheet.pixelScaleRatio
+    width: 1000 * Stylesheet.pixelScaleRatio
     height: 600 * Stylesheet.pixelScaleRatio
 
     focus: true

@@ -322,7 +322,7 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    Switch {
+                    StyledSwitch {
                         property string viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                         implicitWidth: styleSectionSeparatorHeight
@@ -330,7 +330,7 @@ Item {
                         onToggled: appSettings.setViewVisible(viewId, checked)
                     }
 
-                    Switch {
+                    StyledSwitch {
                         property string viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                         implicitWidth: styleSectionSeparatorHeight
@@ -338,7 +338,7 @@ Item {
                         onToggled: appSettings.setViewVisible(viewId, checked)
                     }
 
-                    Switch {
+                    StyledSwitch {
                         property string viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                         implicitWidth: styleSectionSeparatorHeight
@@ -403,19 +403,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_fields_if_not_empty"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_fields_if_not_empty"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_fields_if_not_empty"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -455,19 +455,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_decimals"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_decimals"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_decimals"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -478,19 +478,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding_totals"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding_totals"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding_totals"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -501,19 +501,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_language"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_language"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_language"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -525,19 +525,19 @@ Item {
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_currency"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_currency"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_currency"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -548,19 +548,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_vat_mode"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_vat_mode"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_vat_mode"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -599,19 +599,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_number"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_number"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -622,19 +622,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_date"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_date"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_date"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -645,19 +645,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_due_date"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_due_date"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_due_date"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -668,19 +668,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_number"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_number"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -691,19 +691,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_date"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_date"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_order_date"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -714,19 +714,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_reference"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_reference"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_reference"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -737,19 +737,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_title"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_title"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_title"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -760,19 +760,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_begin_text"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_begin_text"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_begin_text"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -783,19 +783,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_end_text"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_end_text"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_end_text"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -806,19 +806,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_internal_notes"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_internal_notes"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_internal_notes"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -829,19 +829,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -881,19 +881,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_selector"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_selector"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_customer_selector"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -904,19 +904,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_business"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_business"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_business"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -927,19 +927,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_courtesy"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_courtesy"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_courtesy"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -950,19 +950,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_first_and_last_name"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_first_and_last_name"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_first_and_last_name"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -973,19 +973,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_street"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_street"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_street"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -996,19 +996,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_extra"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_extra"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_extra"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1019,19 +1019,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_postbox"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_postbox"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_postbox"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1042,19 +1042,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_country_and_locality"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_country_and_locality"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_country_and_locality"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1065,19 +1065,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_phone_and_email"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_phone_and_email"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_phone_and_email"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1088,19 +1088,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_vat_and_fiscal_number"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_vat_and_fiscal_number"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_address_vat_and_fiscal_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1232,19 +1232,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_row_number"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_row_number"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_row_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1255,19 +1255,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_number"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_number"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1278,19 +1278,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_date"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_date"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_date"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1301,19 +1301,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_quantity"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_quantity"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_quantity"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1324,19 +1324,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_unit"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_unit"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_unit"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1347,19 +1347,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_discount"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_discount"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_item_column_discount"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1399,19 +1399,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_discount"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_discount"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_discount"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1422,19 +1422,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_rounding"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1445,19 +1445,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_deposit"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_deposit"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_deposit"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
@@ -1468,19 +1468,19 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
-                    StyledSwitch {
+                    StyledSettingsSwitch {
                         flagId: "show_invoice_summary"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter

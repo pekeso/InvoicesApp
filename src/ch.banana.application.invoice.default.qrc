@@ -46,5 +46,6 @@
         <file>changelog.md</file>
         <file>ui/components/StyledLabel.qml</file>
         <file>ui/components/StyledSwitch.qml</file>
+        <file>ui/components/StyledSettingsSwitch.qml</file>
     </qresource>
 </RCC>

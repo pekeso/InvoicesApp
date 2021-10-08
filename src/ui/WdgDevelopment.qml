@@ -100,7 +100,7 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                Switch {
+                StyledSwitch {
                     enabled: Banana.application.isInternal
                     checked: devSettings.disableAdvancedPlanLicense
                     onToggled: devSettings.disableAdvancedPlanLicense = checked
@@ -113,7 +113,7 @@ Item {
                     Layout.fillWidth: true
                 }
 
-                Switch {
+                StyledSwitch {
                     enabled: Banana.application.isInternal
                     checked: devSettings.disableIsInternalVersionFlag
                     onToggled: {

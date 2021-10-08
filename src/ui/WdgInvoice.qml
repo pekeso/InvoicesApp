@@ -1015,6 +1015,10 @@ Item {
 
                     selectionMode: QuickControls14.SelectionMode.NoSelection
 
+                    verticalScrollBarPolicy: getMaxVisibleItems() === 0 ?
+                                                 Qt.ScrollBarAlwaysOff :
+                                                 Qt.ScrollBarAlwaysOn
+
                     property int signalUpdateRowHeights: 1
                     property int signalUpdateTableHeight: 1
 
@@ -1697,7 +1701,7 @@ Item {
                     function updateColDescrWidth() {
                         let visColCount = getVisibleColumnCount() // just for binding
                         let colDescription = null
-                        let availableWidth = width - 5
+                        let availableWidth = viewport.width - 5
                         for (let i = 0; i < columnCount; ++i) {
                             let col = getColumn(i)
                             if (col.role !== "description") {
@@ -1708,6 +1712,7 @@ Item {
                                 colDescription = col
                             }
                         }
+
                         if (colDescription) {
                             colDescription.width = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
                         }
@@ -1751,24 +1756,28 @@ Item {
                         if (!signalUpdateRowHeights || !signalUpdateTableHeight || !appSettings.signalItemsVisibilityChanged)
                             return 400 * Stylesheet.pixelScaleRatio
 
-                        let maxVisibleItems = 0;
-                        if (appSettings.data.interface.invoice.views[currentView] &&
-                                ('invoce_max_visible_items_without_scrolling' in appSettings.data.interface.invoice.views[currentView].appearance)) {
-                            maxVisibleItems = appSettings.data.interface.invoice.views[currentView].appearance['invoce_max_visible_items_without_scrolling'];
-                        }
-
+                        let maxVisibleItems = getMaxVisibleItems()
                         if (maxVisibleItems > 0) {
                             return (30 + 30 * maxVisibleItems)  * Stylesheet.pixelScaleRatio
 
                         } else {
                             // Compute current height
-                            let height = 30;
+                            let height = 34;
                             for (let rowNr = 0; rowNr < invoice.json.items.length; ++rowNr) {
                                 let linesCount = invoice.json.items[rowNr].description.split('\n').length
                                 height += 30 + 16 * (linesCount - 1)
                             }
                             return height * Stylesheet.pixelScaleRatio
                         }
+                    }
+
+                    function getMaxVisibleItems() {
+                        let maxVisibleItems = 0
+                        if (appSettings.data.interface.invoice.views[currentView] &&
+                                ('invoce_max_visible_items_without_scrolling' in appSettings.data.interface.invoice.views[currentView].appearance)) {
+                            maxVisibleItems = appSettings.data.interface.invoice.views[currentView].appearance['invoce_max_visible_items_without_scrolling'];
+                        }
+                        return maxVisibleItems
                     }
 
                 }

@@ -12,15 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.12
-import QtQuick.Controls 2.12
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+import "."
 
 Switch {
-    implicitWidth: 40 * Stylesheet.pixelScaleRatio
+    id: control
 
-    required property string flagId
-    required property string viewId
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding,
+                             implicitIndicatorHeight + topPadding + bottomPadding)
 
-    checked: appSettings.getInvoiceFieldVisible(flagId, viewId)
-    onToggled: appSettings.setInvoiceFieldVisible(flagId, viewId, checked)
+    indicator: Rectangle {
+        implicitWidth: 40 * Stylesheet.pixelScaleRatio
+        implicitHeight: 16 * Stylesheet.pixelScaleRatio
+
+        x: control.leftPadding + (control.availableWidth - width) / 2
+        y: control.topPadding + (control.availableHeight - height) / 2
+
+        color: control.checked ? "#c7e2ff" : "#e6e6e6"
+        border.color: control.checked ? "#7891ab" : "#a6a9a9"
+        border.width: control.visualFocus ? 2 : 1
+        radius: 2
+
+        Rectangle {
+            x: Math.max(0, Math.min(parent.width - width, control.visualPosition * parent.width - (width / 2)))
+            y: (parent.height - height) / 2
+            width: 20 * Stylesheet.pixelScaleRatio
+            height: 16 * Stylesheet.pixelScaleRatio
+            color: Stylesheet.buttonColor
+            border.width: control.visualFocus ? 2 : 1
+            border.color: "#a6a9a9"
+            radius: 2
+
+            Behavior on x {
+                enabled: !control.down
+                SmoothedAnimation { velocity: 200 }
+            }
+        }
+    }
 }
