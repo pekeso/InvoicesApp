@@ -1,16 +1,18 @@
 # Changelog
    
-## 2021-10-08 [Beta1]
+## 2021-10-11 [Beta1]
 
 ### Main changes
 
 * [Enhancement] Add in the items the discount column (require advanced plan)
 * [Enhancement] Add in the items the date column (require advanced plan)
-* [Enhancement] Let insert multi line text in the item's desciption
+* [Enhancement] Let insert items quantity and unit price with 4 or more decimals
+* [Enhancement] Let insert multi line text in the item's description
 * [Enhancement] Let insert multi line text in the invoice's begin text
 * [Enhancement] Let choose which invoice's fields are visibles
 * [Enhancement] Let choose which item's columns are visibles
-* [Enhancement] Let insert bold text in item's details, invoice's begin text and invoice's end text
+* [Enhancement] Let insert bold text in item's description, invoice's begin text and invoice's end text
+* [Enhancement] Let set the title for new invoices and estimates
 * [Enhancement] Add views to the dialog
 * [Bug] Resolves an issue where text changes sometimes were not applied if the enter key was not pressed
 * [Bug] Resolves an issue related to clipped text fields on hdpi monitors under window
