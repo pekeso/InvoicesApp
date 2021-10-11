@@ -232,7 +232,7 @@ Item {
             Layout.topMargin: Stylesheet.defaultMargin
 
             ColumnLayout {
-                width: scrollView.availableWidth - scrollView.ScrollBar.vertical.width
+                width: scrollView.availableWidth - scrollView.ScrollBar.vertical.width - Stylesheet.defaultMargin
                 height: scrollView.availableHeight
 
                 spacing: Stylesheet.defaultMargin
@@ -805,8 +805,6 @@ Item {
                         }
 
                         RowLayout {
-                            visible: address_first_name.visible || address_last_name.visible
-
                             StyledTextField {
                                 id: address_first_name
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
