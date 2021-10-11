@@ -1029,7 +1029,7 @@ Item {
                         width: getColumnWidth()
                         property int defaultWidth: 30 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignLeft;
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_row_number")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_row_number")
                         delegate: Item {
                             StyledTextField {
                                 borderless: true
@@ -1059,7 +1059,7 @@ Item {
                         title: qsTr("Item")
                         width: getColumnWidth()
                         property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_number")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_number", role)
                         delegate: Item {
                             StyledComboBox {
                                 id: invoiceItemComboBox
@@ -1079,18 +1079,22 @@ Item {
                                     width: parent.width
                                 }
 
-                                onAccepted: {
+                                onEditingFinished: {
                                     focus = false
-                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                                        var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                                        var item = Items.itemGet(currentText, vatExclusive)
-                                        if (item) {
-                                            var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
-                                            if (vatCode)
-                                                item.unit_price.vat_rate = vatCode.rate
-                                            invoice.json.items[styleData.row] = item
-                                        } else {
-                                            invoice.json.items[styleData.row].number = editText
+                                    if (modified) {
+                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                            var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
+                                            var item = Items.itemGet(currentText, vatExclusive)
+                                            if (item) {
+                                                var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
+                                                if (vatCode)
+                                                    item.unit_price.vat_rate = vatCode.rate
+                                                invoice.json.items[styleData.row] = item
+                                                invoiceItemsModel.setProperty(styleData.row, styleData.role, item.number)
+                                            } else {
+                                                invoice.json.items[styleData.row].number = editText
+                                                invoiceItemsModel.setProperty(styleData.row, styleData.role, editText)
+                                            }
                                         }
                                     }
                                     setDocumentModified()
@@ -1142,7 +1146,7 @@ Item {
                         width: getColumnWidth();
                         property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignLeft;
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_date")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
                         delegate: Item {
                             StyledTextField {
                                 anchors.right: parent.right
@@ -1154,6 +1158,7 @@ Item {
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
                                 onEditingFinished: {
+                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             let date = text
@@ -1161,6 +1166,7 @@ Item {
                                                 date = Banana.Converter.toInternalDateFormat(date)
                                             }
                                             invoice.json.items[styleData.row].date = date
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, Banana.Converter.toLocaleDateFormat(date))
                                         }
                                         setDocumentModified()
                                     }
@@ -1211,9 +1217,11 @@ Item {
                                 }
 
                                 onEditingFinished: {
+                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].description = text
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
                                     }
@@ -1252,7 +1260,7 @@ Item {
                         title: qsTr("Qty")
                         width: getColumnWidth()
                         property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_quantity")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_quantity", role)
                         horizontalAlignment: Text.AlignRight;
                         delegate: Item {
                             StyledTextField {
@@ -1264,9 +1272,11 @@ Item {
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
+                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].quantity = text ? text : ""
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text ? text : "")
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
@@ -1299,7 +1309,7 @@ Item {
                         width: getColumnWidth()
                         property int defaultWidth: 60 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignRight
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_unit")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_unit", role)
                         delegate: Item {
                             StyledTextField {
                                 anchors.right: parent.right
@@ -1310,9 +1320,11 @@ Item {
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
+                                    focus = false
                                     if (modified) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {                                            
                                             invoice.json.items[styleData.row].mesure_unit = text
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
                                     }
@@ -1398,7 +1410,7 @@ Item {
                         width: getColumnWidth()
                         property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignRight
-                        visible: isInvoiceFieldVisible("show_invoice_item_column_discount")
+                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_discount", role)
                         delegate: Item {
                             StyledTextField {
                                 anchors.right: parent.right
@@ -1696,6 +1708,32 @@ Item {
 
                     onWidthChanged: {
                         updateColDescrWidth()
+                    }
+
+                    function isColumnVisible(fieldId, dataRole) {
+                        if (appSettings.signalFieldsVisibilityChanged) {
+                            let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
+                            if (fieldId in viewAppearance) {
+                                if (viewAppearance[fieldId]) {
+                                    return true
+                                } else if (viewAppearance.show_invoice_fields_if_not_empty) {
+                                    if (dataRole) {
+                                        for (let i = 0; i < invoiceItemsModel.count; ++i) {
+                                            let data = invoiceItemsModel.get(i)[dataRole]
+                                            if (data)
+                                                return true
+                                        }
+                                    }
+                                    return false
+                                } else {
+                                    return false
+                                }
+                            } else {
+                                console.log("appearance flag '" + fieldId + "' in view '" + currentView + "' not found")
+                            }
+                        }
+                        return true;
+
                     }
 
                     function updateColDescrWidth() {

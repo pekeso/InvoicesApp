@@ -22,11 +22,18 @@ ComboBox {
     indicator.height: 20 * Stylesheet.pixelScaleRatio
 
     property int popupMinWidth: 0
+    property bool modified: false
+
+    signal editingFinished
 
     contentItem: StyledTextField {
         id: textField
         readOnly: !control.editable
         text: control.displayText
+        onEditingFinished: {
+            control.modified = modified
+            control.editingFinished()
+        }
     }
 
     onActivated: {
