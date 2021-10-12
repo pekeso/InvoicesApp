@@ -48,9 +48,9 @@ test/                           Tests
 
 ## Resources
 
-* [Banana.ch - Estimates and Invocies user documentation](https://www.banana.ch/doc/en/node/9752)  
-* [Banana.ch - Estimates and Incoices extension page](https://www.banana.ch/apps/en/node/9411)  
-* [Banana.ch - Javascript API documentation](https://www.banana.ch/doc/en/node/4714)  
+* [Banana.ch - Estimates and Invoices user documentation](https://www.banana.ch/doc/en/node/9752)  
+* [Banana.ch - Estimates and Invoices extension page](https://www.banana.ch/apps/en/node/9411)  
+* [Banana.ch - Js API documentation](https://www.banana.ch/doc/en/node/4714)  
 * [Banana.ch - Invoice Json Object documentation](https://www.banana.ch/doc/en/node/8833)  
 * [Banana.ch - DocumentChange API documentation](https://www.banana.ch/doc/en/node/9641)  
 * [Banana.ch - JsAction API documentation](...)  
