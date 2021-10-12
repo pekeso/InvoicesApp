@@ -1,41 +1,53 @@
-# Applicazione Offerte e Fatture
+# Invoices and Estimates Extension
 
-L'applicazione Offerte e fatture permette la creazione, la stmapa e la gestione di offerte e fatture.
+The extension Invoices and Estimates allow you to create, edit, print and manages estimates and invoices with [Banana Accounting+](https://www.banana.ch).
 
-## Introduzione
+## Introduction
 
-L'applicazione Offerte e fatture è disponibile in tutte le versioni di BananaPlus.
+This extention is available in all plans of Banana Accounting+.
+Some feautures, like item discount or custom fields, are available only within the advanced plan.
 
-Aprendo un documento di tipo Offerte e Fatture in Banana Contabilità apparirà il menu Fatture (Invoices) dal quale
-saranno disponibili diversi comandi per la creazione, modifica, stampa e altro ancora di offerte e fatture.
-
-## Struttura del repository
+## Repository structure
 
 ```
-src/  
-    main.js             Il file principale che definisce l'estensione
-                        Implementa l'interfaccia JsAction
+doc/                            Documentation
 
-    changelog.md        Cronologia delle modifiche all'estensione
+src/                            Source code
+
+    main.js                     Main file that implement the JsAction interface
+
+    changelog.md                Cronology of modifications
 
     ch.banana.application.invoice.default.manifest.json
-                        Manifesto per la descrizione dell'estensione
+                                Manifest of the extension
 
     ch.banana.application.invoice.default.qrc
-                        File qrc per la creazione del pacchetto
+                                Qrc file for the creation of the extension's package
 
-    invoice-app.pro     Progetto Qt Creator (facilitare l'editing dell'estensione in Qt Creator)
+    invoice-app.pro             Project file for Qt Creator
 
-    ui/                 Contiene i dialoghi dell'estensione
+    base/                       Js code
 
-    ui/components/      Contiene i widgets comuni usati nei dialoghi
+    ui/                         Dialogs and widgets
 
-    translations/       Contiene le traduzioni
+        DlgInvoice.qml          Main dialog
 
-test/                   Contiene i tests dell'estensione
+        components/             Ui components
+
+            Stylesheet.qml      Ui Stylesheet
+
+            ...
+
+    translations/               Translations
+
+test/                           Tests
 ```
 
-## API
+## Resources
 
-L'estensione implementa la API definita nella classe [JsBanana](http://strawberry.parsec5.local/git/banana.ch/bananaX/src/branch/master/src/banapp/scripts/jsaction.md) di Banana Accounting.
-
+[Banana.ch - Estimates and Invocies user documentation](https://www.banana.ch/doc/en/node/9752)  
+[Banana.ch - Estimates and Incoices extension page](https://www.banana.ch/apps/en/node/9411)  
+[Banana.ch - Javascript API documentation](https://www.banana.ch/doc/en/node/4714)  
+[Banana.ch - Invoice Json Object documentation](https://www.banana.ch/doc/en/node/8833)  
+[Banana.ch - DocumentChange API documentation](https://www.banana.ch/doc/en/node/9641)  
+[Banana.ch - JsAction API documentation](...)  
