@@ -1,49 +1,61 @@
-# Programming conventions
+# Programming
+
+This page explain you what you need to create and use a custom estimates and invoices extension. We encourage to start by forking the repository and doing some small changes, befor you start with a whole reprogramming of the extension.
 
 ## Introduction
 
-### Qt e QML
+### Requirements
 
-* Installare Qt
-* Leggere il tutorial QML https://doc.qt.io/qt-5/qml-tutorial.html
-* Aprire compilare ed eseguire alcuni esempi in QtCreator, tra cui: 
-   * Qt Quick Demo - QtockQt
+* Last version of [Banana Accounting+](https://www.banana.ch/en/download) or [Banana Accounting+ Dev Channel](https://www.banana.ch/en/insiderprogram)
+* A valid [Advanced Plan subscription](https://www.banana.ch/en/buy)
+* A fork of this repository
+* The last version of [Qt](https://www.qt.io/home)
 
-### Coding conventions
+### For newbies
 
-Di regola quelle di default in Qt.
+If you never create a Banana Extension or you never use Qt, we suggest you take a look at the following tutorials:
 
-Più precismente:
+* [Qt - QML tutorial](https://doc.qt.io/qt-5/qml-tutorial.html)
+* [Banana.ch - Build your first Extension](https://www.banana.ch/doc/en/node/9324)
+* Create a new Estimates and Invoces file, and creates new invoices
 
-* Ident di 4 spazi
-* Spazi al posto dei tabulatori
-* Apertura parentesi graffa sulla stessa riga degli 'if', definizione delle funzioni, ...
-* Apertura parentesi graffa su una nuova riga per la dichirazione delle classi e dei namespaces
-* Seguire il camel case di default del linguaggio
+### Frameworks and API
+
+The following frameworks and API are used in this project:
+
+* [Banana.ch - Js API documentation](https://www.banana.ch/doc/en/node/4714)  
+* [Banana.ch - Invoice Json Object documentation](https://www.banana.ch/doc/en/node/8833)  
+* [Banana.ch - DocumentChange API documentation](https://www.banana.ch/doc/en/node/9641)  
+* [Banana.ch - JsAction API documentation](...)  
+
+### Programming conventions
+
+As basis we used the [Qt Coding Style](https://wiki.qt.io/Qt_Coding_Style).
+
+More precisely:
+
+* Identation with 4 spaces
+* Spaces instead of tabulators
+* Opening braces on the same line of 'if', function definition, ...
+* Opening braces on the next line for class definition and namespaces
+* Camel case for function, class and variables names
+* Undrscores for json property names
 
 ### Comments
 
-Inserire tutti i commenti e le note che potrebbero essere utili a chi va a riprendere il codice fra qualche mese o qualche anno.
+As best rule insert all  comments and notes that could be useful to those who will go to resume the code in a few months or a few years.
 
-In particolare:
+More precisely:
 
-* Tutto quello che non rispecchierebbe la soluzione standard
-* Dove c'è stato un certo ragionamente nella scelta di più opzioni
-* Dove la soluzione è stata trovata tramite prove e non tramite la documentazione di Qt
-* Dove il codice è stato modificato per aggirare un errore di Qt o del framework dell'applicazione
+* Anything that wouldn't reflect a standard solution
+* Where there was some reasoning in choosing between multiple options
+* Where the solution was found through trials and not through the documentation
+* Where the code has been modified to bypass a framework or api error
+* Where I spent a lot of time to find a solution
 
 ### Tests
 
-Dove possibile e sensato implementare dei tests.
+Where possible and sensible implement tests.
 
-La nostra filosofia, se cambio una riga di codice, tramite i tests devo potermi sentire sicuro che tutto il resto dell'applicazione funziona correttamente.
-
-## Applicazione Banana Invoice
-
-* Installare Banana Accounting Internal
-* Riprendere il repository https://github.com/BananaInternal/invoices-application
-* Aprire in Banana il file invoices-application/test/testcases/invoices-examples.ac2
-
-
-
-
+Our philosophy, before changing the code, check that a corresponding test function is implemented, if not insert it.  
+If I change a line of code, through the tests I must be able to feel sure that all the rest of the application works correctly.
