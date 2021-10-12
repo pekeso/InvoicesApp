@@ -61,7 +61,7 @@ Dialog {
     }
 
     onAccepted: {
-        Qt.openUrlExternally("https://www.banana.ch/buy")
+        Qt.openUrlExternally("https://www.banana.ch/shop/en/account/subscriptions")
         visible = false
     }
 
