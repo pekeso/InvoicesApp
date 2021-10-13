@@ -1065,7 +1065,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>In this section you can select whitch fields are visibles.</source>
-        <translation>In questa sezione potete selezionare quali campi siano visibili.</translation>
+        <translation>In questa sezione puoi selezionare quali campi sono visibili.</translation>
     </message>
     <message>
         <source>General</source>
