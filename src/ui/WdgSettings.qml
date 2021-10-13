@@ -96,7 +96,7 @@ Item {
 
                 RowLayout {
                     StyledLabel{
-                        text: qsTr("Vat mode")
+                        text: qsTr("VAT mode")
                         Layout.fillWidth: true
                     }
 
@@ -190,7 +190,7 @@ Item {
 
                 RowLayout {
                     StyledLabel{
-                        text: qsTr("Invoice payment term")
+                        text: qsTr("Invoice payment term (days)")
                         Layout.fillWidth: true
                     }
 
@@ -210,7 +210,7 @@ Item {
 
                 RowLayout {
                     StyledLabel{
-                        text: qsTr("Estimate validity")
+                        text: qsTr("Estimate validity (days)")
                         Layout.fillWidth: true
                     }
 
@@ -399,7 +399,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Fields not empties")
+                        text: qsTr("Fields not empty")
                         Layout.fillWidth: true
                     }
 
@@ -544,7 +544,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Vat mode")
+                        text: qsTr("VAT mode")
                         Layout.fillWidth: true
                     }
 
@@ -1084,7 +1084,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Vat and fiscal number")
+                        text: qsTr("VAT and fiscal number")
                         Layout.fillWidth: true
                     }
 

@@ -1,6 +1,10 @@
 # Changelog
-   
-## 2021-10-11 [Beta1]
+ 
+## 2021-10-13 [Beta1]
+
+* [Bug] Fix textes and translations
+
+## 2021-10-12 [Beta1]
 
 ### Main changes
 

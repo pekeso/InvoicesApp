@@ -691,15 +691,27 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <name>VatModesModel</name>
     <message>
         <source>No Vat</source>
-        <translation>Senza Iva</translation>
+        <translation type="vanished">Senza Iva</translation>
     </message>
     <message>
         <source>Vat exclusive</source>
-        <translation>Escluso iva</translation>
+        <translation type="vanished">Escluso iva</translation>
     </message>
     <message>
         <source>Vat inclusive</source>
-        <translation>Incluso Iva</translation>
+        <translation type="vanished">Incluso Iva</translation>
+    </message>
+    <message>
+        <source>No VAT</source>
+        <translation>Senza IVA</translation>
+    </message>
+    <message>
+        <source>VAT exclusive</source>
+        <translation>Escluso IVA</translation>
+    </message>
+    <message>
+        <source>VAT inclusive</source>
+        <translation>Incluso IVA</translation>
     </message>
 </context>
 <context>
@@ -746,7 +758,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Vat mode</source>
-        <translation>Modalità Iva</translation>
+        <translation type="vanished">Modalità Iva</translation>
     </message>
     <message>
         <source>Invoice date</source>
@@ -870,7 +882,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Vat number</source>
-        <translation>Numero iva</translation>
+        <translation type="vanished">Numero iva</translation>
     </message>
     <message>
         <source>Fiscal number</source>
@@ -922,7 +934,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Vat</source>
-        <translation>Iva</translation>
+        <translation type="vanished">Iva</translation>
     </message>
     <message>
         <source>Add</source>
@@ -980,6 +992,18 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
         <source>Prefix</source>
         <translation>Prefisso</translation>
     </message>
+    <message>
+        <source>VAT mode</source>
+        <translation>Modalità IVA</translation>
+    </message>
+    <message>
+        <source>VAT number</source>
+        <translation>Numero IVA</translation>
+    </message>
+    <message>
+        <source>VAT</source>
+        <translation>IVA</translation>
+    </message>
 </context>
 <context>
     <name>WdgSettings</name>
@@ -997,7 +1021,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Vat mode</source>
-        <translation>Modalità Iva</translation>
+        <translation type="vanished">Modalità Iva</translation>
     </message>
     <message>
         <source>Currency</source>
@@ -1013,11 +1037,11 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Invoice payment term</source>
-        <translation>Termine di pagamento fatture</translation>
+        <translation type="vanished">Termine di pagamento fatture</translation>
     </message>
     <message>
         <source>Estimate validity</source>
-        <translation>Validità fatture</translation>
+        <translation type="vanished">Validità fatture</translation>
     </message>
     <message>
         <source>Interface</source>
@@ -1049,7 +1073,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Fields not empties</source>
-        <translation>Campi non vuoti</translation>
+        <translation type="vanished">Campi non vuoti</translation>
     </message>
     <message>
         <source>Parameters</source>
@@ -1145,7 +1169,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Vat and fiscal number</source>
-        <translation>Numero iva e codice fiscale</translation>
+        <translation type="vanished">Numero iva e codice fiscale</translation>
     </message>
     <message>
         <source>Items</source>
@@ -1238,6 +1262,26 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <message>
         <source>Prefix</source>
         <translation>Prefisso</translation>
+    </message>
+    <message>
+        <source>VAT mode</source>
+        <translation>Modalità IVA</translation>
+    </message>
+    <message>
+        <source>Invoice payment term (days)</source>
+        <translation>Termine di pagamento fatture (giorni)</translation>
+    </message>
+    <message>
+        <source>Estimate validity (days)</source>
+        <translation>Validità offerta (giorni)</translation>
+    </message>
+    <message>
+        <source>Fields not empty</source>
+        <translation>Campi non vuoti</translation>
+    </message>
+    <message>
+        <source>VAT and fiscal number</source>
+        <translation>Numero IVA e codice fiscale</translation>
     </message>
 </context>
 <context>

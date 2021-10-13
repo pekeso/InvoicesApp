@@ -345,7 +345,7 @@ Item {
                         }
 
                         StyledLabel{
-                            text: qsTr("Vat mode")
+                            text: qsTr("VAT mode")
                             Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
                             visible: invoice_vat_mode.visible
                         }
@@ -972,7 +972,7 @@ Item {
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_and_fiscal_number", text)
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
                                 Keys.onReturnPressed: focus = false
-                                placeholderText: qsTr("Vat number")
+                                placeholderText: qsTr("VAT number")
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1505,7 +1505,7 @@ Item {
                     QuickControls14.TableViewColumn {
                         id: itemVatRateColumn
                         role: "vat_rate"
-                        title: qsTr("Vat")
+                        title: qsTr("VAT")
                         width: getColumnWidth()
                         property int defaultWidth: 80 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignRight
@@ -2074,7 +2074,7 @@ Item {
                             readOnly: true
                             borderless: true
                             visible: vattotal_amount.visible
-                            text: qsTr("Vat")
+                            text: qsTr("VAT")
                         }
 
                         StyledTextField {
