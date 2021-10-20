@@ -81,6 +81,7 @@ Item {
    MouseArea {
       anchors.fill: parent
       acceptedButtons: control.contextMenu ? Qt.RightButton : Qt.NoButton
+      cursorShape: textArea.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
 
       onPressed: {
          if (mouse.button === Qt.RightButton) {
