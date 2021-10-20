@@ -502,17 +502,17 @@ Would you like to upgrade to the Advanced plan?</source>
 <context>
     <name>StyledScrollableTextArea</name>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="128"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="129"/>
         <source>Cut</source>
         <translation>Knippen</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="134"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="135"/>
         <source>Copy</source>
         <translation>Kopiëren</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="148"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="149"/>
         <source>Paste</source>
         <translation>Plakken</translation>
     </message>
@@ -520,17 +520,17 @@ Would you like to upgrade to the Advanced plan?</source>
 <context>
     <name>StyledTextArea</name>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="102"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="103"/>
         <source>Cut</source>
         <translation>Knippen</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="108"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="109"/>
         <source>Copy</source>
         <translation>Kopiëren</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="122"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="123"/>
         <source>Paste</source>
         <translation>Plakken</translation>
     </message>
@@ -1007,11 +1007,6 @@ Would you like to upgrade to the Advanced plan?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../ui/WdgSettings.qml" line="371"/>
-        <source>In this section you can select whitch fields are visibles.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../ui/WdgSettings.qml" line="381"/>
         <source>General</source>
         <translation type="unfinished"></translation>
@@ -1030,6 +1025,11 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgSettings.qml" line="213"/>
         <source>Estimate validity (days)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../ui/WdgSettings.qml" line="371"/>
+        <source>In this section you can select which fields are displayed.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

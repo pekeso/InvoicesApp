@@ -1,10 +1,10 @@
 # Changelog
  
-## 2021-10-13 [Beta1]
+## 2021-10-20
 
 * [Bug] Fix textes and translations
 
-## 2021-10-12 [Beta1]
+## 2021-10-13 [Beta1]
 
 ### Main changes
 
@@ -34,6 +34,7 @@
 * [Enhancement] The dimension of the invoice dialog is saved and restored at the next opening (require the last version of Banana Accounting);
 * [Enhancement] Support dynamic switch to dark mode
 * [Enhancement] Add the invoice / estimate total to the dialog's top right corner
+* [Bug] Fix textes and translations
 
 ### To do [Beta2]
 

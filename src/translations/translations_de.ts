@@ -507,17 +507,17 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
 <context>
     <name>StyledScrollableTextArea</name>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="128"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="129"/>
         <source>Cut</source>
         <translation>Ausschneiden</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="134"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="135"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="148"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="149"/>
         <source>Paste</source>
         <translation>Einfügen</translation>
     </message>
@@ -525,17 +525,17 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
 <context>
     <name>StyledTextArea</name>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="102"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="103"/>
         <source>Cut</source>
         <translation>Ausschneiden</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="108"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="109"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="122"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="123"/>
         <source>Paste</source>
         <translation>Einfügen</translation>
     </message>
@@ -1028,9 +1028,8 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
         <translation>Rechnungsfelder</translation>
     </message>
     <message>
-        <location filename="../ui/WdgSettings.qml" line="371"/>
         <source>In this section you can select whitch fields are visibles.</source>
-        <translation>In diesem Abschnitt können Sie auswählen, welche Felder sichtbar sind.</translation>
+        <translation type="vanished">In diesem Abschnitt können Sie auswählen, welche Felder sichtbar sind.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="381"/>
@@ -1179,6 +1178,11 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
         <location filename="../ui/WdgSettings.qml" line="213"/>
         <source>Estimate validity (days)</source>
         <translation>Gültigkeitsdauer des Kostenvoranschlags (Tage)</translation>
+    </message>
+    <message>
+        <location filename="../ui/WdgSettings.qml" line="371"/>
+        <source>In this section you can select which fields are displayed.</source>
+        <translation>In diesem Abschnitt können Sie auswählen, welche Felder angezeigt werden.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="402"/>

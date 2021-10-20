@@ -408,7 +408,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/DlgLincense.qml" line="50"/>
         <source>Upgrade now</source>
-        <translation>Passer maintenant</translation>
+        <translation>Mettre à jour maintenant</translation>
     </message>
     <message>
         <location filename="../ui/DlgLincense.qml" line="54"/>
@@ -503,17 +503,17 @@ Souhaitez-vous passer au plan Advanced?</translation>
 <context>
     <name>StyledScrollableTextArea</name>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="128"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="129"/>
         <source>Cut</source>
         <translation>Couper</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="134"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="135"/>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledScrollableTextArea.qml" line="148"/>
+        <location filename="../ui/components/StyledScrollableTextArea.qml" line="149"/>
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
@@ -521,17 +521,17 @@ Souhaitez-vous passer au plan Advanced?</translation>
 <context>
     <name>StyledTextArea</name>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="102"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="103"/>
         <source>Cut</source>
         <translation>Couper</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="108"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="109"/>
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="122"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="123"/>
         <source>Paste</source>
         <translation>Coller</translation>
     </message>
@@ -680,22 +680,22 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="561"/>
         <source>Custom field 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Champ personnalisé 1</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="583"/>
         <source>Custom field 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Champ personnalisé 2</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="605"/>
         <source>Custom field 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Champ personnalisé 3</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="627"/>
         <source>Custom field 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Champ personnalisé 4</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="659"/>
@@ -734,7 +734,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="798"/>
         <source>Prefix</source>
-        <translation>Prefix</translation>
+        <translation>Préfixe</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="813"/>
@@ -749,7 +749,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="842"/>
         <source>Street</source>
-        <translation>Roue</translation>
+        <translation>Rue</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="856"/>
@@ -861,7 +861,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
         <location filename="../ui/WdgInvoice.qml" line="1419"/>
         <location filename="../ui/WdgInvoice.qml" line="1984"/>
         <source>30% or 30.00</source>
-        <translation>30% où 30.00</translation>
+        <translation>30% ou 30.00</translation>
     </message>
     <message>
         <source>Vat</source>
@@ -1024,9 +1024,8 @@ Souhaitez-vous passer au plan Advanced?</translation>
         <translation>Champs facture</translation>
     </message>
     <message>
-        <location filename="../ui/WdgSettings.qml" line="371"/>
         <source>In this section you can select whitch fields are visibles.</source>
-        <translation>Dans cette section, vous pouvez sélectionner les champs visibles.</translation>
+        <translation type="vanished">Dans cette section, vous pouvez sélectionner les champs visibles.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="381"/>
@@ -1120,7 +1119,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="926"/>
         <source>Prefix</source>
-        <translation>Prefix</translation>
+        <translation>Préfixe</translation>
     </message>
     <message>
         <source>Courtesy</source>
@@ -1134,7 +1133,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="972"/>
         <source>Address street</source>
-        <translation>Roue</translation>
+        <translation>Rue</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="995"/>
@@ -1149,12 +1148,12 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1041"/>
         <source>Country and locality</source>
-        <translation>Pay et localité</translation>
+        <translation>Pays et lieu</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1064"/>
         <source>Email and phone</source>
-        <translation>Email et téléphone</translation>
+        <translation>E-mail et téléphone</translation>
     </message>
     <message>
         <source>Vat and fiscal number</source>
@@ -1169,12 +1168,17 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="193"/>
         <source>Invoice payment term (days)</source>
-        <translation>Date d&apos;échéance factures (jours)</translation>
+        <translation>Délai de paiement factures (en jours)</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="213"/>
         <source>Estimate validity (days)</source>
-        <translation>Validité des offres (jours)</translation>
+        <translation>Validité des offres (en jours)</translation>
+    </message>
+    <message>
+        <location filename="../ui/WdgSettings.qml" line="371"/>
+        <source>In this section you can select which fields are displayed.</source>
+        <translation>Dans cette section, vous pouvez sélectionner les champs visibles.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="402"/>
@@ -1214,7 +1218,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1277"/>
         <source>Item date</source>
-        <translation>Date</translation>
+        <translation>Date article</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1300"/>
@@ -1260,7 +1264,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1516"/>
         <source>Edit current settings</source>
-        <translation>Modifier paramètres</translation>
+        <translation>Modifier paramètres actuels</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1521"/>
@@ -1291,7 +1295,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1600"/>
         <source>Are you sure you want to clear the settings?</source>
-        <translation></translation>
+        <translation>Voulez-vous vraiment effacer les paramètres ?</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1610"/>
@@ -1304,7 +1308,7 @@ Souhaitez-vous passer au plan Advanced?</translation>
     <message>
         <location filename="../ui/WdgSource.qml" line="60"/>
         <source>Line: </source>
-        <translation>Ligne:</translation>
+        <translation>Ligne :</translation>
     </message>
     <message>
         <location filename="../ui/WdgSource.qml" line="90"/>

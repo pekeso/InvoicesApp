@@ -1065,7 +1065,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>In this section you can select whitch fields are visibles.</source>
-        <translation>In questa sezione puoi selezionare quali campi sono visibili.</translation>
+        <translation type="vanished">In questa sezione puoi selezionare quali campi sono visibili.</translation>
     </message>
     <message>
         <source>General</source>
@@ -1282,6 +1282,10 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <message>
         <source>VAT and fiscal number</source>
         <translation>Numero IVA e codice fiscale</translation>
+    </message>
+    <message>
+        <source>In this section you can select which fields are displayed.</source>
+        <translation>In questa sezione puoi selezionare quali campi sono visualizzati.</translation>
     </message>
 </context>
 <context>

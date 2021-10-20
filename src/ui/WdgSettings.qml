@@ -368,7 +368,7 @@ Item {
                 }
 
                 StyledLabel{
-                    text: qsTr("In this section you can select whitch fields are visibles.")
+                    text: qsTr("In this section you can select which fields are displayed.")
                 }
 
                 GridLayout {
