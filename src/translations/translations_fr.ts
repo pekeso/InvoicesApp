@@ -1196,8 +1196,12 @@ Souhaitez-vous passer au plan Advanced?</translation>
         <translation>Articles</translation>
     </message>
     <message>
-        <location filename="../ui/WdgSettings.qml" line="1139"/>
         <source>Invoice items visible without scolling (0 = all items)</source>
+        <translation type="vanished">Éléments de facture visibles sans défilement (0 = tous les éléments)</translation>
+    </message>
+    <message>
+        <location filename="../ui/WdgSettings.qml" line="1139"/>
+        <source>Invoice items visible without scrolling (0 = all items)</source>
         <translation>Éléments de facture visibles sans défilement (0 = tous les éléments)</translation>
     </message>
     <message>

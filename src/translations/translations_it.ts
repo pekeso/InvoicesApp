@@ -1177,7 +1177,7 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Invoice items visible without scolling (0 = all items)</source>
-        <translation>Articli visibili senza scorrimento (0 = tutti)</translation>
+        <translation type="vanished">Articli visibili senza scorrimento (0 = tutti)</translation>
     </message>
     <message>
         <source>Item columns</source>
@@ -1286,6 +1286,10 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <message>
         <source>In this section you can select which fields are displayed.</source>
         <translation>In questa sezione puoi selezionare quali campi sono visualizzati.</translation>
+    </message>
+    <message>
+        <source>Invoice items visible without scrolling (0 = all items)</source>
+        <translation>Articoli visibili senza scorrimento (0 = tutti)</translation>
     </message>
 </context>
 <context>

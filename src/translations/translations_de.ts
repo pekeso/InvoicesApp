@@ -1200,8 +1200,12 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
         <translation>Artikeln</translation>
     </message>
     <message>
-        <location filename="../ui/WdgSettings.qml" line="1139"/>
         <source>Invoice items visible without scolling (0 = all items)</source>
+        <translation type="vanished">Sichtbare Artikeln ohne Scrollen (0 = alle Artikeln)</translation>
+    </message>
+    <message>
+        <location filename="../ui/WdgSettings.qml" line="1139"/>
+        <source>Invoice items visible without scrolling (0 = all items)</source>
         <translation>Sichtbare Artikeln ohne Scrollen (0 = alle Artikeln)</translation>
     </message>
     <message>

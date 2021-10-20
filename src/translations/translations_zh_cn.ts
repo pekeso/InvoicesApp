@@ -1168,7 +1168,7 @@ Would you like to upgrade to the Advanced plan?</source>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1139"/>
-        <source>Invoice items visible without scolling (0 = all items)</source>
+        <source>Invoice items visible without scrolling (0 = all items)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

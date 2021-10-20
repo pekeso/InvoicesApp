@@ -1136,7 +1136,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Invoice items visible without scolling (0 = all items)")
+                        text: qsTr("Invoice items visible without scrolling (0 = all items)")
                         Layout.fillWidth: true
                     }
 

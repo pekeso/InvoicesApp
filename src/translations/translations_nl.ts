@@ -6,22 +6,22 @@
     <message>
         <location filename="../ui/AppSettings.qml" line="29"/>
         <source>Base</source>
-        <translation type="unfinished"></translation>
+        <translation>Basis</translation>
     </message>
     <message>
         <location filename="../ui/AppSettings.qml" line="30"/>
         <source>Short</source>
-        <translation type="unfinished"></translation>
+        <translation>Kort</translation>
     </message>
     <message>
         <location filename="../ui/AppSettings.qml" line="31"/>
         <source>Long</source>
-        <translation type="unfinished"></translation>
+        <translation>Lang</translation>
     </message>
     <message>
         <location filename="../ui/AppSettings.qml" line="32"/>
         <source>Complete</source>
-        <translation type="unfinished"></translation>
+        <translation>Compleet</translation>
     </message>
 </context>
 <context>
@@ -34,7 +34,7 @@
     <message>
         <location filename="../ui/DlgEditSource.qml" line="83"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Help</translation>
     </message>
     <message>
         <location filename="../ui/DlgEditSource.qml" line="92"/>
@@ -44,7 +44,7 @@
     <message>
         <location filename="../ui/DlgEditSource.qml" line="107"/>
         <source>Copy</source>
-        <translation type="unfinished">Kopiëren</translation>
+        <translation>Kopiëren</translation>
     </message>
     <message>
         <location filename="../ui/DlgEditSource.qml" line="114"/>
@@ -286,57 +286,57 @@
     <message>
         <location filename="../ui/DlgInvoice.qml" line="62"/>
         <source>Document</source>
-        <translation type="unfinished"></translation>
+        <translation>Document</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="65"/>
         <source>Estimate %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Offerte %1</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="67"/>
         <source>Invoice %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuur %1</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="71"/>
         <source>New estimate %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe offerte %1</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="73"/>
         <source>New invoice %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe factuur %1</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="176"/>
         <source>Invoice</source>
-        <translation type="unfinished">Factuur</translation>
+        <translation>Factuur</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="180"/>
         <source>Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="185"/>
         <source>Source</source>
-        <translation type="unfinished">Bron</translation>
+        <translation>Bron</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="192"/>
         <source>Development</source>
-        <translation type="unfinished"></translation>
+        <translation>Ontwikkeling</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="199"/>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Changelog</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="294"/>
         <source>Help</source>
-        <translation type="unfinished"></translation>
+        <translation>Help</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="333"/>
@@ -398,17 +398,18 @@
         <location filename="../ui/DlgLincense.qml" line="39"/>
         <source>This feature is unavailable in your plan.
 Would you like to upgrade to the Advanced plan?</source>
-        <translation type="unfinished"></translation>
+        <translation>Deze functie is niet beschikbaar in uw plan.
+Wilt u upgraden naar het Advanced-plan?</translation>
     </message>
     <message>
         <location filename="../ui/DlgLincense.qml" line="50"/>
         <source>Upgrade now</source>
-        <translation type="unfinished"></translation>
+        <translation>Nu upgraden</translation>
     </message>
     <message>
         <location filename="../ui/DlgLincense.qml" line="54"/>
         <source>Close</source>
-        <translation type="unfinished">Sluiten</translation>
+        <translation>Sluiten</translation>
     </message>
 </context>
 <context>
@@ -570,17 +571,17 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/VatModesModel.qml" line="18"/>
         <source>No VAT</source>
-        <translation type="unfinished"></translation>
+        <translation>Geen Btw</translation>
     </message>
     <message>
         <location filename="../ui/VatModesModel.qml" line="19"/>
         <source>VAT exclusive</source>
-        <translation type="unfinished"></translation>
+        <translation>Exclusief Btw</translation>
     </message>
     <message>
         <location filename="../ui/VatModesModel.qml" line="20"/>
         <source>VAT inclusive</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -588,54 +589,54 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="62"/>
         <source>Invoice created</source>
-        <translation type="unfinished">Factuur aangemaakt</translation>
+        <translation>Factuur aangemaakt</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="78"/>
         <source>Estimate copied</source>
-        <translation type="unfinished">Offerte gekopieerd</translation>
+        <translation>Offerte gekopieerd</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="78"/>
         <source>Invoice copied</source>
-        <translation type="unfinished">Factuur gekopieerd</translation>
+        <translation>Factuur gekopieerd</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="86"/>
         <source>Estimate saved</source>
-        <translation type="unfinished">Offerte opgeslagen</translation>
+        <translation>Offerte opgeslagen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="86"/>
         <source>Invoice saved</source>
-        <translation type="unfinished">Factuur opgeslagen</translation>
+        <translation>Factuur opgeslagen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="140"/>
         <source>Views:</source>
-        <translation type="unfinished"></translation>
+        <translation>Weergaven:</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="218"/>
         <location filename="../ui/WdgInvoice.qml" line="1471"/>
         <location filename="../ui/WdgInvoice.qml" line="2195"/>
         <source>Total</source>
-        <translation type="unfinished">Totaal</translation>
+        <translation>Totaal</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="251"/>
         <source>Invoice No</source>
-        <translation type="unfinished">Factuurnummer</translation>
+        <translation>Factuurnummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="272"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Taal</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="310"/>
         <source>Currency</source>
-        <translation type="unfinished">Valuta</translation>
+        <translation>Valuta</translation>
     </message>
     <message>
         <source>Vat mode</source>
@@ -644,215 +645,215 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="380"/>
         <source>Invoice date</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuurdatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="410"/>
         <source>Due date</source>
-        <translation type="unfinished"></translation>
+        <translation>Vervaldatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="444"/>
         <source>Order No</source>
-        <translation type="unfinished">Bestelnummer</translation>
+        <translation>Bestelnummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="465"/>
         <source>Order date</source>
-        <translation type="unfinished"></translation>
+        <translation>Besteldatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="492"/>
         <source>Decimal points</source>
-        <translation type="unfinished">Decimaalpunten voor bedragen</translation>
+        <translation>Decimaalpunten voor bedragen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="513"/>
         <source>Total rounding</source>
-        <translation type="unfinished">Totaal afronding</translation>
+        <translation>Totaal afronding</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="539"/>
         <source>Customer ref.</source>
-        <translation type="unfinished">Klantenreferentie</translation>
+        <translation>Klantenreferentie</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="561"/>
         <source>Custom field 1</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanpasbaar veld 1</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="583"/>
         <source>Custom field 2</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanpasbaar veld 2</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="605"/>
         <source>Custom field 3</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanpasbaar veld 3</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="627"/>
         <source>Custom field 4</source>
-        <translation type="unfinished"></translation>
+        <translation>Aanpasbaar veld 4</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="659"/>
         <source>Object</source>
-        <translation type="unfinished">Object</translation>
+        <translation>Object</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="681"/>
         <source>Begin text</source>
-        <translation type="unfinished">Oorspronkelijke tekst</translation>
+        <translation>Begintekst</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="705"/>
         <source>End text</source>
-        <translation type="unfinished"></translation>
+        <translation>Eindtekst</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="741"/>
         <source>Customer</source>
-        <translation type="unfinished">Klant</translation>
+        <translation>Klant</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="776"/>
         <source>Address</source>
-        <translation type="unfinished">Adres</translation>
+        <translation>Adres</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="784"/>
         <source>Business name</source>
-        <translation type="unfinished">Bedrijfsnaam</translation>
+        <translation>Bedrijfsnaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="798"/>
         <source>Prefix</source>
-        <translation type="unfinished"></translation>
+        <translation>Voorvoegsel</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="813"/>
         <source>First name</source>
-        <translation type="unfinished">Voornaam</translation>
+        <translation>Voornaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="827"/>
         <source>Last name</source>
-        <translation type="unfinished">Achternaam</translation>
+        <translation>Achternaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="842"/>
         <source>Street</source>
-        <translation type="unfinished"></translation>
+        <translation>Straat</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="856"/>
         <source>Extra</source>
-        <translation type="unfinished"></translation>
+        <translation>Extra</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="870"/>
         <source>P.O.Box</source>
-        <translation type="unfinished"></translation>
+        <translation>Postbus</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="884"/>
         <source>CC</source>
-        <translation type="unfinished">LC</translation>
+        <translation>LC</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="886"/>
         <source>Country code</source>
-        <translation type="unfinished">Landcode</translation>
+        <translation>Landcode</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="904"/>
         <source>Zip</source>
-        <translation type="unfinished">PC</translation>
+        <translation>PC</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="906"/>
         <source>Postal code</source>
-        <translation type="unfinished">Postcode</translation>
+        <translation>Postcode</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="920"/>
         <source>City</source>
-        <translation type="unfinished">Plaats</translation>
+        <translation>Plaats</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="940"/>
         <source>Email</source>
-        <translation type="unfinished">E-mail</translation>
+        <translation>E-mail</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="955"/>
         <source>Phone</source>
-        <translation type="unfinished">Telefoon</translation>
+        <translation>Telefoon</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="990"/>
         <source>Fiscal number</source>
-        <translation type="unfinished"></translation>
+        <translation>Fiscaal nummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1026"/>
         <source>#</source>
-        <translation type="unfinished"></translation>
+        <translation>#</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1057"/>
         <source>Item</source>
-        <translation type="unfinished">Item</translation>
+        <translation>Item</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1143"/>
         <source>Date</source>
-        <translation type="unfinished">Datum</translation>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1200"/>
         <source>Description</source>
-        <translation type="unfinished">Beschrijving</translation>
+        <translation>Beschrijving</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1258"/>
         <source>Qty</source>
-        <translation type="unfinished">Hoevd</translation>
+        <translation>Hoevd</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1306"/>
         <source>Unit</source>
-        <translation type="unfinished">Eenheid</translation>
+        <translation>Eenheid</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1354"/>
         <source>Price</source>
-        <translation type="unfinished">Prijs</translation>
+        <translation>Prijs</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1355"/>
         <source>Price incl.</source>
-        <translation type="unfinished">Prijs incl.</translation>
+        <translation>Prijs incl.</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1355"/>
         <source>Price excl.</source>
-        <translation type="unfinished">Prijs excl.</translation>
+        <translation>Prijs excl.</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1407"/>
         <location filename="../ui/WdgInvoice.qml" line="1954"/>
         <location filename="../ui/WdgInvoice.qml" line="1964"/>
         <source>Discount</source>
-        <translation type="unfinished">Korting</translation>
+        <translation>Korting</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1419"/>
         <location filename="../ui/WdgInvoice.qml" line="1984"/>
         <source>30% or 30.00</source>
-        <translation type="unfinished"></translation>
+        <translation>30% of 30.00</translation>
     </message>
     <message>
         <source>Vat</source>
@@ -861,84 +862,84 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1825"/>
         <source>Add</source>
-        <translation type="unfinished">Toevoegen</translation>
+        <translation>Toevoegen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="348"/>
         <source>VAT mode</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW modus</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="975"/>
         <source>VAT number</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW-nummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1508"/>
         <location filename="../ui/WdgInvoice.qml" line="2077"/>
         <source>VAT</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1841"/>
         <source>Remove</source>
-        <translation type="unfinished">Verwijderen</translation>
+        <translation>Verwijderen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1860"/>
         <source>Move up</source>
-        <translation type="unfinished">Naar boven verplaatsen</translation>
+        <translation>Naar boven verplaatsen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1882"/>
         <source>Move Down</source>
-        <translation type="unfinished">Naar beneden verplaatsen</translation>
+        <translation>Naar beneden verplaatsen</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1923"/>
         <source>Subtotal</source>
-        <translation type="unfinished">Subtotaal</translation>
+        <translation>Subtotaal</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="1923"/>
         <source>Total Net</source>
-        <translation type="unfinished">Totaal netto</translation>
+        <translation>Totaal netto</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2093"/>
         <source>Rounding</source>
-        <translation type="unfinished">Afronding</translation>
+        <translation>Afronding</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2124"/>
         <location filename="../ui/WdgInvoice.qml" line="2133"/>
         <source>Deposit</source>
-        <translation type="unfinished">Voorschot</translation>
+        <translation>Voorschot</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2225"/>
         <source>VAT %1% %4 %2 (%4 %3)</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW %1% %4 %2 (%4 %3)</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2287"/>
         <source>Internal notes</source>
-        <translation type="unfinished">Interne nota&apos;s</translation>
+        <translation>Interne nota&apos;s</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2545"/>
         <source>Swiss Franc</source>
-        <translation type="unfinished"></translation>
+        <translation>Zwitserse Frank</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2546"/>
         <source>Euro</source>
-        <translation type="unfinished"></translation>
+        <translation>Euro</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="2547"/>
         <source>US Dollar</source>
-        <translation type="unfinished"></translation>
+        <translation>US Dollar</translation>
     </message>
 </context>
 <context>
@@ -946,18 +947,18 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgSettings.qml" line="54"/>
         <source>New documents</source>
-        <translation type="unfinished"></translation>
+        <translation>Nieuwe documenten</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="62"/>
         <location filename="../ui/WdgSettings.qml" line="736"/>
         <source>Invoice title</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuurtitel</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="81"/>
         <source>Estimate title</source>
-        <translation type="unfinished"></translation>
+        <translation>Offertetitel</translation>
     </message>
     <message>
         <source>Vat mode</source>
@@ -967,307 +968,315 @@ Would you like to upgrade to the Advanced plan?</source>
         <location filename="../ui/WdgSettings.qml" line="129"/>
         <location filename="../ui/WdgSettings.qml" line="523"/>
         <source>Currency</source>
-        <translation type="unfinished">Valuta</translation>
+        <translation>Valuta</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="148"/>
         <location filename="../ui/WdgSettings.qml" line="454"/>
         <source>Decimals</source>
-        <translation type="unfinished"></translation>
+        <translation>Decimaalpunten voor bedragen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="173"/>
         <location filename="../ui/WdgSettings.qml" line="477"/>
         <source>Total rounding</source>
-        <translation type="unfinished">Totaal afronding</translation>
+        <translation>Totaal afronding</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="245"/>
         <source>Interface</source>
-        <translation type="unfinished"></translation>
+        <translation>Interface</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="256"/>
         <source>Views</source>
-        <translation type="unfinished"></translation>
+        <translation>Weergaven</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="277"/>
         <source>Title</source>
-        <translation type="unfinished"></translation>
+        <translation>Titel</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="321"/>
         <source>Visible</source>
-        <translation type="unfinished"></translation>
+        <translation>Zichtbaar</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="365"/>
         <source>Invoice fields</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuurvelden</translation>
+    </message>
+    <message>
+        <source>In this section you can select whitch fields are visibles.</source>
+        <translation type="vanished">In deze sectie kunt u kiezen welke velden zichtbaar zijn.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="381"/>
         <source>General</source>
-        <translation type="unfinished"></translation>
+        <translation>Algemeen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="99"/>
         <location filename="../ui/WdgSettings.qml" line="547"/>
         <source>VAT mode</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW modus</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="193"/>
         <source>Invoice payment term (days)</source>
-        <translation type="unfinished"></translation>
+        <translation>Betalingstermijn van de factuur (in dagen)</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="213"/>
         <source>Estimate validity (days)</source>
-        <translation type="unfinished"></translation>
+        <translation>Geldigheidsduur offerte (in dagen)</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="371"/>
         <source>In this section you can select which fields are displayed.</source>
-        <translation type="unfinished"></translation>
+        <translation>In deze sectie kunt u kiezen welke velden zichtbaar zijn.</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="402"/>
         <source>Fields not empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Velden niet leeg</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="433"/>
         <source>Parameters</source>
-        <translation type="unfinished"></translation>
+        <translation>Parameters</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="500"/>
         <source>Language</source>
-        <translation type="unfinished"></translation>
+        <translation>Taal</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="577"/>
         <source>Details</source>
-        <translation type="unfinished"></translation>
+        <translation>Details</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="598"/>
         <source>Invoice number</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuurnummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="621"/>
         <source>Invoice date</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuurdatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="644"/>
         <source>Due date</source>
-        <translation type="unfinished"></translation>
+        <translation>Vervaldatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="667"/>
         <source>Order number</source>
-        <translation type="unfinished"></translation>
+        <translation>Bestelnummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="690"/>
         <source>Order date</source>
-        <translation type="unfinished"></translation>
+        <translation>Besteldatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="713"/>
         <source>Customer reference</source>
-        <translation type="unfinished"></translation>
+        <translation>Klantenreferentie</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="759"/>
         <source>Begin text</source>
-        <translation type="unfinished">Oorspronkelijke tekst</translation>
+        <translation>Begintekst</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="782"/>
         <source>End text</source>
-        <translation type="unfinished"></translation>
+        <translation>Eindtekst</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="805"/>
         <source>Internal notes</source>
-        <translation type="unfinished">Interne nota&apos;s</translation>
+        <translation>Interne nota&apos;s</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="828"/>
         <source>Invoice summary</source>
-        <translation type="unfinished"></translation>
+        <translation>Samenvatting van de factuur</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="858"/>
         <source>Address</source>
-        <translation type="unfinished">Adres</translation>
+        <translation>Adres</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="880"/>
         <source>Customer selector</source>
-        <translation type="unfinished"></translation>
+        <translation>Klantenselector</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="903"/>
         <source>Business name</source>
-        <translation type="unfinished">Bedrijfsnaam</translation>
+        <translation>Bedrijfsnaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="926"/>
         <source>Prefix</source>
-        <translation type="unfinished"></translation>
+        <translation>Voorvoegsel</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="949"/>
         <source>First and last name</source>
-        <translation type="unfinished"></translation>
+        <translation>Voornaam en achternaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="972"/>
         <source>Address street</source>
-        <translation type="unfinished"></translation>
+        <translation>Adres straat</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="995"/>
         <source>Address extra</source>
-        <translation type="unfinished"></translation>
+        <translation>Adres extra</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1018"/>
         <source>Post box</source>
-        <translation type="unfinished"></translation>
+        <translation>Postbus</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1041"/>
         <source>Country and locality</source>
-        <translation type="unfinished"></translation>
+        <translation>Land en plaatsnaam</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1064"/>
         <source>Email and phone</source>
-        <translation type="unfinished"></translation>
+        <translation>E-mail en telefoon</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1087"/>
         <source>VAT and fiscal number</source>
-        <translation type="unfinished"></translation>
+        <translation>BTW- en Fiscaal nummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1117"/>
         <source>Items</source>
-        <translation type="unfinished"></translation>
+        <translation>Items</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1139"/>
+        <source>Invoice items visible without scrolling (0 = all items)</source>
+        <translation>Factuuritems zichtbaar zonder scrollen (0 = alle items)</translation>
+    </message>
+    <message>
         <source>Invoice items visible without scolling (0 = all items)</source>
-        <translation type="unfinished"></translation>
+        <translation type="vanished">Factuuritems zichtbaar zonder scrollen (0 = alle items)</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1209"/>
         <source>Item columns</source>
-        <translation type="unfinished"></translation>
+        <translation>Item kolommen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1231"/>
         <source>Row</source>
-        <translation type="unfinished"></translation>
+        <translation>Rij</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1254"/>
         <source>Number</source>
-        <translation type="unfinished"></translation>
+        <translation>Nummer</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1277"/>
         <source>Item date</source>
-        <translation type="unfinished"></translation>
+        <translation>Datum van het item</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1300"/>
         <source>Quantity</source>
-        <translation type="unfinished"></translation>
+        <translation>Hoeveelheid</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1323"/>
         <source>Unit</source>
-        <translation type="unfinished">Eenheid</translation>
+        <translation>Eenheid</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1346"/>
         <location filename="../ui/WdgSettings.qml" line="1398"/>
         <source>Discount</source>
-        <translation type="unfinished">Korting</translation>
+        <translation>Korting</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1376"/>
         <source>Totals</source>
-        <translation type="unfinished"></translation>
+        <translation>Totalen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1421"/>
         <source>Rounding</source>
-        <translation type="unfinished">Afronding</translation>
+        <translation>Afronding</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1444"/>
         <source>Deposit</source>
-        <translation type="unfinished">Voorschot</translation>
+        <translation>Voorschot</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1467"/>
         <source>Summary</source>
-        <translation type="unfinished"></translation>
+        <translation>Samenvatting</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1504"/>
         <source>Tools</source>
-        <translation type="unfinished"></translation>
+        <translation>Werktuigen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1516"/>
         <source>Edit current settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Huidige instellingen bewerken</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1521"/>
         <source>Edit settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen bewerken</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1534"/>
         <source>Restore default settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Standaardinstellingen herstellen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1539"/>
         <source>Restore settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen herstellen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1547"/>
         <location filename="../ui/WdgSettings.qml" line="1552"/>
         <source>Clear settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Instellingen wissen</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1589"/>
         <source>Are you sure you want to restore the default settings?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet u zeker dat u de standaardinstellingen wilt herstellen?</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1600"/>
         <source>Are you sure you want to clear the settings?</source>
-        <translation type="unfinished"></translation>
+        <translation>Weet u zeker dat u de instellingen wilt wissen?</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1610"/>
         <source>Advanced plan</source>
-        <translation type="unfinished"></translation>
+        <translation>Advanced plan</translation>
     </message>
 </context>
 <context>
@@ -1275,12 +1284,12 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgSource.qml" line="60"/>
         <source>Line: </source>
-        <translation type="unfinished"></translation>
+        <translation>Regel: </translation>
     </message>
     <message>
         <location filename="../ui/WdgSource.qml" line="90"/>
         <source>Revert</source>
-        <translation type="unfinished"></translation>
+        <translation>Terugkeren</translation>
     </message>
 </context>
 <context>
@@ -1322,12 +1331,12 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../base/settings.js" line="80"/>
         <source>Invoice %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Factuur %1</translation>
     </message>
     <message>
         <location filename="../base/settings.js" line="81"/>
         <source>Estimate %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Offerte %1</translation>
     </message>
 </context>
 </TS>
