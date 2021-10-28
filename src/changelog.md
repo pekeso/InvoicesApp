@@ -1,5 +1,9 @@
 # Changelog
  
+## 2021-10-28
+
+* [Bug] Fix tab key on field item quantity does not save the edited text
+
 ## 2021-10-20
 
 * [Bug] Fix textes and translations

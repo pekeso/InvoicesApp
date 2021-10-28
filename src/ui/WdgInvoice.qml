@@ -1078,7 +1078,6 @@ Item {
                                 }
 
                                 onEditingFinished: {
-                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
@@ -1094,14 +1093,14 @@ Item {
                                                 invoiceItemsModel.setProperty(styleData.row, styleData.role, editText)
                                             }
                                         }
+                                        setDocumentModified()
+                                        calculateInvoice()
                                     }
-                                    setDocumentModified()
-                                    calculateInvoice()
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
 
                                 onActivated: {
                                     if (popup.visible) {
-                                        focus = false
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             var itemId = currentIndex === -1 ? currentText : itemsModel.get(index).id
                                             var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
@@ -1113,6 +1112,7 @@ Item {
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
+                                        focus = false
                                     }
                                 }
 
@@ -1156,7 +1156,6 @@ Item {
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
                                 onEditingFinished: {
-                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             let date = text
@@ -1168,6 +1167,7 @@ Item {
                                         }
                                         setDocumentModified()
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
                                 onFocusChanged: {
                                     if (focus) {
@@ -1215,7 +1215,6 @@ Item {
                                 }
 
                                 onEditingFinished: {
-                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].description = text
@@ -1223,6 +1222,7 @@ Item {
                                         }
                                         setDocumentModified()
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
 
                                 // In case the lines count change we emit a signal to update the row heigth
@@ -1270,7 +1270,6 @@ Item {
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
-                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].quantity = text ? text : ""
@@ -1279,6 +1278,7 @@ Item {
                                         setDocumentModified()
                                         calculateInvoice()
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
                                 onFocusChanged: {
                                     if (focus) {
@@ -1318,7 +1318,6 @@ Item {
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
-                                    focus = false
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {                                            
                                             invoice.json.items[styleData.row].mesure_unit = text
@@ -1326,6 +1325,7 @@ Item {
                                         }
                                         setDocumentModified()
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
                                 onFocusChanged: {
                                     if (focus) {
@@ -1380,6 +1380,7 @@ Item {
                                             calculateInvoice()
                                         }
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
                                 onFocusChanged: {
                                     if (focus) {
@@ -1439,6 +1440,7 @@ Item {
                                             calculateInvoice()
                                         }
                                     }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
                                 onFocusChanged: {
                                     if (focus) {
