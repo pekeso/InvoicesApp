@@ -20,8 +20,9 @@ function vatCodeGet(id) {
             var vatCodeRow = tableVatCodes.findRowByValue("RowId", id);
             if (vatCodeRow) {
                 var vatCode = {
-                    'rate': vatCodeRow.value("VatPercentage"),
-                    'code': vatCodeRow.value("RowId")
+                    'key': vatCodeRow.value("RowId"),
+                    'descr':  vatCodeRow.value("Description"),
+                    'rate': vatCodeRow.value("VatPercentage")
                 };
                 return vatCode;
             }
@@ -39,8 +40,9 @@ function vatCodesGet() {
         if (id) {
             items.push(
                         {
-                            'rate': table.value(i, "VatPercentage"),
-                            'code': table.value(i, "RowId")
+                            'key': table.value(i, "RowId"),
+                            'descr': table.value(i, "Description"),
+                            'rate': table.value(i, "VatPercentage")
                         })
         }
     }

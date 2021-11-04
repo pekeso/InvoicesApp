@@ -2,8 +2,10 @@
  
 ## 2021-11-04
 
-* [Bug] Fix entered item date is not saved
-* [Enhancement] Entered dates are checked before saved
+* [Enhancement] Let search items by description
+* [Enhancement] Let search customers by name, address, email or fiscal number
+* [Enhancement] Check entered dates and notify the user if the date is not valid
+* [Bug] Fix the entered item date is not saved
 
 ## 2021-10-28
 

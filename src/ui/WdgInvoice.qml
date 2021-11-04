@@ -39,7 +39,7 @@ Item {
     required property Invoice invoice
 
     property string currentView: appSettings.data.interface.invoice.current_view ?
-                                   appSettings.data.interface.invoice.current_view :
+                                     appSettings.data.interface.invoice.current_view :
                                      appSettings.view_id_base
 
     onCurrentViewChanged: {
@@ -119,13 +119,15 @@ Item {
     }
 
     ListModel {
+        id: filteredItemsModel
+    }
+
+    ListModel {
         id: languagesModel
-        ListElement {code: ''; descr: ''}
     }
 
     ListModel {
         id: currenciesModel
-        ListElement {currency: ''; descr: ''}
     }
 
     ColumnLayout {
@@ -138,7 +140,7 @@ Item {
 
             StyledLabel{
                 text: qsTr("Views:")
-             }
+            }
 
             StyledLabel{
                 property string viewId: appSettings.view_id_base
@@ -277,29 +279,55 @@ Item {
                         StyledComboBox {
                             id: invoice_language
                             visible: isInvoiceFieldVisible("show_invoice_language")
-                            editable: false
+                            editable: true
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Keys.onReturnPressed: focus = false
                             model: languagesModel
                             textRole: "descr"
                             currentIndex: getLanguageIndex()
-                            displayText: getLanguageIndex() === -1
-                                         ? (invoice.json && invoice.json.document_info && invoice.json.document_info.locale ? invoice.json.document_info.locale : '')
-                                         : currentText
+                            displayText: {
+                                let i = getLanguageIndex()
+                                if (i >= 0) {
+                                    languagesModel.get(i).descr
+                                } else if (invoice.json && invoice.json.document_info && invoice.json.document_info.locale) {
+                                    invoice.json.document_info.locale
+                                } else {
+                                    ''
+                                }
+                            }
+                            editText: {
+                                let i = getLanguageIndex()
+                                if (i >= 0) {
+                                    languagesModel.get(i).key
+                                } else if (invoice.json && invoice.json.document_info && invoice.json.document_info.locale) {
+                                    invoice.json.document_info.locale
+                                } else {
+                                    ''
+                                }
+                            }
 
                             onActivated: {
-                                invoice.json.document_info.locale = model.get(index).code
+                                invoice.json.document_info.locale = model.get(index).key
                                 displayText = model.get(index).descr
                                 setDocumentModified()
                             }
 
-                            function getLanguageIndex() {
-                                if (invoice.json && invoice.json.document_info.locale) {
-                                    for (var i = 0; i < model.count; i++) {
-                                        if (model.get(i).code === invoice.json.document_info.locale) {
-                                            return i
-                                        }
+                            onEditingFinished: function(text) {
+                                if (modified) {
+                                    if (currentIndex === -1) {
+                                        invoice.json.document_info.locale = text
+                                        displayText = text
+                                    } else {
+                                        invoice.json.document_info.locale = model.get(currentIndex).key
+                                        displayText = model.get(currentIndex).descr
                                     }
+                                    setDocumentModified()
+                                }
+                            }
+
+                            function getLanguageIndex() {
+                                if (invoice.json) {
+                                    return findKey(invoice.json.document_info.locale)
                                 }
                                 return -1;
                             }
@@ -320,25 +348,24 @@ Item {
                             enabled: !invoice.isReadOnly
                             Keys.onReturnPressed: focus = false
                             model: currenciesModel
-                            textRole: "currency"
+                            textRole: "key"
                             currentIndex: getCurrencyIndex()
-                            displayText: getCurrencyIndex() === -1
-                                         ? (invoice.json && invoice.json.document_info && invoice.json.document_info.currency ? invoice.json.document_info.currency : '')
-                                         : currentText
+                            displayText: invoice.json && invoice.json.document_info && invoice.json.document_info.currency ? invoice.json.document_info.currency : ''
 
                             onActivated: {
-                                invoice.json.document_info.currency = model.get(index).currency
-                                displayText = model.get(index).currency
+                                invoice.json.document_info.currency = model.get(index).key
+                                displayText = model.get(index).key
+                                setDocumentModified()
+                            }
+
+                            onEditingFinished: function(text) {
+                                invoice.json.document_info.currency = text
                                 setDocumentModified()
                             }
 
                             function getCurrencyIndex() {
-                                if (invoice.json && invoice.json.document_info.currency) {
-                                    for (var i = 0; i < model.count; i++) {
-                                        if (model.get(i).code === invoice.json.document_info.currency) {
-                                            return i
-                                        }
-                                    }
+                                if (invoice.json) {
+                                    return findKey(invoice.json.document_info.currency)
                                 }
                                 return -1;
                             }
@@ -359,16 +386,17 @@ Item {
                             editable: false
                             textRole: "descr"
                             currentIndex: invoice.json ? getVatModeIndex(invoice.json.document_info.vat_mode) : 0
+                            displayTextIncludesKey: false
 
                             onActivated: {
-                                invoice.json.document_info.vat_mode = vatModesModel.get(index).mode
+                                invoice.json.document_info.vat_mode = vatModesModel.get(index).key
                                 setDocumentModified()
                                 calculateInvoice()
                             }
 
                             function getVatModeIndex(vatMode) {
                                 for (var i = 0; i < vatModesModel.count; i++) {
-                                    if (vatModesModel.get(i).mode === vatMode) {
+                                    if (vatModesModel.get(i).key === vatMode) {
                                         return i
                                     }
                                 }
@@ -778,29 +806,36 @@ Item {
                             id: address_customer_selector
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_customer_selector")
+                            popupMinWidth: 400  * Stylesheet.pixelScaleRatio
+                            popupAlign: Qt.AlignRight
 
                             editable: true
-                            textRole: "descr"
-                            currentIndex: -1
+                            filterEnabled: true
+                            textRole: "key"
+                            currentIndex: invoice.json ? findKey(invoice.json.customer_info.number) : -1
+                            displayText: invoice.json && invoice.json.customer_info.number ? invoice.json.customer_info.number : ""
 
                             model: customerAddressesModel
 
                             onActivated: {
-                                if (index < 0) {
-                                    invoice.json.customer_info.number = "";
+                                if (popup.visible) {
+                                    if (index < 0) {
+                                        invoice.json.customer_info.number = "";
 
-                                } else {
-                                    var contactId = customerAddressesModel.get(index).id
-                                    invoice.json.customer_info = Contacts.contactAddressGet(contactId)
-                                    invoice.json.customer_info.number = contactId
-                                    invoice.json.document_info.locale = Contacts.contactLocaleGet(contactId);
-                                    updateViewAddress()
+                                    } else {
+                                        var contactId = model.get(index).key
+                                        invoice.json.customer_info = Contacts.contactAddressGet(contactId)
+                                        invoice.json.customer_info.number = contactId
+                                        invoice.json.document_info.locale = Contacts.contactLocaleGet(contactId);
+                                        displayText = contactId
+                                        updateViewAddress()
 
+                                    }
+                                    focus = false
+
+                                    setDocumentModified()
                                 }
-
-                                setDocumentModified()
                             }
-
                         }
 
                         StyledLabel{
@@ -1100,14 +1135,11 @@ Item {
                                 anchors.rightMargin: 3 * Stylesheet.pixelScaleRatio
                                 anchors.leftMargin: 3 * Stylesheet.pixelScaleRatio
                                 editable: true
-                                textRole: "id"
+                                textRole: "key"
                                 popupMinWidth: 300 * Stylesheet.pixelScaleRatio
+                                filterEnabled: true
                                 displayText: styleData.value
-
-                                delegate: ItemDelegate {
-                                    text: id + "   " + descr
-                                    width: parent.width
-                                }
+                                currentIndex: findKey(styleData.value)
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1133,20 +1165,22 @@ Item {
                                 }
 
                                 onActivated: {
-                                    if (popup.visible) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                                            var itemId = currentIndex === -1 ? currentText : itemsModel.get(index).id
-                                            var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                                            var item = Items.itemGet(itemId, vatExclusive)
+                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        var itemId = currentIndex === -1 ? currentText : itemsModel.get(index).key
+                                        var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
+                                        var item = Items.itemGet(itemId, vatExclusive)
+                                        if (item) {
                                             var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
                                             if (vatCode)
                                                 item.unit_price.vat_rate = vatCode.rate
-                                            invoice.json.items[styleData.row] = item
+                                        } else {
+                                            item = emptyInvoiceItem()
                                         }
-                                        setDocumentModified()
-                                        calculateInvoice()
-                                        focus = false
+                                        invoice.json.items[styleData.row] = item
                                     }
+                                    setDocumentModified()
+                                    calculateInvoice()
+                                    focus = false
                                 }
 
                                 onFocusChanged: {
@@ -1155,7 +1189,6 @@ Item {
                                         currentInvoiceItemCol = styleData.role
                                     }
                                 }
-
                             }
                         }
                         onWidthChanged: {
@@ -1366,7 +1399,7 @@ Item {
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {                                            
+                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].mesure_unit = text
                                             invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
@@ -1567,13 +1600,15 @@ Item {
                             StyledComboBox {
                                 id: invoice_item_vat
                                 model: taxRatesModel
-                                textRole: "code"
+                                textRole: "key"
                                 editable: false
                                 currentIndex: getCurrentVatCodeIndex()
                                 displayText: getDisplayText(styleData.value)
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.margins: 3 * Stylesheet.pixelScaleRatio
+                                popupMinWidth: 300  * Stylesheet.pixelScaleRatio
+                                popupAlign: Qt.AlignRight
 
                                 onActivated: {
                                     updateInvoiceItem()
@@ -1605,7 +1640,7 @@ Item {
                                         return ""
                                     for (let i = 0; i < taxRatesModel.count; ++i) {
                                         if (taxRatesModel.get(i).rate === rate)
-                                            return taxRatesModel.get(i).code
+                                            return taxRatesModel.get(i).key
                                     }
                                     return rate;
                                 }
@@ -2542,7 +2577,7 @@ Item {
 
     function loadCustomerAddresses() {
         customerAddressesModel.clear()
-        customerAddressesModel.append({'id': '','descr': ''})
+        customerAddressesModel.append({'key': '','descr': ''})
         var contacts = Contacts.contactsAddressesGet()
         for (var i = 0; i < contacts.length; ++i) {
             customerAddressesModel.append(contacts[i])
@@ -2551,7 +2586,7 @@ Item {
 
     function loadItems() {
         itemsModel.clear();
-        itemsModel.append({'id': '','descr': ''})
+        itemsModel.append({'key': '','descr': ''})
         var items = Items.itemsGet()
         for (var i = 0; i < items.length; ++i) {
             itemsModel.append(items[i]);
@@ -2587,13 +2622,13 @@ Item {
         for (let i = 0; i < languagesCodes.length; ++i) {
             let langCode = languagesCodes[i]
             let language = languages[langCode];
-            languagesModel.append({code: langCode, descr: langCode + "\t" + language.nativeName})
+            languagesModel.append({key: langCode, descr: language.nativeName})
         }
     }
 
     function loadCurrencies() {
         // Get default currencies
-        var currenciesAbbreviations = {
+        var currencies = {
             'CHF' : {"descr":  qsTr('Swiss Franc')},
             'EUR' : {"descr":  qsTr('Euro')},
             'USD' : {"descr":  qsTr('US Dollar')},
@@ -2605,8 +2640,8 @@ Item {
             let contactsLanguagesCodes = Object.keys(contactsCurrencies);
             for (let i = 0; i < contactsLanguagesCodes.length; ++i) {
                 let currencyCode = contactsLanguagesCodes[i]
-                if (!currenciesAbbreviations[currencyCode]) {
-                    currenciesAbbreviations[currencyCode] = contactsCurrencies[currencyCode]
+                if (!currencies[currencyCode]) {
+                    currencies[currencyCode] = contactsCurrencies[currencyCode]
                 }
             }
             */
@@ -2617,18 +2652,18 @@ Item {
             let invoicesLanguagesCodes = Object.keys(invoicesCurrencies);
             for (let i = 0; i < invoicesLanguagesCodes.length; ++i) {
                 let currencyCode = contactsLanguagesCodes[i]
-                if (!currenciesAbbreviations[currencyCode]) {
-                    currenciesAbbreviations[currencyCode] = invoicesCurrencies[currencyCode]
+                if (!currencies[currencyCode]) {
+                    currencies[currencyCode] = invoicesCurrencies[currencyCode]
                 }
             }
             */
 
         // Sort languages by code and fill the model
         currenciesModel.clear()
-        currenciesAbbreviations = Object.keys(currenciesAbbreviations).sort();
+        let currenciesAbbreviations = Object.keys(currencies).sort();
         for (let i = 0; i < currenciesAbbreviations.length; ++i) {
             let currencyCode = currenciesAbbreviations[i]
-            currenciesModel.append({currency: currencyCode, descr: ""})
+            currenciesModel.append({key: currencyCode, descr: currencies[currencyCode].descr})
         }
     }
 
@@ -2636,8 +2671,9 @@ Item {
         taxRatesModel.clear();
         taxRatesModel.append(
                     {
-                        'rate': "",
-                        'code': ""
+                        'key': "",
+                        'descr' : "",
+                        'rate': ""
                     })
         var vatCodes = VatCodes.vatCodesGet()
         for (var i = 0; i < vatCodes.length; ++i) {
@@ -2649,18 +2685,6 @@ Item {
         updateViewAddress()
         updateViewVatMode()
         updateViewItems()
-        updateViewCustomerAddressId()
-    }
-
-    function updateViewCustomerAddressId() {
-        if (!invoice.json || !invoice.json.customer_info.number)
-            address_customer_selector.displayText = ""
-
-        for (var i = 0; i < customerAddressesModel.count; ++i) {
-            if (customerAddressesModel.get(i).id === invoice.json.customer_info.number) {
-                address_customer_selector.currentIndex = i;
-            }
-        }
     }
 
     function updateViewAddress() {

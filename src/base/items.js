@@ -64,7 +64,7 @@ function itemsGet() {
         if (id) {
             items.push(
                         {
-                            'id': table.value(i, "RowId"),
+                            'key': table.value(i, "RowId"),
                             'descr': table.value(i, "Description")
                         })
         }

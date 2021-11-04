@@ -62,11 +62,17 @@ function contactsAddressesGet() {
     var table = contactsTableGet();
     var rowCount = table.rowCount
     for (var i = 0; i < table.rowCount; ++i) {
-        cusomersAddresses.push(
-                    {
-                        'descr': contactsBriefDescriptionGetByRowNr(i),
-                        'id': table.value(i, "RowId")
-                    });
+        let id = table.value(i, "RowId")
+        let descr = contactsBriefDescriptionGetByRowNr(i);
+        if (id || descr) {
+            let search = contactsSupplementSearchText(i);
+            cusomersAddresses.push(
+                        {
+                            'key': table.value(i, "RowId"),
+                            'descr': descr,
+                            'search': search
+                        });
+        }
     }
     return cusomersAddresses;
 }
@@ -76,16 +82,18 @@ function contactsLocalesGet() {
     var table = contactsTableGet();
     for (var i = 0; i < table.rowCount; ++i) {
         var langCode = table.value(i, "Language")
-        if (!customersLocales[langCode]) {
-            var langNativeName = Qt.locale(langCode).nativeLanguageName
-            if (langNativeName.length > 0) {
-                langNativeName = langNativeName.charAt(0).toUpperCase() + langNativeName.slice(1)
-            } else {
-                langNativeName = langCode
-            }
-            customersLocales[langCode] = {
-                englishName: langCode,
-                nativeName: langNativeName
+        if (langCode) {
+            if (!customersLocales[langCode]) {
+                var langNativeName = Qt.locale(langCode).nativeLanguageName
+                if (langNativeName.length > 0) {
+                    langNativeName = langNativeName.charAt(0).toUpperCase() + langNativeName.slice(1)
+                } else {
+                    langNativeName = langCode
+                }
+                customersLocales[langCode] = {
+                    englishName: langCode,
+                    nativeName: langNativeName
+                }
             }
         }
     }
@@ -155,6 +163,15 @@ function contactsBriefDescription(contactRow) {
         if (customerName.length > 0)
             addressFields.push(customerName.join(' '));
 
+        if (addressFields.length === 0) {
+            let rowId = contactRow.value('RowId').trim();
+            if (rowId) {
+                addressFields.push(rowId)
+            } else {
+                return null;
+            }
+        }
+
         if (contactRow.value('Locality'))
             addressFields.push(contactRow.value('Locality'));
 
@@ -164,6 +181,34 @@ function contactsBriefDescription(contactRow) {
         var customerDescr = addressFields.join(', ');
         customerDescr.replace('\n', ", ");
         return customerDescr;
+    }
+    return null;
+}
+
+function contactsSupplementSearchText(rowNr) {
+    var tableContacts = contactsTableGet();
+    if (tableContacts) {
+        var contactRow = tableContacts.row(rowNr)
+        if (contactRow) {
+            var searchFields = [];
+
+            if (contactRow.value('EmailHome'))
+                searchFields.push(contactRow.value('EmailHome'))
+            if (contactRow.value('EmailWork'))
+                searchFields.push(contactRow.value('EmailWork'))
+            if (contactRow.value('EmailOther'))
+                searchFields.push(contactRow.value('EmailWork'))
+            if (contactRow.value('FiscalNumber'))
+                searchFields.push(contactRow.value('FiscalNumber'))
+            if (contactRow.value('VatNumber'))
+                searchFields.push(contactRow.value('VatNumber'))
+
+            if (searchFields.length > 0) {
+                var customerSearchText = searchFields.join(', ');
+                customerSearchText.replace('\n', ", ");
+                return customerSearchText;
+            }
+        }
     }
     return null;
 }
