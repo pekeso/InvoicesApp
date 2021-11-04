@@ -1,5 +1,10 @@
 # Changelog
  
+## 2021-11-04
+
+* [Bug] Fix entered item date is not saved
+* [Enhancement] Entered dates are checked before saved
+
 ## 2021-10-28
 
 * [Bug] Fix tab key on field item quantity does not save the edited text

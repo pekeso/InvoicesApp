@@ -386,23 +386,45 @@ Item {
                             id: invoice_date
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_date", text)
+                            property int updateText: 1 // Binding for updating the text
 
                             readOnly: invoice.isReadOnly
                             text: {
-                                if (invoice.json && invoice.json.document_info.date) {
+                                if (updateText && invoice.json && invoice.json.document_info.date) {
                                     var dateString = invoice.json.document_info.date.split('T')[0]
                                     Banana.Converter.toLocaleDateFormat(dateString)
                                 } else {
                                     ""
                                 }
                             }
+
                             Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
-                                    invoiceSetDate(invoice.json, Banana.Converter.toInternalDateFormat(text));
+                                    // Check date
+                                    let date = Banana.Converter.toInternalDateFormat(text)
+                                    let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                    if (!localDate || localDate.length === 0) {
+                                        errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                        errorMessageDialog.visible = true
+                                        updateText++
+                                        return
+                                    }
+                                    // Set date
+                                    invoiceSetDate(invoice.json, date);
                                     invoice_due_date.update()
                                     setDocumentModified()
                                 }
+                            }
+                            function getDate() {
+                                if (updateText > 0) {
+                                    if (invoice.json && invoice.json.document_info.date) {
+                                        var dateString = invoice.json.document_info.date.split('T')[0]
+                                        return Banana.Converter.toLocaleDateFormat(dateString)
+                                    }
+                                }
+                                return ""
+
                             }
                         }
 
@@ -421,7 +443,17 @@ Item {
 
                             onEditingFinished: {
                                 if (modified) {
-                                    invoice.json.payment_info.due_date = Banana.Converter.toInternalDateFormat(text)
+                                    // Check date
+                                    let date = Banana.Converter.toInternalDateFormat(text)
+                                    let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                    if (!localDate || localDate.length === 0) {
+                                        errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                        errorMessageDialog.visible = true
+                                        update()
+                                        return
+                                    }
+                                    // Set date
+                                    invoice.json.payment_info.due_date = date
                                     setDocumentModified()
                                 }
                             }
@@ -1095,6 +1127,7 @@ Item {
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1151,7 +1184,8 @@ Item {
                                 anchors.left: parent.left
                                 anchors.margins: 3 * Stylesheet.pixelScaleRatio
                                 horizontalAlignment: styleData.textAlignment
-                                text: styleData.value ? Banana.Converter.toLocaleDateFormat(styleData.value) : ""
+                                property int updateText: 1  // Binding for updating the text
+                                text: updateText && styleData.value ? Banana.Converter.toLocaleDateFormat(styleData.value) : ""
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
@@ -1161,11 +1195,22 @@ Item {
                                             let date = text
                                             if (date) {
                                                 date = Banana.Converter.toInternalDateFormat(date)
+                                                // Check date
+                                                let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                                if (!localDate || localDate.length === 0) {
+                                                    errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                                    errorMessageDialog.visible = true
+                                                    updateText++
+                                                    modified = false
+                                                    focus = false
+                                                    return
+                                                }
                                             }
                                             invoice.json.items[styleData.row].date = date
-                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, Banana.Converter.toLocaleDateFormat(date))
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, date)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1221,6 +1266,7 @@ Item {
                                             invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1277,6 +1323,7 @@ Item {
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1324,6 +1371,7 @@ Item {
                                             invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1378,6 +1426,7 @@ Item {
                                             }
                                             setDocumentModified()
                                             calculateInvoice()
+                                            modified = false
                                         }
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
@@ -1438,6 +1487,7 @@ Item {
                                             }
                                             setDocumentModified()
                                             calculateInvoice()
+                                            modified = false
                                         }
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
