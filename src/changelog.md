@@ -4,6 +4,7 @@
 
 * [Enhancement] Let search items by description
 * [Enhancement] Let search customers by name, address, email or fiscal number
+* [Enhancement] Add customer fields to the invoice
 
 ## 2021-11-04
 

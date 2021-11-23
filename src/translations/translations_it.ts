@@ -483,6 +483,29 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
 </context>
 <context>
+    <name>DlgTranslations</name>
+    <message>
+        <source>Translations</source>
+        <translation>Traduzioni</translation>
+    </message>
+    <message>
+        <source>Id</source>
+        <translation>Id</translation>
+    </message>
+    <message>
+        <source>Other languages</source>
+        <translation>Altre lingue</translation>
+    </message>
+    <message>
+        <source>Help</source>
+        <translation>Aiuto</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation>Chiudi</translation>
+    </message>
+</context>
+<context>
     <name>EmailTextField</name>
     <message>
         <source>email</source>
@@ -790,19 +813,19 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
     <message>
         <source>Custom field 1</source>
-        <translation>Campo utente 1</translation>
+        <translation type="vanished">Campo utente 1</translation>
     </message>
     <message>
         <source>Custom field 2</source>
-        <translation>Campo utente 2</translation>
+        <translation type="vanished">Campo utente 2</translation>
     </message>
     <message>
         <source>Custom field 3</source>
-        <translation>Campo utente 3</translation>
+        <translation type="vanished">Campo utente 3</translation>
     </message>
     <message>
         <source>Custom field 4</source>
-        <translation>Campo utente 4</translation>
+        <translation type="vanished">Campo utente 4</translation>
     </message>
     <message>
         <source>Object</source>
@@ -1291,6 +1314,46 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
         <source>Invoice items visible without scrolling (0 = all items)</source>
         <translation>Articoli visibili senza scorrimento (0 = tutti)</translation>
     </message>
+    <message>
+        <source>Invoice custom fields</source>
+        <translation>Campi utente fattura</translation>
+    </message>
+    <message>
+        <source>Custom field 1</source>
+        <translation>Campo utente 1</translation>
+    </message>
+    <message>
+        <source>Custom field 2</source>
+        <translation>Campo utente 2</translation>
+    </message>
+    <message>
+        <source>Custom field 3</source>
+        <translation>Campo utente 3</translation>
+    </message>
+    <message>
+        <source>Custom field 4</source>
+        <translation>Campo utente 4</translation>
+    </message>
+    <message>
+        <source>Custom field 5</source>
+        <translation>Campo utente 5</translation>
+    </message>
+    <message>
+        <source>Custom field 6</source>
+        <translation>Campo utente 6</translation>
+    </message>
+    <message>
+        <source>Custom field 7</source>
+        <translation>Campo utente 7</translation>
+    </message>
+    <message>
+        <source>Custom field 8</source>
+        <translation>Campo utente 8</translation>
+    </message>
+    <message>
+        <source>Custom fields</source>
+        <translation>Campi utente</translation>
+    </message>
 </context>
 <context>
     <name>WdgSource</name>
@@ -1327,6 +1390,41 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     </message>
 </context>
 <context>
+    <name>languages</name>
+    <message>
+        <source>German</source>
+        <translation>Tedesco</translation>
+    </message>
+    <message>
+        <source>French</source>
+        <translation>Francese</translation>
+    </message>
+    <message>
+        <source>English</source>
+        <translation>Inglese</translation>
+    </message>
+    <message>
+        <source>Spanish</source>
+        <translation>Spagnolo</translation>
+    </message>
+    <message>
+        <source>Italian</source>
+        <translation>Italiano</translation>
+    </message>
+    <message>
+        <source>Dutch</source>
+        <translation>Olandese</translation>
+    </message>
+    <message>
+        <source>Portuguese</source>
+        <translation>Portoghese</translation>
+    </message>
+    <message>
+        <source>Chinese</source>
+        <translation>Cinese</translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
         <source>Print invoice</source>
@@ -1342,6 +1440,18 @@ Desideri eseguire l&apos;aggiornamento al piano Advanced?</translation>
     <message>
         <source>Estimate %1</source>
         <translation>Offerta %1</translation>
+    </message>
+    <message>
+        <source>Title for new invoices.</source>
+        <translation>Titolo nuove fatture.</translation>
+    </message>
+    <message>
+        <source>Title for new estimates.</source>
+        <translation>Titolo nuove offerte.</translation>
+    </message>
+    <message>
+        <source>Text</source>
+        <translation>Testo</translation>
     </message>
 </context>
 </TS>
