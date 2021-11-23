@@ -53,6 +53,19 @@ function invoiceCreateNew(tabPos, id) {
             'rounding_total': settingsNewDocs.rounding_total,
             'vat_mode': settingsNewDocs.vat_mode,
             'doc_type': isEstimate ? "17" : "10",
+            'custom_fields': [
+                {
+                    'id': 'custom_field_1',
+                    'title': 'Custom field 1',
+                    'value': ''
+                },
+                {
+                    'id': 'custom_field_2',
+                    'title': 'Custom field 2',
+                    'value': ''
+                }
+
+            ]
         },
         'billing_info' : {
             'total_vat_rates': ''
@@ -364,6 +377,18 @@ function invoiceInfoSummaryGet(invoiceObj, infoObj) {
         infoMsg.amount4 = item.unit_price.vat_code ? item.unit_price.vat_code : item.unit_price.vat_rate
         infoObj.push(infoMsg);
     }
+}
+
+function invoiceCustomFieldGet(invoiceObj, fieldId) {
+    if (invoiceObj && invoiceObj.document_info && invoiceObj.document_info.custom_fields) {
+        let custom_fields = invoiceObj.document_info.custom_fields;
+        for (let i = 0; i < custom_fields.length; ++i) {
+            if (custom_fields[i].id === fieldId) {
+                return custom_fields[i].value;
+            }
+        }
+    }
+    return "";
 }
 
 function invoicePrint(invoiceObj) {

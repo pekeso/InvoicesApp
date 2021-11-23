@@ -139,7 +139,7 @@ Item {
     Invoice {
         id: invoice
 
-        onInvoiceModified: {
+        onInvoiceChanged: {
             updateTitle()
         }
     }

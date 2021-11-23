@@ -39,8 +39,10 @@ QtObject {
     property bool docChangeRowAddAdded : false
 
     // Signals
-    signal invoiceModified()
+    signal invoiceChanged()
     signal invoiceSaved()
+
+    property int signalInvoiceChanged: 1
 
     // Methods
 
@@ -125,7 +127,8 @@ QtObject {
 
     function setIsModified(modified) {
         isModified = modified
-        invoiceModified()
+        invoiceChanged()
+        signalInvoiceChanged++
     }
 
     function setIsEstimate(estimate) {

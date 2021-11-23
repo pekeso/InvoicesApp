@@ -1,9 +1,12 @@
 # Changelog
  
-## 2021-11-04
+## 2021-11-23
 
 * [Enhancement] Let search items by description
 * [Enhancement] Let search customers by name, address, email or fiscal number
+
+## 2021-11-04
+
 * [Enhancement] Check entered dates and notify the user if the date is not valid
 * [Bug] Fix the entered item date is not saved
 

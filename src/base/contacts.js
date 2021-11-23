@@ -62,13 +62,13 @@ function contactsAddressesGet() {
     var table = contactsTableGet();
     var rowCount = table.rowCount
     for (var i = 0; i < table.rowCount; ++i) {
-        let id = table.value(i, "RowId")
+        let id = table.value(i, "RowId");
         let descr = contactsBriefDescriptionGetByRowNr(i);
         if (id || descr) {
             let search = contactsSupplementSearchText(i);
             cusomersAddresses.push(
                         {
-                            'key': table.value(i, "RowId"),
+                            'key': id,
                             'descr': descr,
                             'search': search
                         });

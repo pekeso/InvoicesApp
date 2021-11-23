@@ -42,6 +42,7 @@ QtObject {
     property int signalViewsSettingsChanged: 1
     property int signalFieldsVisibilityChanged: 1
     property int signalItemsVisibilityChanged: 1
+    property int signalTranslationsChanged: 1
 
     // Other properties
     property DevSettings devSettings: null
@@ -87,6 +88,9 @@ QtObject {
     // Fields visibility
 
     function getInvoiceFieldVisible(fieldId, viewId) {
+        if (viewId === view_id_full) {
+            return true;
+        }
         let viewAppearance = data.interface.invoice.views[viewId].appearance
         if (fieldId in viewAppearance) {
             return viewAppearance[fieldId];
