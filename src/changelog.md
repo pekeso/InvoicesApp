@@ -1,5 +1,10 @@
 # Changelog
  
+## 2021-11-29
+
+* [BUG] Fix custom fields descriptions are not updated while printing
+* [BUG] Fix empties custom fields remain in the printing
+
 ## 2021-11-23
 
 * [Enhancement] Let search items by description

@@ -23,6 +23,7 @@ import "./components"
 Item {
     id: root
 
+    required property Invoice invoice
     required property AppSettings appSettings
 
     // Style properties
@@ -1965,6 +1966,9 @@ Item {
         documentLanguage: root.documentLanguage
         appSettings: appSettings
         trId: ""
+        onTranslationChanged: {
+            invoice.setIsModified(true)
+        }
     }
 
     SimpleMessageDialog {

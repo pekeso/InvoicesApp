@@ -36,6 +36,8 @@ Window {
     property int stylePropertyWidth: 220 * Stylesheet.pixelScaleRatio
     property int styleSectionSeparatorHeight: 4 * Stylesheet.defaultMargin
 
+    signal translationChanged()
+
     Item {
         focus: true // to enable key events handling
         anchors.fill: parent
@@ -90,6 +92,7 @@ Window {
                     onEditingFinished: {
                         if (modified) {
                             setTranslatedText(programLanguage, text)
+                            translationChanged()
                         }
                         focus = false
                     }
@@ -133,6 +136,7 @@ Window {
                                 onEditingFinished: {
                                     if (modified) {
                                         setTranslatedText(modelData, text)
+                                        translationChanged()
                                     }
                                     focus = false
                                 }

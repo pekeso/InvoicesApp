@@ -462,11 +462,11 @@ function getSettingsRequiringAdvancedPlan() {
     };
 }
 
-function translationExists(settings, id) {
+function translationExists(settings, id, lang) {
     if (settings.translations) {
         for (let i = 0; i < settings.translations.length; ++i) {
             let tr = settings.translations[i];
-            if (tr.id === id) {
+            if (tr.id === id && tr.tr[lang]) {
                 return true;
             }
         }

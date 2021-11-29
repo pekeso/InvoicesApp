@@ -215,6 +215,7 @@ Item {
 
             WdgSettings {
                 id: wdgAppSettings
+                invoice: invoice
                 appSettings: appSettings
             }
 

@@ -87,6 +87,7 @@ Item {
             notificationPopUp.text = invoice.isEstimate() ? qsTr("Estimate saved") : qsTr("Invoice saved");
             notificationPopUp.visible = true
         }
+        invoiceUpdateCustomFields()
         Invoice.invoicePrint(invoice.json);
     }
 
@@ -601,7 +602,7 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_1
-                            property string customFieldId: "invoice_custom_field_1"
+                            property string customFieldId: "custom_field_1"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_1", text)
@@ -631,12 +632,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_2
-                            property string customFieldId: "invoice_custom_field_2"
+                            property string customFieldId: "custom_field_2"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_2", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_2")
-                            text: invoice.json && invoice.json.document_info.custom_field_2 ? invoice.json.document_info.custom_field_2 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -661,12 +662,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_3
-                            property string customFieldId: "invoice_custom_field_3"
+                            property string customFieldId: "custom_field_3"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_3", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_3")
-                            text: invoice.json && invoice.json.document_info.custom_field_3 ? invoice.json.document_info.custom_field_3 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -691,12 +692,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_4
-                            property string customFieldId: "invoice_custom_field_4"
+                            property string customFieldId: "custom_field_4"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_4", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_4")
-                            text: invoice.json && invoice.json.document_info.custom_field_4 ? invoice.json.document_info.custom_field_4 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -721,12 +722,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_5
-                            property string customFieldId: "invoice_custom_field_5"
+                            property string customFieldId: "custom_field_5"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_5", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_5")
-                            text: invoice.json && invoice.json.document_info.custom_field_5 ? invoice.json.document_info.custom_field_5 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -751,12 +752,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_6
-                            property string customFieldId: "invoice_custom_field_6"
+                            property string customFieldId: "custom_field_6"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_6", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_6")
-                            text: invoice.json && invoice.json.document_info.custom_field_6 ? invoice.json.document_info.custom_field_6 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -781,12 +782,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_7
-                            property string customFieldId: "invoice_custom_field_7"
+                            property string customFieldId: "custom_field_7"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_7", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_7")
-                            text: invoice.json && invoice.json.document_info.custom_field_7 ? invoice.json.document_info.custom_field_7 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -811,12 +812,12 @@ Item {
 
                         StyledTextField {
                             id: invoice_custom_field_8
-                            property string customFieldId: "invoice_custom_field_8"
+                            property string customFieldId: "custom_field_8"
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_8", text)
                             readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_8")
-                            text: invoice.json && invoice.json.document_info.custom_field_8 ? invoice.json.document_info.custom_field_8 : ""
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
                             onEditingFinished: {
                                 if (modified) {
                                     invoiceUpdateCustomFields();
@@ -2922,74 +2923,91 @@ Item {
     }
 
     function invoiceUpdateCustomFields() {
+
+        // Read form custom fields
         let language = invoice.json ? invoice.json.document_info.locale.substring(0,2) : Banana.document.locale.substring(0,2);
         let custom_fields = []
         if (invoice_custom_field_1.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_1.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_1.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_1.customFieldId, language),
                                   "value": invoice_custom_field_1.text
                               });
         }
         if (invoice_custom_field_2.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_2.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_2.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_2.customFieldId, language),
                                   "value": invoice_custom_field_2.text
                               });
         }
         if (invoice_custom_field_3.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_3.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_3.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_3.customFieldId, language),
                                   "value": invoice_custom_field_3.text
                               });
         }
         if (invoice_custom_field_4.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_4.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_4.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_4.customFieldId, language),
                                   "value": invoice_custom_field_4.text
                               });
         }
         if (invoice_custom_field_5.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_5.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_5.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_5.customFieldId, language),
                                   "value": invoice_custom_field_5.text
                               });
         }
         if (invoice_custom_field_6.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_6.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_6.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_6.customFieldId, language),
                                   "value": invoice_custom_field_6.text
                               });
         }
         if (invoice_custom_field_7.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_7.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_7.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_7.customFieldId, language),
                                   "value": invoice_custom_field_7.text
                               });
         }
         if (invoice_custom_field_8.text) {
             custom_fields.push({
                                   'id': invoice_custom_field_8.customFieldId,
-                                  "title": Settings.getTranslatedText(appSettings.data, invoice_custom_field_8.customFieldId, language),
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_8.customFieldId, language),
                                   "value": invoice_custom_field_8.text
                               });
         }
 
-        let invoices_custom_fields = invoice.json.document_info.custom_fields;
-        if (!invoices_custom_fields) {
-            invoices_custom_fields = [];
-        } else {
-            for (let i = 0; i < custom_fields.length; ++i) {
-                invoices_custom_fields = invoices_custom_fields.filter(field => field.id !== custom_fields[i].id);
+        // Keeps custom fields not present in the form
+        if (invoice.json.document_info.custom_fields) {
+            let implFields = [
+                    'invoice_custom_field_1',
+                    'invoice_custom_field_2',
+                    'invoice_custom_field_3',
+                    'invoice_custom_field_4',
+                    'custom_field_1',
+                    'custom_field_2',
+                    'custom_field_3',
+                    'custom_field_4',
+                    'custom_field_5',
+                    'custom_field_6',
+                    'custom_field_7',
+                    'custom_field_8',
+                ]
+            for (let i = 0; i < invoice.json.document_info.custom_fields; ++i) {
+                if (implFields.indexOf(invoice.json.document_info.custom_fields[i].id) === -1) {
+                    custom_fields.push(invoice.json.document_info.custom_fields[i]);
+                }
             }
         }
-        invoice.json.document_info.custom_fields = custom_fields.concat(invoices_custom_fields);
+
+        invoice.json.document_info.custom_fields = custom_fields;
     }
 
     // Convertion functions

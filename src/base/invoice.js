@@ -424,4 +424,15 @@ function invoicePrepareForPrinting(invoiceObj) {
         item.item = item.number
     }
 
+    // Update custom fields descriptions
+    if (invoiceObj.document_info.custom_fields) {
+        let settings = getSettings();
+        for (let i = 0; i < invoiceObj.document_info.custom_fields.length; ++i) {
+            let field = invoiceObj.document_info.custom_fields[i];
+            let fieldTrId = "invoice_" + field.id
+            if (translationExists(settings, fieldTrId, invoiceObj.document_info.locale)) {
+                field.title = getTranslatedText(settings, fieldTrId, invoiceObj.document_info.locale);
+            }
+        }
+    }
 }
