@@ -240,7 +240,8 @@ var JsAction = class JsAction {
             } else if (tabPos.columnName === "_CompleteRowData") {
                 // Read invoice
                 invoiceObj = invoiceObjGet(tabPos);
-                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                if (!invoiceObj)
+                    return null;
 
                 // Create docChange
                 invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));

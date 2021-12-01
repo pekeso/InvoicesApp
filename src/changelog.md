@@ -6,6 +6,7 @@
 * [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Ctrl + Shift + 9)
 * [BUG] Fix custom fields descriptions are not updated while printing
 * [BUG] Fix empties custom fields remain in the printing
+* [BUG] Fix key F9 create new invoices on empty rows
 
 ## 2021-11-23 [Beta2]
 
