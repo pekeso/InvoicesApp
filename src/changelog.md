@@ -1,32 +1,20 @@
 # Changelog
  
-## 2021-12-01
+## 2021-12-01 [Beta2]
 
 * [BUG] Fix invoice language is not updated when a contact is selected from the combo box
 * [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Ctrl + Shift + 9)
-
-## 2021-11-29
-
 * [BUG] Fix custom fields descriptions are not updated while printing
 * [BUG] Fix empties custom fields remain in the printing
 
-## 2021-11-23
+## 2021-11-23 [Beta2]
 
 * [Enhancement] Let search items by description
 * [Enhancement] Let search customers by name, address, email or fiscal number
 * [Enhancement] Add customer fields to the invoice
-
-## 2021-11-04
-
 * [Enhancement] Check entered dates and notify the user if the date is not valid
 * [Bug] Fix the entered item date is not saved
-
-## 2021-10-28
-
 * [Bug] Fix tab key on field item quantity does not save the edited text
-
-## 2021-10-20
-
 * [Bug] Fix textes and translations
 
 ## 2021-10-13 [Beta1]
