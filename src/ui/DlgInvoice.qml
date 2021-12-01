@@ -45,7 +45,17 @@ Item {
         }
     }
 
-    Keys.onReleased: {
+    Keys.onPressed: (event) => {
+        if ((event.key === Qt.Key_9 && event.modifiers) &&
+            (event.modifiers & Qt.ShiftModifier) &&
+            (event.modifiers & Qt.ControlModifier)) {
+                            // Ctrl + Shift + 9
+            pixelMetricsDialog.visible = true
+            event.accepted = true
+        }
+    }
+
+    Keys.onReleased: (event) => {
         if (event.key === Qt.Key_Help || event.key === Qt.Key_F1) {
             showHelp()
             event.accepted = true
@@ -393,4 +403,7 @@ Item {
         }
     }
 
+    DlgPixelMetrics {
+        id: pixelMetricsDialog
+    }
 }

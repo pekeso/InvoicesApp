@@ -51,5 +51,6 @@
         <file>base/languages.js</file>
         <file>base/invoices.js</file>
         <file>ui/components/StyledKeyDescrComboBox.qml</file>
+        <file>ui/DlgPixelMetrics.qml</file>
     </qresource>
 </RCC>

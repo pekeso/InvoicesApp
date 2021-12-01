@@ -1,5 +1,10 @@
 # Changelog
  
+## 2021-12-01
+
+* [BUG] Fix invoice language is not updated when a contact is selected from the combo box
+* [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Ctrl + Shift + 9)
+
 ## 2021-11-29
 
 * [BUG] Fix custom fields descriptions are not updated while printing

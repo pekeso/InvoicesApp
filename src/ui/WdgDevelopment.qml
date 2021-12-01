@@ -168,12 +168,7 @@ Item {
                     text: "Show pixel metrics"
                     Layout.minimumWidth: styleButtonMinWidth
                     onClicked: {
-                        let text = "Pixel density: " + Screen.pixelDensity + "\n"
-                        text += "Device pixel ratio: " + Screen.devicePixelRatio + "\n"
-                        text += "TextField height: " + pixelMetricsTextField.height + "\n"
-                        text += "Font xHeight: " + pixelMetricsFont.xHeight + "\n"
-                        messaggeDialog.text = text
-                        messaggeDialog.visible = true
+                        dlgPixelMetrics.visible = true
                     }
                 }
             }
@@ -195,14 +190,8 @@ Item {
         onAccepted: visible = false
     }
 
-    TextField {
-        id: pixelMetricsTextField
-        text: "AÈjJÇ"
-        visible: false
-    }
-
-    FontMetrics {
-        id: pixelMetricsFont
+    DlgPixelMetrics {
+        id: dlgPixelMetrics
     }
 
     SimpleMessageDialog {
