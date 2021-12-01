@@ -7,6 +7,7 @@
 * [BUG] Fix custom fields descriptions are not updated while printing
 * [BUG] Fix empties custom fields remain in the printing
 * [BUG] Fix key F9 create new invoices on empty rows
+* [BUG] Fix supplier info are not updated in the invoice and in the print out
 
 ## 2021-11-23 [Beta2]
 
