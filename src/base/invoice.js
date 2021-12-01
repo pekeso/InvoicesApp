@@ -127,6 +127,7 @@ function invoiceCreateFromEstimate(tabPos) {
     if (!estimateObj)
         return null;
     invoiceUpdateCreatorInfo(estimateObj);
+    invoiceUpdateSupplierInfo(estimateObj);
     return invoiceCreateFromEstimateObj(estimateObj);
 }
 
@@ -138,6 +139,7 @@ function invoiceCreateFromEstimateObj(estimateObj) {
     estimateObj.document_info.doc_type = "10";
     invoiceSetDate(estimateObj, new Date().toISOString().substring(0,10));
     invoiceUpdateCreatorInfo(estimateObj);
+    invoiceUpdateSupplierInfo(estimateObj);
     return estimateObj;
 }
 
@@ -151,6 +153,12 @@ function invoiceUpdateCreatorInfo(invoiceObj) {
             invoiceObj.creator_info.pubdate = Banana.script.getParamValue('pubdate');
             invoiceObj.creator_info.publisher = Banana.script.getParamValue('publisher');
         }
+    }
+}
+
+function invoiceUpdateSupplierInfo(invoiceObj) {
+    if (invoiceObj) {
+        invoiceObj.supplier_info = invoiceSupplierInfoGet();
     }
 }
 
@@ -175,6 +183,7 @@ function invoiceDuplicateObj(invoiceObj, tabPos) {
     invoiceObj.payment_info.due_date = dateAdd(invoiceObj.document_info.date, due_date_days);
 
     invoiceUpdateCreatorInfo(invoiceObj);
+    invoiceUpdateSupplierInfo(invoiceObj);
 
     return invoiceObj;
 }
@@ -435,4 +444,10 @@ function invoicePrepareForPrinting(invoiceObj) {
             }
         }
     }
+
+    // Update supplier info
+    invoiceUpdateSupplierInfo(invoiceObj);
+
+    // Update creator info
+    invoiceUpdateCreatorInfo(invoiceObj);
 }

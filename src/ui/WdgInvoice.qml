@@ -3138,32 +3138,6 @@ Item {
         return Banana.Converter.toInternalDateFormat(datetimeParts[0]);
     }
 
-    function getSupplierInfo() {
-        var supplier_info = {}
-
-        supplier_info.courtesy = Banana.document.info('AccountingDataBase', 'Courtesy');
-        supplier_info.business_name = Banana.document.info('AccountingDataBase', 'Company');
-        supplier_info.first_name = Banana.document.info('AccountingDataBase', 'Name');
-        supplier_info.last_name = Banana.document.info('AccountingDataBase', 'FamilyName');
-        supplier_info.address1 = Banana.document.info('AccountingDataBase', 'Address1');
-        supplier_info.address2 = Banana.document.info('AccountingDataBase', 'Address2');
-        supplier_info.address3 = "";
-        supplier_info.postal_code = Banana.document.info('AccountingDataBase', 'Zip');
-        supplier_info.city = Banana.document.info('AccountingDataBase', 'City');
-        supplier_info.country = Banana.document.info('AccountingDataBase', 'Country');
-        supplier_info.country_code = Banana.document.info('AccountingDataBase', 'CountryCode');
-        supplier_info.web = Banana.document.info('AccountingDataBase', 'Web');
-        supplier_info.email = Banana.document.info('AccountingDataBase', 'Email');
-        supplier_info.phone = Banana.document.info('AccountingDataBase', 'Phone');
-        supplier_info.mobile = Banana.document.info('AccountingDataBase', 'Mobile');
-        supplier_info.fax = Banana.document.info('AccountingDataBase', 'Fax');
-        supplier_info.fiscal_number = Banana.document.info('AccountingDataBase', 'FiscalNumber');
-        supplier_info.vat_number = Banana.document.info('AccountingDataBase', 'VatNumber');
-        supplier_info.iban_number = Banana.document.info('AccountingDataBase', 'IBAN');
-
-        return supplier_info;
-    }
-
     function showHelp() {
         Banana.Ui.showHelp("dlginvoiceedit");
     }

@@ -49,6 +49,7 @@ QtObject {
     function calculate() {
         clearError()
         Invoice.invoiceUpdateCreatorInfo(json)
+        Invoice.invoiceUpdateSupplierInfo(json)
 
         // Set item quantity to 1 if empty
         for (var i = 0; i < json.items.length; ++i) {
@@ -87,7 +88,8 @@ QtObject {
     }
 
     function save() {
-        invoiceUpdateCreatorInfo(invoice.json);
+        Invoice.invoiceUpdateCreatorInfo(invoice.json);
+        Invoice.invoiceUpdateSupplierInfo(invoice.json)
 
         var invoiceRow = invoiceRowGet(invoice.tabPos)
         var changedRowFields = invoiceChangedFieldsGet(invoice.json, invoiceRow)
