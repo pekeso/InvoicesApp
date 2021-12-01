@@ -283,7 +283,7 @@ Item {
 
                             Connections {
                                 target: invoice
-                                function onJsonChanged() {
+                                function onInvoiceChanged() {
                                     invoice_language.setCurrentKey(
                                                 invoice.json && invoice.json.document_info.locale ?
                                                     invoice.json.document_info.locale : ""
@@ -292,9 +292,7 @@ Item {
                             }
 
                             onCurrentKeySet: function(key, isExistingKey) {
-                                invoice.json.document_info.locale = key;
-                                invoiceUpdateCustomFields();
-                                setDocumentModified()
+                                setDocumentLocale(key)
                             }
 
                         }
@@ -320,7 +318,7 @@ Item {
 
                             Connections {
                                 target: invoice
-                                function onJsonChanged() {
+                                function onInvoiceChanged() {
                                     invoice_currency.setCurrentKey(
                                                 invoice.json && invoice.json.document_info.currency ?
                                                     invoice.json.document_info.currency : ""
@@ -352,7 +350,7 @@ Item {
 
                             Connections {
                                 target: invoice
-                                function onJsonChanged() {
+                                function onInvoiceChanged() {
                                     invoice_vat_mode.setCurrentKey(
                                                 invoice.json && invoice.json.document_info.vat_mode ?
                                                     invoice.json.document_info.vat_mode : ""
@@ -946,7 +944,7 @@ Item {
 
                             Connections {
                                 target: invoice
-                                function onJsonChanged() {
+                                function onInvoiceChanged() {
                                     address_customer_selector.setCurrentKey(
                                                 invoice.json && invoice.json.customer_info.number ?
                                                     invoice.json.customer_info.number : ""
@@ -959,7 +957,7 @@ Item {
                                     var contactId = key
                                     invoice.json.customer_info = Contacts.contactAddressGet(key)
                                     invoice.json.customer_info.number = contactId
-                                    invoice.json.document_info.locale = Contacts.contactLocaleGet(contactId);
+                                    setDocumentLocale(Contacts.contactLocaleGet(contactId))
                                     updateViewAddress()
                                 } else {
                                     invoice.json.customer_info.number = "";
@@ -2532,6 +2530,14 @@ Item {
             }
         }
         return Banana.document.rounding.decimals
+    }
+
+    function setDocumentLocale(lang) {
+        if (lang) {
+            invoice.json.document_info.locale = lang;
+            invoiceUpdateCustomFields();
+            setDocumentModified()
+        }
     }
 
     function setDocumentModified() {
