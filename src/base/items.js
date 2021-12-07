@@ -39,7 +39,7 @@ function itemGet(id, vatExclusive) {
                 product.description = productRow.value('Description');
                 product.mesure_unit = productRow.value('Unit');
                 product.number = productRow.value('RowId');
-                product.quantity = '1.00';
+                product.quantity = '1'; // Most users use '1' and not '1.00'
                 if (vatExclusive) {
                     product.unit_price.amount_vat_exclusive = productRow.value('UnitPrice');
                 } else  {
