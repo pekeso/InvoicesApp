@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2021-12-01
+// @pubdate = 2021-12-07
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -254,7 +254,10 @@ var JsAction = class JsAction {
             } else if (tabPos.columnName === "_AllRowDataChanged") {
                 // Read invoice
                 invoiceObj = invoiceObjGet(tabPos);
-                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                if (!invoiceObj) {
+                    let number = row ? row.value("RowId") : ""
+                    invoiceObj = invoiceCreateNew(tabPos, number);
+                }
 
                 // Create docChange
                 invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));

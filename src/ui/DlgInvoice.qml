@@ -46,7 +46,7 @@ Item {
     }
 
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_9 && event.modifiers) &&
+        if ((event.key === Qt.Key_9) &&
             (event.modifiers & Qt.ShiftModifier) &&
             (event.modifiers & Qt.ControlModifier)) {
                             // Ctrl + Shift + 9
