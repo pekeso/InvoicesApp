@@ -25,7 +25,8 @@ SimpleMessageDialog {
     text: getPixelMetrics()
 
     function getPixelMetrics() {
-        let text = "System info" + "\n"
+        let text = "Display info" + "\n"
+        text += "Version: " + Banana.script.getParamValue('pubdate') + "\n"
         text += "Pixel density: " + Screen.pixelDensity + "\n"
         text += "Device pixel ratio: " + Screen.devicePixelRatio + "\n"
         text += "TextField height: " + pixelMetricsTextField.height + "\n"

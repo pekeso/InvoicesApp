@@ -1,11 +1,11 @@
 # Changelog
  
-## 2021-12-07 [Beta2]
+## 2021-12-09 [Beta2]
 
 * [BUG] Fix F6 (Cmd-6) on Invoice Id column skip a number
 * [Enhancement] For new item rows the inserted default quantity is "1" instead of "1.00"
 * [BUG] Fix invoice language is not updated when a contact is selected from the combo box
-* [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Alt + Shift + 9)
+* [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Ctrl+Alt+9, Cmd+ALt+9 on macOS)
 * [BUG] Fix custom fields descriptions are not updated while printing
 * [BUG] Fix empties custom fields remain in the printing
 * [BUG] Fix key F9 create new invoices on empty rows
