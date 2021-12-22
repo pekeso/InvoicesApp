@@ -2,6 +2,7 @@
  
 ## 2021-12-22 [Beta2]
 
+* [BUG] Fix invoice number in the description of new invoices
 * [BUG] Fix invoice language was not correctly resumed from the contact table
 * [BUG] Fix invoice without a valid language is not printed
 

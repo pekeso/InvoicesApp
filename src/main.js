@@ -96,8 +96,7 @@ var JsAction = class JsAction {
                 } else {
                     // Update invoice
                     invoiceObj = invoiceObjGet(tabPos);
-                    if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
-                    invoiceObj.document_info.number = rowId;
+                    if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos, rowId);
                     changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
 
                 }
