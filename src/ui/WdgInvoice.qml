@@ -2931,7 +2931,8 @@ Item {
     function invoiceUpdateCustomFields() {
 
         // Read form custom fields
-        let language = invoice.json ? invoice.json.document_info.locale.substring(0,2) : Banana.document.locale.substring(0,2);
+        let language = invoice && invoice.json && invoice.json.document_info && invoice.json.document_info.locale ?
+                invoice.json.document_info.locale.substring(0,2) : Banana.document.locale.substring(0,2);
         let custom_fields = []
         if (invoice_custom_field_1.text) {
             custom_fields.push({

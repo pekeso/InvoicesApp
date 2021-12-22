@@ -120,11 +120,16 @@ function contactLocaleGet(id) {
     if (tableContacts) {
         var contactRow = tableContacts.findRowByValue("RowId", id);
         if (contactRow) {
-            return contactRow.value('Language');
+            let lang = contactRow.value('Language');
+            if (lang)
+                return lang.substring(0,2);
+            lang = contactRow.value('LanguageCode');
+            if (lang)
+                return lang.substring(0,2);
         }
     }
 
-    return '';
+    return Banana.document.locale.substring(0,2);
 }
 
 function contactsTableGet() {

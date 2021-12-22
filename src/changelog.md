@@ -1,5 +1,10 @@
 # Changelog
  
+## 2021-12-22 [Beta2]
+
+* [BUG] Fix invoice language was not correctly resumed from the contact table
+* [BUG] Fix invoice without a valid language is not printed
+
 ## 2021-12-09 [Beta2]
 
 * [BUG] Fix F6 (Cmd-6) on Invoice Id column skip a number
