@@ -1,12 +1,16 @@
 # Changelog
  
-## 2021-12-22 [Beta2]
+## 2021-12-23 [Beta]
+
+* [BUG] Fix article's unit price is resumed resumed in the invoice dialog with 4 decimals instead of 2 decimals
+
+## 2021-12-22 [Beta]
 
 * [BUG] Fix invoice number in the description of new invoices
 * [BUG] Fix invoice language was not correctly resumed from the contact table
 * [BUG] Fix invoice without a valid language is not printed
 
-## 2021-12-09 [Beta2]
+## 2021-12-09 [Beta]
 
 * [BUG] Fix F6 (Cmd-6) on Invoice Id column skip a number
 * [Enhancement] For new item rows the inserted default quantity is "1" instead of "1.00"
@@ -17,7 +21,7 @@
 * [BUG] Fix key F9 create new invoices on empty rows
 * [BUG] Fix supplier info are not updated in the invoice and in the print out
 
-## 2021-11-23 [Beta2]
+## 2021-11-23 [Beta]
 
 * [Enhancement] Let search items by description
 * [Enhancement] Let search customers by name, address, email or fiscal number
@@ -27,7 +31,9 @@
 * [Bug] Fix tab key on field item quantity does not save the edited text
 * [Bug] Fix textes and translations
 
-## 2021-10-13 [Beta1]
+## 2021-10-13 [Beta]
+
+* First beta release
 
 ### Main changes
 

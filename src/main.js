@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2021-12-22
+// @pubdate = 2021-12-23
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
