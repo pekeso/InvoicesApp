@@ -351,10 +351,9 @@ Item {
                             Connections {
                                 target: invoice
                                 function onInvoiceChanged() {
-                                    invoice_vat_mode.setCurrentKey(
-                                                invoice.json && invoice.json.document_info.vat_mode ?
-                                                    invoice.json.document_info.vat_mode : ""
-                                                )
+                                    if (invoice.json && invoice.json.document_info.vat_mode) {
+                                        invoice_vat_mode.setCurrentKey(invoice.json.document_info.vat_mode)
+                                    }
                                 }
                             }
 

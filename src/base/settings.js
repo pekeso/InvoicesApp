@@ -13,6 +13,7 @@
 // limitations under the License.
 
 const _settings_id = "invoices";
+const _settings_version = "1.0.0";
 
 function saveSettings(settings) {
     Banana.document.setScriptSettings(_settings_id, JSON.stringify(settings));
@@ -54,6 +55,23 @@ function upgradeSettings(settings) {
             settings.new_documents.vat_mode = settings.vat_mode
     }
 
+    if (Banana.compareVersion(settings.version, _settings_version) < 0) {
+        // Setting have an older previous version compated to the current versione
+
+        let defaultSettings = getDefaultSettings();
+
+        if (Banana.compareVersion(settings.version, '1.0.1') < 0) {
+            if (!settings.new_documents)
+                settings.new_documents = defaultSettings.new_documents;
+            if (!settings.interface)
+                settings.interface = defaultSettings.interface;
+            if (!settings.translations)
+                settings.translations = defaultSettings.translations;
+        }
+
+        settings.version = _settings_version;
+    }
+
     if (!settings.creator)
         settings.creator = {};
     if (Banana.script && Banana.script.getParamValue) {
@@ -68,7 +86,7 @@ function upgradeSettings(settings) {
 
 function getDefaultSettings() {
     return {
-        'version': "1.0.0",
+        'version': _settings_version,
 
         'new_documents': {
             'currency': "CHF",

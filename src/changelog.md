@@ -1,5 +1,9 @@
 # Changelog
  
+## 2022-01-11 [Beta]
+
+* [BUG] Fix changes to application's setting vat mode are not saved
+
 ## 2021-12-23 [Beta]
 
 * [BUG] Fix article's unit price is resumed resumed in the invoice dialog with 4 decimals instead of 2 decimals

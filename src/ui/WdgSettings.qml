@@ -118,25 +118,26 @@ Item {
                     }
 
                     StyledKeyDescrComboBox {
+                        id: settings_vat_mode
                         implicitWidth: stylePropertyWidth
 
                         model: vatModesModel
                         editable: false
                         textRole: "descr"
-                        currentIndex: getVatModeIndex(appSettings.data.new_documents.vat_mode)
+                        listItemTextIncludesKey: false
 
-                        onActivated: {
-                            appSettings.data.new_documents.vat_mode = vatModesModel.get(index).mode
-                            appSettings.modified = true
-                        }
-
-                        function getVatModeIndex(vatMode) {
-                            for (var i = 0; i < vatModesModel.count; i++) {
-                                if (vatModesModel.get(i).mode === vatMode) {
-                                    return i
+                        Connections {
+                            target: appSettings
+                            function onDataChanged() {
+                                if (appSettings.data.new_documents.vat_mode) {
+                                    settings_vat_mode.setCurrentKey(appSettings.data.new_documents.vat_mode)
                                 }
                             }
-                            return 0;
+                        }
+
+                        onCurrentKeySet: function(key, isExistingKey) {
+                            appSettings.data.new_documents.vat_mode = key
+                            appSettings.modified = true
                         }
                     }
                 }
