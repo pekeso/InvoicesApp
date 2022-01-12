@@ -318,6 +318,12 @@ StyledComboBox {
         return -1;
     }
 
+    function getCurrentItem() {
+        if (currentKeyIndex >= 0)
+            return model.get(currentKeyIndex);
+        return null;
+    }
+
     function getCurrentKey() {
         if (currentKeyIndex >= 0)
             return model.get(currentKeyIndex).key;

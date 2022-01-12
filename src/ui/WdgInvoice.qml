@@ -1712,7 +1712,15 @@ Item {
                                 editable: false
 
                                 onCurrentKeySet: function(key, isExistingKey) {
-                                    updateInvoiceItem()
+                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        let vatItem = invoice_item_vat.getCurrentItem()
+                                        if (vatItem) {
+                                            invoice.json.items[styleData.row].unit_price.vat_code = vatItem.key
+                                            invoice.json.items[styleData.row].unit_price.vat_rate = vatItem.rate
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                        }
+                                    }
                                 }
 
                                 Keys.onPressed: {
