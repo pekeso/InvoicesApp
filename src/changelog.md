@@ -6,6 +6,7 @@
 * [BUG] Fix first item of news invoices has the item number set as the invoice number
 * [BUG] Fix changes to invoice items vat rates are not saved
 * [BUG] Fix vat number and fiscal number are not resumed from the contact table
+* [BUG] Fix invoice (or estimate) progessive number doesn't consider archived documents
 
 ## 2021-12-23 [Beta]
 

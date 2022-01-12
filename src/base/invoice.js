@@ -22,7 +22,7 @@
 function invoiceCreateNew(tabPos, id) {
     var settingsNewDocs = getSettings().new_documents;
     var isEstimate = tabPos.tableName === "Estimates" ? true : false;
-    var docNumber = id ? id : Banana.document.table(tabPos.tableName).progressiveNumber('RowId');
+    var docNumber = id ? id : invoiceGetNextNumber(isEstimate);
 
     // Get translator for the document's language
     // Translations currently doesn't work if called from updateRow cz the translators are not loaded
@@ -141,6 +141,28 @@ function invoiceCreateFromEstimateObj(estimateObj) {
     invoiceUpdateCreatorInfo(estimateObj);
     invoiceUpdateSupplierInfo(estimateObj);
     return estimateObj;
+}
+
+function invoiceGetNextNumber(isEstimate) {
+    let table = Banana.document.table(isEstimate ? "Estimates" : "Invoices");
+    if (table) {
+        let nextNumber = 0;
+        for (let i = 0; i < table.rowCount; ++i) {
+            let rowId = Number(table.value(i, 'RowId'))
+            if (rowId > nextNumber)
+                nextNumber = rowId;
+        }
+        let archiveTable = table.list('Archive')
+        if (archiveTable) {
+            for (let i = 0; i < archiveTable.rowCount; ++i) {
+                let rowId = Number(archiveTable.value(i, 'RowId'))
+                if (rowId > nextNumber)
+                    nextNumber = rowId;
+            }
+        }
+        return (nextNumber + 1).toString();
+    }
+    return "1";
 }
 
 function invoiceUpdateCreatorInfo(invoiceObj) {
