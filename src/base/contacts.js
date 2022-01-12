@@ -217,6 +217,6 @@ function contactsSupplementSearchText(rowNr) {
             }
         }
     }
-    return null;
+    return '';
 }
 
