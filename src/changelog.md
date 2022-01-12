@@ -1,8 +1,9 @@
 # Changelog
  
-## 2022-01-11 [Beta]
+## 2022-01-12 [Beta]
 
 * [BUG] Fix changes to application's setting vat mode are not saved
+* [BUG] Fix first item of news invoices has the item number set as the invoice number
 
 ## 2021-12-23 [Beta]
 

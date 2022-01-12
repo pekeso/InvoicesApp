@@ -96,7 +96,7 @@ function invoiceCreateNew(tabPos, id) {
                 "description": "",
                 "item_type": "",
                 "mesure_unit": "",
-                "number": id,
+                "number": "",
                 "quantity": "",
                 "total": "",
                 "total_amount_vat_exclusive": "",
