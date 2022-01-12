@@ -51,6 +51,8 @@ function contactAddressGet(id) {
             customer_info.email = contactRow.value('EmailWork');
             customer_info.phone = contactRow.value('PhoneWork');
             customer_info.mobile = contactRow.value('PhoneMobile');
+            customer_info.vat_number = contactRow.value('VatNumber');
+            customer_info.fiscal_number = contactRow.value('FiscalNumber');
         }
     }
 
