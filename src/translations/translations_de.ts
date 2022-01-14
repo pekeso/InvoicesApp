@@ -677,7 +677,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="371"/>
         <source>Invoice date</source>
-        <translation>Datum rechnung</translation>
+        <translation>Rechnungsdatum</translation>
     </message>
     <message>
         <location filename="../ui/WdgInvoice.qml" line="422"/>

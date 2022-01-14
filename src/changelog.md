@@ -2,6 +2,10 @@
  
 ## 2022-01-12 [Beta]
 
+* [BUG] Fix some translations
+
+## 2022-01-12 [Beta]
+
 * [BUG] Fix changes to application's setting vat mode are not saved
 * [BUG] Fix first item of news invoices has the item number set as the invoice number
 * [BUG] Fix changes to invoice items vat rates are not saved
