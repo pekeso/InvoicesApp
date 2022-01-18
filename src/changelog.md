@@ -1,6 +1,6 @@
 # Changelog
  
-## 2022-01-12 [Beta]
+## 2022-01-17 [Beta]
 
 * [BUG] Fix some translations
 

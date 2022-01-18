@@ -1263,7 +1263,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1511"/>
         <source>Items</source>
-        <translation>Artikeln</translation>
+        <translation>Artikel</translation>
     </message>
     <message>
         <source>Invoice items visible without scolling (0 = all items)</source>
@@ -1272,7 +1272,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1526"/>
         <source>Invoice items visible without scrolling (0 = all items)</source>
-        <translation>Sichtbare Artikeln ohne Scrollen (0 = alle Artikeln)</translation>
+        <translation>Sichtbare Artikel ohne Scrollen (0 = alle Artikel)</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1596"/>
@@ -1313,7 +1313,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1756"/>
         <source>Totals</source>
-        <translation>Totalen</translation>
+        <translation>Totale</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1794"/>
@@ -1333,7 +1333,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1877"/>
         <source>Tools</source>
-        <translation>Werkzeugen</translation>
+        <translation>Werkzeuge</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="1889"/>
