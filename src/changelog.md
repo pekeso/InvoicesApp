@@ -1,5 +1,9 @@
 # Changelog
  
+## 2022-01-25 [Beta]
+
+* [BUG] Fix vat code V0 in invoice's items table is not pre-selected in the combo box
+
 ## 2022-01-17 [Beta]
 
 * [BUG] Fix some translations

@@ -1689,7 +1689,7 @@ Item {
 
                     QuickControls14.TableViewColumn {
                         id: itemVatRateColumn
-                        role: "vat_rate"
+                        role: "vat_code"
                         title: qsTr("VAT")
                         width: getColumnWidth()
                         property int defaultWidth: 80 * Stylesheet.pixelScaleRatio
@@ -1705,7 +1705,7 @@ Item {
                                 popupAlign: Qt.AlignRight
 
                                 currentIndex: getCurrentVatCodeIndex()
-                                displayText: getDisplayText(styleData.value)
+                                displayText: getDisplayText()
 
                                 model: taxRatesModel
                                 textRole: "key"
@@ -1738,14 +1738,16 @@ Item {
                                     }
                                 }
 
-                                function getDisplayText(rate) {
-                                    if (!rate)
-                                        return ""
-                                    for (let i = 0; i < taxRatesModel.count; ++i) {
-                                        if (taxRatesModel.get(i).rate === rate)
-                                            return taxRatesModel.get(i).key
+                                function getDisplayText() {
+                                    if (styleData.value) {
+                                        return styleData.value
+                                    } else if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        // If the code is not set, show the rate
+                                        if (invoice.json.items[styleData.row].unit_price.vat_rate) {
+                                            return invoice.json.items[styleData.row].unit_price.vat_rate
+                                        }
                                     }
-                                    return rate;
+                                    return "";
                                 }
 
                                 function updateInvoiceItem() {
