@@ -2416,16 +2416,27 @@ Item {
                                 var totalVatRatesLength = invoice.json.billing_info.total_vat_rates.length;
                                 for (var i = 0; i < totalVatRatesLength; i++) {
                                     var vatRatesObj = invoice.json.billing_info.total_vat_rates[i];
-                                    var vatText = qsTr("VAT %1% %4 %2 (%4 %3)");
-                                    vatText = vatText.replace("%1", vatRatesObj["vat_rate"]);
-                                    vatText = vatText.replace("%2", Banana.Converter.toLocaleNumberFormat(vatRatesObj["total_vat_amount"], invoice.json.document_info.decimals_amounts, true));
-                                    vatText = vatText.replace("%3", Banana.Converter.toLocaleNumberFormat(vatRatesObj["total_amount_vat_exclusive"], invoice.json.document_info.decimals_amounts, true));
-                                    vatText = vatText.replace(/%4/g, (invoice.json.document_info.currency ? invoice.json.document_info.currency.toUpperCase() : ""));
-                                    if (i > 0)
+                                    var vatText = getVatRateDetails(vatRatesObj);
+                                    if (vatDetails.length > 0)
                                         vatDetails += "\n";
                                     vatDetails += vatText;
                                 }
+                                if (invoice.json.billing_info.total_vat_rate_zero &&
+                                        invoice.json.billing_info.total_vat_rate_zero.total_amount_vat_exclusive) {
+                                    if (vatDetails.length > 0)
+                                        vatDetails += "\n";
+                                    vatDetails += getVatRateDetails(invoice.json.billing_info.total_vat_rate_zero);
+                                }
                                 return vatDetails;
+                            }
+
+                            function getVatRateDetails(vatRateObj) {
+                                var vatText = qsTr("VAT %1% %4 %2 (%4 %3)");
+                                vatText = vatText.replace("%1", vatRateObj["vat_rate"] ? vatRateObj["vat_rate"] : "0");
+                                vatText = vatText.replace("%2", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_vat_amount"], invoice.json.document_info.decimals_amounts, true));
+                                vatText = vatText.replace("%3", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_amount_vat_exclusive"], invoice.json.document_info.decimals_amounts, true));
+                                vatText = vatText.replace(/%4/g, (invoice.json.document_info.currency ? invoice.json.document_info.currency.toUpperCase() : ""));
+                                return vatText;
                             }
 
                         }

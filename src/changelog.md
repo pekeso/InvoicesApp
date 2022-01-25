@@ -3,6 +3,7 @@
 ## 2022-01-25 [Beta]
 
 * [BUG] Fix vat code V0 in invoice's items table is not pre-selected in the combo box
+* [ENHANCEMENT] Show in invoice dialog the total for the vat rate 0%
 
 ## 2022-01-17 [Beta]
 
