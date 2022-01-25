@@ -42,11 +42,13 @@ function getLanguageName(lang) {
  * the application, the document, contacts and invoices.
  */
 function getUsedLanguagesCodes() {
-    let languages = [];
+    // Default languages, always showed
+    let languages = ['de', 'en', 'fr', 'it'];
 
     // Application language
     let lang = Banana.application.locale.substring(0, 2);
-    languages.push(lang);
+    if (languages.indexOf(lang) === -1)
+        languages.push(lang);
 
     // Document language
     lang = Banana.document.locale.substring(0, 2);
