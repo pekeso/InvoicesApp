@@ -147,7 +147,6 @@ QtObject {
 
     function setInvoice(invoice) {
         json = invoice
-        setIsModified(true)
     }
 
     function setPosition(pos) {
