@@ -389,6 +389,14 @@
         <source>Help</source>
         <translation>Aiuto</translation>
     </message>
+    <message>
+        <source>An updated version of Estimate and Invoices extension has been installed. See %1.</source>
+        <translation>È stata installata una versione aggiornata dell&apos;estensione Stima e fatture. Scopri %1.</translation>
+    </message>
+    <message>
+        <source>what&apos;s new</source>
+        <translation>le novità</translation>
+    </message>
 </context>
 <context>
     <name>DlgLincense</name>

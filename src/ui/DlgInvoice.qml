@@ -46,19 +46,28 @@ Item {
     }
 
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_9) &&
-            (event.modifiers & Qt.AltModifier) &&
-            (event.modifiers & Qt.ControlModifier)) {
+                        if ((event.key === Qt.Key_9) &&
+                            (event.modifiers & Qt.AltModifier) &&
+                            (event.modifiers & Qt.ControlModifier)) {
                             // Ctrl + Shift + 9
-            pixelMetricsDialog.visible = true
-            event.accepted = true
-        }
-    }
+                            pixelMetricsDialog.visible = true
+                            event.accepted = true
+                        }
+                    }
 
     Keys.onReleased: (event) => {
-        if (event.key === Qt.Key_Help || event.key === Qt.Key_F1) {
-            showHelp()
-            event.accepted = true
+                         if (event.key === Qt.Key_Help || event.key === Qt.Key_F1) {
+                             showHelp()
+                             event.accepted = true
+                         }
+                     }
+
+    Component.onCompleted: {
+        appSettings.loadSettings()
+        if (!appSettings.data.creator ||
+                (appSettings.data.creator.pubdate < Banana.script.getParamValue('pubdate'))) {
+            // Show notification message "updated extention was installed"
+            appSettings.setNotificationVisible("show_updated_version_installed", true)
         }
     }
 
@@ -120,7 +129,11 @@ Item {
     }
 
     function showHelp() {
-        Banana.Ui.showHelp("dlginvoiceedit");
+        if (tabBar.currentIndex == 1) {
+            Banana.Ui.showHelp("dlginvoiceedit::settings");
+        } else {
+            Banana.Ui.showHelp("dlginvoiceedit");
+        }
     }
 
     function updateTitle() {
@@ -159,218 +172,272 @@ Item {
     // Questo margine permette sotto windows di separare la tab bar dal windows frame,
     // che essendo bianco si fondono e non creano alcuna separazione
     // Per semplicità applichiamo questo spazio a tutti i sistemi operativi
-    property int tabBarTopMargin: 12
+    property int tabBarTopMargin: 12 * Stylesheet.pixelScaleRatio
 
     Rectangle {
+        // Window background
         anchors.fill: parent
         color: Stylesheet.baseColor
     }
 
     Rectangle {
+        // Tab bar background
         anchors.left: parent.left
+        anchors.right: parent.right
         anchors.top: parent.top
-        width: parent.width
-        height: tabBar.height + tabBarTopMargin
+        anchors.bottom: tabBar.bottom
         color: Stylesheet.buttonColor
     }
 
-    ColumnLayout {
-        anchors.fill: parent
+    Rectangle {
+        // Notification bar background
+        visible: messageBar.visible
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: tabBar.top
+        color: Stylesheet.notificationBarColor
+    }
+
+    RowLayout {
+        id: messageBar
+
+        visible: appSettings.isNotificationVisible("show_updated_version_installed")
+
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: Stylesheet.defaultMargin
+
+        StyledLabel {
+             text: "&#x24D8; " +
+                   qsTr("An updated version of Estimate and Invoices extension has been installed. See %1.")
+                   .arg("<a href=\"dlginvoiceedit::changelog\">%1</a>")
+                   .arg(qsTr("what's new"))
+             textFormat: Text.RichText
+             onLinkActivated: (link) => Banana.Ui.showHelp(link);
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        StyledLabel {
+             text: "Close"
+             MouseArea {
+                 anchors.fill: parent
+                 onClicked: {
+                     appSettings.setNotificationVisible("show_updated_version_installed", false)
+                 }
+             }
+        }
+    }
+
+    StyledTabBar {
+        id: tabBar
+
+        anchors.left: parent.left
+        anchors.top: messageBar.visible ? messageBar.bottom : parent.top
+        anchors.leftMargin: -1 // Don't draw left button border
         anchors.topMargin: tabBarTopMargin
 
-        StyledTabBar {
-            id: tabBar
-            Layout.leftMargin: -1 // Don't draw left button border
+        StyledTabButton {
+            text: qsTr("Invoice")
+        }
 
-            StyledTabButton {
-                text: qsTr("Invoice")
+        StyledTabButton {
+            text: qsTr("Settings")
+        }
+
+        StyledTabButton {
+            id: tabButtonSource
+            text: qsTr("Source")
+            visible: appSettings.isInternalVersion()
+            onVisibleChanged: tabBar.removeItem(tabButtonSource)
+        }
+
+        StyledTabButton {
+            id: tabDevelopment
+            text: qsTr("Development")
+            visible: appSettings.isInternalVersion()
+            onVisibleChanged: tabBar.removeItem(tabDevelopment)
+        }
+
+        StyledTabButton {
+            id: tabChangeLog
+            text: qsTr("Changelog")
+            visible: appSettings.isInternalVersion()
+            onVisibleChanged: tabBar.removeItem(tabChangeLog)
+        }
+    }
+
+    StackLayout {
+        id: tabStackLayout
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: tabBar.bottom
+        anchors.bottom: buttonBar.top
+
+        currentIndex: tabBar.currentIndex
+
+        WdgInvoice {
+            id: wdgInvoice
+            invoice: invoice
+            appSettings: appSettings
+        }
+
+        WdgSettings {
+            id: wdgAppSettings
+            invoice: invoice
+            appSettings: appSettings
+        }
+
+        WdgSource {
+            id: wdgSource
+            format: "json"
+
+            onRevertRequested: {
+                wdgSource.clearError()
+                text = JSON.stringify(invoice.json, null, "    ")
+                isModified = false
             }
 
-            StyledTabButton {
-                text: qsTr("Settings")
-            }
+            onVisibleChanged: {
+                if (visible) {
+                    if (!error) {
+                        text = JSON.stringify(invoice.json, null, "    ")
+                    }
 
-            StyledTabButton {
-                id: tabButtonSource
-                text: qsTr("Source")
-                visible: appSettings.isInternalVersion()
-                onVisibleChanged: tabBar.removeItem(tabButtonSource)
-            }
+                } else {
+                    if (isModified) {
+                        try {
+                            let invoiceObj = JSON.parse(text)
+                            invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
+                            invoice.json = invoiceObj
+                            invoice.setIsModified(true)
+                            wdgInvoice.updateView()
 
-            StyledTabButton {
-                id: tabDevelopment
-                text: qsTr("Development")
-                visible: appSettings.isInternalVersion()
-                onVisibleChanged: tabBar.removeItem(tabDevelopment)
-            }
+                        } catch (err) {
+                            setError(err.message, err.lineNumber)
+                            jsonErrorMessageDialog.text = err.toString()
+                            jsonErrorMessageDialog.visible = true
+                            error = true
 
-            StyledTabButton {
-                id: tabChangeLog
-                text: qsTr("Changelog")
-                visible: appSettings.isInternalVersion()
-                onVisibleChanged: tabBar.removeItem(tabChangeLog)
+                        }
+                    }
+                }
             }
         }
 
-        StackLayout {
-            id: tabStackLayout
-
-            currentIndex: tabBar.currentIndex
-
-            WdgInvoice {
-                id: wdgInvoice
-                invoice: invoice
-                appSettings: appSettings
+        WdgDevelopment {
+            id: wdgMessages
+            appSettings: appSettings
+            devSettings: devSettings
+            invoice: invoice
+            onGoToHome: {
+                tabBar.currentIndex = 0
             }
-
-            WdgSettings {
-                id: wdgAppSettings
-                invoice: invoice
-                appSettings: appSettings
-            }
-
-            WdgSource {
-                id: wdgSource
-                format: "json"
-
-                onRevertRequested: {
-                    wdgSource.clearError()
-                    text = JSON.stringify(invoice.json, null, "    ")
-                    isModified = false
-                }
-
-                onVisibleChanged: {
-                    if (visible) {
-                        if (!error) {
-                            text = JSON.stringify(invoice.json, null, "    ")
-                        }
-
-                    } else {
-                        if (isModified) {
-                            try {
-                                let invoiceObj = JSON.parse(text)
-                                invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
-                                invoice.json = invoiceObj
-                                invoice.setIsModified(true)
-                                wdgInvoice.updateView()
-
-                            } catch (err) {
-                                setError(err.message, err.lineNumber)
-                                jsonErrorMessageDialog.text = err.toString()
-                                jsonErrorMessageDialog.visible = true
-                                error = true
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            WdgDevelopment {
-                id: wdgMessages
-                appSettings: appSettings
-                devSettings: devSettings
-                invoice: invoice
-                onGoToHome: {
-                    tabBar.currentIndex = 0
-                }
-            }
-
-            WdgChangelog {
-                text: getText()
-                textFormat: TextEdit.MarkdownText
-                function getText() {
-                    let file = Banana.IO.getLocalFile("file:script/changelog.md")
-                    return file.read()
-                }
-            }
-
         }
 
-        RowLayout {  // Invoice's button's bar
-            Layout.fillWidth: true
-            Layout.margins: Stylesheet.defaultMargin
-
-            //                StyledButton {
-            //                    text: qsTr("Export...")
-            //                    onClicked: {
-            //                        if (activeFocusItem)
-            //                            activeFocusItem.focus = false
-
-            //                        exportInvoice()
-            //                    }
-            //                }
-
-            StyledButton {
-                text: qsTr("Help")
-                onClicked: showHelp()
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-
-            StyledButton {
-                text: qsTr("Print")
-                onClicked: {
-                    // Acquire focus, if a text field is in edit mode it will commit changes
-                    focus = true
-                    wdgInvoice.printInvoice()
-                }
-            }
-
-            StyledButton {
-                text: qsTr("Create invoice")
-                visible: invoice.isEstimate() && !invoice.isNewDocument
-                onClicked: {
-                    // Acquire focus, if a text field is in edit mode it will commit changes
-                    focus = true
-                    wdgInvoice.createInvoiceFromEstimate()
-                }
-            }
-
-            StyledButton {
-                id: copyButton
-                text: qsTr("Copy")
-                visible: !invoice.isNewDocument
-                onClicked: {
-                    // Acquire focus, if a text field is in edit mode it will commit changes
-                    focus = true
-                    wdgInvoice.duplicateInvoice()
-                }
-            }
-
-            StyledButton {
-                text: invoice.isReadOnly ? qsTr("Edit") : qsTr("Save")
-                enabled: invoice.isModified
-                onClicked: {
-                    // Acquire focus, if a text field is in edit mode it will commit changes
-                    focus = true
-                    if (invoice.isReadOnly) {
-                        invoice.isReadOnly = false
-                    } else {
-                        invoice.save()
-                        result = 1
-                        closeDialog()
-                    }
-                }
-            }
-
-            StyledButton {
-                text: invoice.isModified ? qsTr("Cancel") : qsTr("Close")
-                onClicked: {
-                    // Acquire focus, if a text field is in edit mode it will commit changes
-                    focus = true
-                    if (invoice.isModified) {
-                        cancelConfirmDialog.open()
-                    } else {
-                        closeDialog()
-                    }
-                }
+        WdgChangelog {
+            text: getText()
+            textFormat: TextEdit.MarkdownText
+            function getText() {
+                let file = Banana.IO.getLocalFile("file:script/changelog.md")
+                return file.read()
             }
         }
 
     }
+
+    RowLayout {  // Invoice's button's bar
+        id: buttonBar
+
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: Stylesheet.defaultMargin
+
+        //                StyledButton {
+        //                    text: qsTr("Export...")
+        //                    onClicked: {
+        //                        if (activeFocusItem)
+        //                            activeFocusItem.focus = false
+
+        //                        exportInvoice()
+        //                    }
+        //                }
+
+        StyledButton {
+            text: qsTr("Help")
+            onClicked: showHelp()
+        }
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        StyledButton {
+            text: qsTr("Print")
+            onClicked: {
+                // Acquire focus, if a text field is in edit mode it will commit changes
+                focus = true
+                wdgInvoice.printInvoice()
+            }
+        }
+
+        StyledButton {
+            text: qsTr("Create invoice")
+            visible: invoice.isEstimate() && !invoice.isNewDocument
+            onClicked: {
+                // Acquire focus, if a text field is in edit mode it will commit changes
+                focus = true
+                wdgInvoice.createInvoiceFromEstimate()
+            }
+        }
+
+        StyledButton {
+            id: copyButton
+            text: qsTr("Copy")
+            visible: !invoice.isNewDocument
+            onClicked: {
+                // Acquire focus, if a text field is in edit mode it will commit changes
+                focus = true
+                wdgInvoice.duplicateInvoice()
+            }
+        }
+
+        StyledButton {
+            text: invoice.isReadOnly ? qsTr("Edit") : qsTr("Save")
+            enabled: invoice.isModified
+            onClicked: {
+                // Acquire focus, if a text field is in edit mode it will commit changes
+                focus = true
+                if (invoice.isReadOnly) {
+                    invoice.isReadOnly = false
+                } else {
+                    invoice.save()
+                    result = 1
+                    closeDialog()
+                }
+            }
+        }
+
+        StyledButton {
+            text: invoice.isModified ? qsTr("Cancel") : qsTr("Close")
+            onClicked: {
+                // Acquire focus, if a text field is in edit mode it will commit changes
+                focus = true
+                if (invoice.isModified) {
+                    cancelConfirmDialog.open()
+                } else {
+                    closeDialog()
+                }
+            }
+        }
+    }
+
 
     SimpleMessageDialog { // Error message dialog
         id: errorMessageDialog

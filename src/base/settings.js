@@ -16,6 +16,7 @@ const _settings_id = "invoices";
 const _settings_version = "1.0.0";
 
 function saveSettings(settings) {
+    settings.creator = getCreatorInfo();
     Banana.document.setScriptSettings(_settings_id, JSON.stringify(settings));
 }
 
@@ -26,6 +27,7 @@ function getSettings() {
         settings = upgradeSettings(settings);
     } catch (err) {
         settings = getDefaultSettings();
+        Banana.console.log("error reading settings: invalid json")
     }
     return settings;
 }
@@ -72,16 +74,22 @@ function upgradeSettings(settings) {
         settings.version = _settings_version;
     }
 
-    if (!settings.creator)
-        settings.creator = {};
-    if (Banana.script && Banana.script.getParamValue) {
-        settings.creator.name = Banana.script.getParamValue('id');
-        settings.creator.version = "";
-        settings.creator.pubdate = Banana.script.getParamValue('pubdate');
-        settings.creator.publisher = Banana.script.getParamValue('publisher');
+    if (!settings.creator) {
+        // We don't have to update the creator and pubdate when we read the settings,
+        // we will update them when saved, so we could determine the version that created them
+        // settings.creator = getCreatorInfo()
     }
 
     return settings
+}
+
+function getCreatorInfo() {
+    return {
+        'name': Banana.script.getParamValue('id'),
+        'version': "",
+        'pubdate': Banana.script.getParamValue('pubdate'),
+        'publisher': Banana.script.getParamValue('publisher'),
+    }
 }
 
 function getDefaultSettings() {
@@ -323,6 +331,9 @@ function getDefaultSettings() {
                         }
                     }
                 }
+            },
+            'notifications': {
+                'show_updated_version_installed': false
             }
         },
 
@@ -459,7 +470,9 @@ function getDefaultSettings() {
                     'zh': '附加信息 8'
                 }
             }
-        ]
+        ],
+
+        'creator' : getCreatorInfo()
     };
 }
 

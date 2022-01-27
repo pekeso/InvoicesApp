@@ -26,6 +26,7 @@ Item {
     property double minimumContrast: 4.5
     property color baseColor: systemPalette.base
     property color buttonColor: systemPalette.button
+    property color notificationBarColor: isDarkModus() ? "#0C0C0C" : "#DEEEF7" // HEX: #DEEEF7 RGB: 222, 238, 247
     property color textColor: systemPalette.text
     property color linkColor: "blue"
     property color selectionColor: systemPalette.highlight
@@ -42,6 +43,12 @@ Item {
 
     onBaseColorChanged: {
         updatePalette()
+    }
+
+    function isDarkModus() {
+        // To find if we are in dark modus, check the contrast ratio between
+        // a black text and the window base color
+        return getContrastRatio(Qt.rgba(1, 1, 1, 0), systemPalette.base) > 8
     }
 
     function updatePalette() {

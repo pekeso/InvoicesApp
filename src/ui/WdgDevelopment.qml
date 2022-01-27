@@ -123,6 +123,22 @@ Item {
                 }
             }
 
+            RowLayout {
+                StyledLabel {
+                    text: "Test with updated version notification visible"
+                    Layout.fillWidth: true
+                }
+
+                StyledSwitch {
+                    id: showUpdatedVersionInstalledSwitch
+                    enabled: Banana.application.isInternal
+                    checked: appSettings.isNotificationVisible("show_updated_version_installed")
+                    onToggled: {
+                        appSettings.setNotificationVisible("show_updated_version_installed", checked)
+                    }
+                }
+            }
+
             Rectangle {
                 Layout.fillWidth: true
                 Layout.topMargin: styleSectionSeparatorHeight / 2

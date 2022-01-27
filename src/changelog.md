@@ -1,5 +1,10 @@
 # Changelog
  
+## 2022-01-27 [RC]
+
+* [RELEASECANDIDATE] This is a release candidate
+* [ENHANCEMENT] Show a notification to the user when an updated extension is installed
+
 ## 2022-01-25 [Beta]
 
 * [BUG] Fix vat code V0 in invoice's items table is not pre-selected in the combo box

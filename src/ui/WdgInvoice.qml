@@ -92,7 +92,6 @@ Item {
     }
 
     Component.onCompleted: {
-        appSettings.loadSettings()
         loadLanguages()
         loadCurrencies()
         loadCustomerAddresses()

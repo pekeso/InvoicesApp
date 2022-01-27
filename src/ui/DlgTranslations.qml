@@ -192,7 +192,7 @@ Window {
     }
 
     function showHelp() {
-        Banana.Ui.showHelp("dlgcustomfield");
+        Banana.Ui.showHelp("dlginvoiceedit::translations");
     }
 
 }
