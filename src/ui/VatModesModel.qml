@@ -15,7 +15,7 @@
 import QtQuick 2.15
 
 ListModel {
-    ListElement {mode: "vat_none"; descr: qsTr("No VAT")}
-    ListElement {mode: "vat_excl"; descr: qsTr("VAT exclusive")}
-    ListElement {mode: "vat_incl"; descr: qsTr("VAT inclusive")}
+    ListElement {key: "vat_none"; descr: qsTr("No VAT")}
+    ListElement {key: "vat_excl"; descr: qsTr("VAT exclusive")}
+    ListElement {key: "vat_incl"; descr: qsTr("VAT inclusive")}
 }

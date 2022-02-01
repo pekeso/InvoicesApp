@@ -44,3 +44,43 @@ function dateDiff(fromDate, toDate) {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays + 1;
 }
+
+/**
+ * The method textMatchSearch return true if the test match the search string.
+ * The search pattern can contains one or more terms. The text math the search string
+ * if for every search term there at least one word that start with the serach term.
+ *
+ * Examples:
+ * - text:    "Lorenzo"
+ *   seach:   "lo pa"
+ *   returns:  true
+ * - text:    "Lorenzo Paolini"
+ *   seach:   "lo pa"
+ *   returns:  true
+ * - text:    "Lorenzo Paolini"
+ *   seach:   "lo ma"
+ *   returns:  false
+ * - text:    "Lorenzo Paolini"
+ *   seach:   "lo ma gi"
+ *   returns:  false
+ * - text:    "Lorenzo Paolini"
+ *   seach:   "zo"
+ *   returns:  false
+ */
+function textMatchSearch(text, search) {
+    let descrWords = text.toLowerCase().split(" ")
+    let searchWords = search.toLowerCase().split(" ")
+    let matchsCount = 0;
+    for (let si = 0; si < searchWords.length; ++si) {
+        for (let di = 0; di < descrWords.length; ++di) {
+            if (descrWords[di].startsWith(searchWords[si])) {
+                matchsCount++
+                break
+            }
+        }
+    }
+    if (matchsCount === searchWords.length) {
+        return true
+    }
+    return false
+}

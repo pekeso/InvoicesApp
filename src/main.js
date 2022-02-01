@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2021-10-28
+// @pubdate = 2022-02-01
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -22,6 +22,7 @@
 
 // @includejs = base/utils.js
 // @includejs = base/invoice.js
+// @includejs = base/invoices.js
 // @includejs = base/contacts.js
 // @includejs = base/documentchange.js
 
@@ -95,8 +96,7 @@ var JsAction = class JsAction {
                 } else {
                     // Update invoice
                     invoiceObj = invoiceObjGet(tabPos);
-                    if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
-                    invoiceObj.document_info.number = rowId;
+                    if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos, rowId);
                     changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
 
                 }
@@ -236,10 +236,25 @@ var JsAction = class JsAction {
                 docChange.setDocumentForCurrentRow();
                 return docChange.getDocChange();
 
+            } else if (tabPos.columnName === "InvoiceDatePayment") {
+                // Update invoice
+                invoiceObj = invoiceObjGet(tabPos);
+                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                invoiceObj.payment_info.payment_date = row.value("InvoiceDatePayment");
+
+                // Create docChange
+                changedRowFields = {};
+                changedRowFields["InvoiceData"] = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj);
+                docChange = new DocumentChange();
+                docChange.addOperationRowModify(tabPos.tableName, tabPos.rowNr, changedRowFields);
+                docChange.setDocumentForCurrentRow();
+                return docChange.getDocChange();
+
             } else if (tabPos.columnName === "_CompleteRowData") {
                 // Read invoice
                 invoiceObj = invoiceObjGet(tabPos);
-                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                if (!invoiceObj)
+                    return null;
 
                 // Create docChange
                 invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));
@@ -252,7 +267,10 @@ var JsAction = class JsAction {
             } else if (tabPos.columnName === "_AllRowDataChanged") {
                 // Read invoice
                 invoiceObj = invoiceObjGet(tabPos);
-                if (!invoiceObj) invoiceObj = invoiceCreateNew(tabPos);
+                if (!invoiceObj) {
+                    let number = row ? row.value("RowId") : ""
+                    invoiceObj = invoiceCreateNew(tabPos, number);
+                }
 
                 // Create docChange
                 invoiceObj = JSON.parse(Banana.document.calculateInvoice(JSON.stringify(invoiceObj)));

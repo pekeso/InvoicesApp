@@ -1,14 +1,78 @@
 # Changelog
  
-## 2021-10-28
+## 2022-02-01
 
+* [FIX] Add payment date to invoice json to determine if an invoice is paid
+
+## 2022-01-31 [BETA]
+
+* [RELEASE BETA] Released as Beta
+* [FIX] Fix language, currency and contacts combobox were empty and did not show the current values
+* [FIX] Fix text in contacts combobox was deleted while entering text
+* [FIX] Changes in custom fields text was not immediately take over
+
+
+## 2022-01-27
+
+* [FIX] Fix some italian translations
+
+## 2022-01-27 [BETA]
+
+* [RELEASE BETA] Released as Beta
+* [ENHANCEMENT] Show a notification to the user when an updated extension is installed
+
+## 2022-01-25 [Beta]
+
+* [BUG] Fix vat code V0 in invoice's items table is not pre-selected in the combo box
+* [ENHANCEMENT] Show in invoice dialog the total for the vat rate 0%
+* [ENHANCEMENT] Show in translations dialog at least the mains languages german, italian, french and english
+
+## 2022-01-17 [Beta]
+
+* [BUG] Fix some translations
+
+## 2022-01-12 [Beta]
+
+* [BUG] Fix changes to application's setting vat mode are not saved
+* [BUG] Fix first item of news invoices has the item number set as the invoice number
+* [BUG] Fix changes to invoice items vat rates are not saved
+* [BUG] Fix vat number and fiscal number are not resumed from the contact table
+* [BUG] Fix invoice (or estimate) progessive number doesn't consider archived documents
+
+## 2021-12-23 [Beta]
+
+* [BUG] Fix article's unit price is resumed resumed in the invoice dialog with 4 decimals instead of 2 decimals
+
+## 2021-12-22 [Beta]
+
+* [BUG] Fix invoice number in the description of new invoices
+* [BUG] Fix invoice language was not correctly resumed from the contact table
+* [BUG] Fix invoice without a valid language is not printed
+
+## 2021-12-09 [Beta]
+
+* [BUG] Fix F6 (Cmd-6) on Invoice Id column skip a number
+* [Enhancement] For new item rows the inserted default quantity is "1" instead of "1.00"
+* [BUG] Fix invoice language is not updated when a contact is selected from the combo box
+* [Enhancement] Add a dialog to show the display properties and the applied pixel ratio (Ctrl+Alt+9, Cmd+ALt+9 on macOS)
+* [BUG] Fix custom fields descriptions are not updated while printing
+* [BUG] Fix empties custom fields remain in the printing
+* [BUG] Fix key F9 create new invoices on empty rows
+* [BUG] Fix supplier info are not updated in the invoice and in the print out
+
+## 2021-11-23 [Beta]
+
+* [Enhancement] Let search items by description
+* [Enhancement] Let search customers by name, address, email or fiscal number
+* [Enhancement] Add customer fields to the invoice
+* [Enhancement] Check entered dates and notify the user if the date is not valid
+* [Bug] Fix the entered item date is not saved
 * [Bug] Fix tab key on field item quantity does not save the edited text
-
-## 2021-10-20
-
 * [Bug] Fix textes and translations
 
-## 2021-10-13 [Beta1]
+## 2021-10-13 [Beta]
+
+* First beta release
 
 ### Main changes
 

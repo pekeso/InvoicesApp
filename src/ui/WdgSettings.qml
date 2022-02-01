@@ -16,20 +16,29 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
+import "../base/settings.js" as Settings
+
 import "./components"
 
 Item {
     id: root
 
+    required property Invoice invoice
     required property AppSettings appSettings
 
     // Style properties
-    property int stylePropertyWidth: 200 * Stylesheet.pixelScaleRatio
+    property int stylePropertyWidth: 220 * Stylesheet.pixelScaleRatio
     property int styleButtonMinWidth: 140 * Stylesheet.pixelScaleRatio
     property int styleSectionSeparatorHeight: 4 * Stylesheet.defaultMargin
     property int styleColumnSpacing: 2.5 * Stylesheet.defaultMargin
     property int styleRowSpacing: 0.5 * Stylesheet.defaultMargin
 
+    property string programLanguage: Banana.application.locale.substring(0, 2)
+    property string documentLanguage: invoice.json && invoice.json.document_info.locale && invoice.signalInvoiceChanged?
+                                         invoice.json.document_info.locale.substring(0, 2) :
+                                         programLanguage
+
+    property var viewsSettingsModel: [appSettings.view_id_base, appSettings.view_id_short, appSettings.view_id_long]
 
     VatModesModel {
         id: vatModesModel
@@ -64,13 +73,17 @@ Item {
                     }
 
                     StyledTextField {
+                        property string trId: "new_invoice_title"
                         implicitWidth: stylePropertyWidth
-                        text: appSettings.data.new_documents.invoice_title
-                        onEditingFinished: {
-                            if (modified) {
-                                appSettings.data.new_documents.invoice_title = text
-                                appSettings.modified = true
-                                focus = false
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
                             }
                         }
                     }
@@ -82,13 +95,17 @@ Item {
                         Layout.fillWidth: true
                     }
                     StyledTextField {
+                        property string trId: "new_estimate_title"
                         implicitWidth: stylePropertyWidth
-                        text: appSettings.data.new_documents.estimate_title
-                        onEditingFinished: {
-                            if (modified) {
-                                appSettings.data.new_documents.estimate_title = text
-                                appSettings.modified = true
-                                focus = false
+                        text: appSettings.signalTranslationsChanged  ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
                             }
                         }
                     }
@@ -100,26 +117,27 @@ Item {
                         Layout.fillWidth: true
                     }
 
-                    StyledComboBox {
+                    StyledKeyDescrComboBox {
+                        id: settings_vat_mode
                         implicitWidth: stylePropertyWidth
 
                         model: vatModesModel
                         editable: false
                         textRole: "descr"
-                        currentIndex: getVatModeIndex(appSettings.data.new_documents.vat_mode)
+                        listItemTextIncludesKey: false
 
-                        onActivated: {
-                            appSettings.data.new_documents.vat_mode = vatModesModel.get(index).mode
-                            appSettings.modified = true
-                        }
-
-                        function getVatModeIndex(vatMode) {
-                            for (var i = 0; i < vatModesModel.count; i++) {
-                                if (vatModesModel.get(i).mode === vatMode) {
-                                    return i
+                        Connections {
+                            target: appSettings
+                            function onDataChanged() {
+                                if (appSettings.data.new_documents.vat_mode) {
+                                    settings_vat_mode.setCurrentKey(appSettings.data.new_documents.vat_mode)
                                 }
                             }
-                            return 0;
+                        }
+
+                        onCurrentKeySet: function(key, isExistingKey) {
+                            appSettings.data.new_documents.vat_mode = key
+                            appSettings.modified = true
                         }
                     }
                 }
@@ -227,6 +245,7 @@ Item {
                         }
                     }
                 }
+
             }
 
             Rectangle {
@@ -237,6 +256,216 @@ Item {
                 color: Stylesheet.buttonColor
             }
 
+            ColumnLayout {
+                Layout.fillWidth: true
+
+                StyledLabel{
+                    text: qsTr("Invoice custom fields")
+                    font.bold: true
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 1"), "show_invoice_custom_field_1")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_1"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 2"), "show_invoice_custom_field_2")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_2"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 3"), "show_invoice_custom_field_3")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_3"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 4"), "show_invoice_custom_field_4")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_4"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 5"), "show_invoice_custom_field_5")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_5"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 6"), "show_invoice_custom_field_6")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_6"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 7"), "show_invoice_custom_field_7")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_7"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: addLicenseRequirementText(qsTr("Custom field 8"), "show_invoice_custom_field_8")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextField {
+                        property string trId: "invoice_custom_field_8"
+                        Layout.alignment: Qt.AlignRight
+                        implicitWidth: stylePropertyWidth
+                        text: appSettings.signalTranslationsChanged ?
+                                  Settings.getTranslatedText(appSettings.data, trId, programLanguage) :
+                                  trId
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                dlgTranslations.trId = parent.trId
+                                dlgTranslations.appSettings = appSettings
+                                dlgTranslations.visible = true
+                            }
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                Layout.fillWidth: true
+                Layout.topMargin: styleSectionSeparatorHeight / 2
+                Layout.bottomMargin: styleSectionSeparatorHeight / 2
+                height: 1
+                color: Stylesheet.buttonColor
+            }
             ColumnLayout {
                 width: scrollView.availableWidth
                 height: scrollView.availableHeight
@@ -258,19 +487,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -325,7 +547,6 @@ Item {
                     StyledSwitch {
                         property string viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
-                        implicitWidth: styleSectionSeparatorHeight
                         checked: appSettings.isViewVisible(viewId)
                         onToggled: appSettings.setViewVisible(viewId, checked)
                     }
@@ -333,7 +554,6 @@ Item {
                     StyledSwitch {
                         property string viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
-                        implicitWidth: styleSectionSeparatorHeight
                         checked: appSettings.isViewVisible(viewId)
                         onToggled: appSettings.setViewVisible(viewId, checked)
                     }
@@ -341,7 +561,6 @@ Item {
                     StyledSwitch {
                         property string viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
-                        implicitWidth: styleSectionSeparatorHeight
                         checked: appSettings.isViewVisible(viewId)
                         onToggled: appSettings.setViewVisible(viewId, checked)
                     }
@@ -383,19 +602,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -435,19 +647,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -579,19 +784,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -855,25 +1053,223 @@ Item {
                     Layout.topMargin: styleSectionSeparatorHeight
 
                     StyledLabel{
+                        text: qsTr("Custom fields")
+                        font.bold: true
+                        Layout.bottomMargin: styleRowSpacing
+                    }
+
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 1")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_1"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_1"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_1"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 2")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_2"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_2"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_2"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 3")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_3"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_3"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_3"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 4")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_4"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_4"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_4"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 5")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_5"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_5"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_5"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 6")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_6"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_6"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_6"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 7")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_7"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_7"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_7"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Custom field 8")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_8"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_8"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_custom_field_8"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+                }
+
+                GridLayout {
+                    columns: 4
+                    columnSpacing: styleColumnSpacing
+                    rowSpacing: styleRowSpacing
+                    Layout.topMargin: styleSectionSeparatorHeight
+
+                    StyledLabel{
                         text: qsTr("Address")
                         font.bold: true
                         Layout.fillWidth: true
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -1120,19 +1516,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -1145,7 +1534,7 @@ Item {
                         property string viewId: appSettings.view_id_base
                         validator: IntValidator{bottom: 0; top: 1024;}
                         horizontalAlignment: Qt.AlignRight
-                        Layout.minimumWidth: styleSectionSeparatorHeight
+                        implicitWidth: width_reference.implicitWidth
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.data.interface.invoice.views[viewId].appearance[flagId] ?
                                   appSettings.data.interface.invoice.views[viewId].appearance[flagId].toString() : "0"
@@ -1164,7 +1553,7 @@ Item {
                         property string viewId: appSettings.view_id_short
                         validator: IntValidator{bottom: 0; top: 1024;}
                         horizontalAlignment: Qt.AlignRight
-                        Layout.minimumWidth: styleSectionSeparatorHeight
+                        implicitWidth: width_reference.implicitWidth
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.data.interface.invoice.views[viewId].appearance[flagId] ?
                                   appSettings.data.interface.invoice.views[viewId].appearance[flagId].toString() : "0"
@@ -1183,7 +1572,7 @@ Item {
                         property string viewId: appSettings.view_id_long
                         validator: IntValidator{bottom: 0; top: 1024;}
                         horizontalAlignment: Qt.AlignRight
-                        Layout.minimumWidth: styleSectionSeparatorHeight
+                        implicitWidth: width_reference.implicitWidth
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.data.interface.invoice.views[viewId].appearance[flagId] ?
                                   appSettings.data.interface.invoice.views[viewId].appearance[flagId].toString() : "0"
@@ -1212,19 +1601,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -1379,19 +1761,12 @@ Item {
                         Layout.bottomMargin: styleRowSpacing
                     }
 
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_base)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_short)
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: appSettings.getViewTitle(appSettings.view_id_long)
-                        Layout.alignment: Qt.AlignHCenter
+                    Repeater {
+                        model: viewsSettingsModel
+                        StyledLabel{
+                            text: appSettings.getViewTitle(modelData)
+                            Layout.alignment: Qt.AlignHCenter
+                        }
                     }
 
                     StyledLabel{
@@ -1559,6 +1934,11 @@ Item {
         }
     }
 
+    StyledSwitch {
+        id: width_reference
+        visible: false
+    }
+
     DlgEditSource {
         id: dlgEditSettings
         height: root.height - 50 * Stylesheet.pixelScaleRatio
@@ -1575,6 +1955,20 @@ Item {
                 errorMessageDialog.text = err.message()
                 errorMessageDialog.visible = true
             }
+        }
+    }
+
+    DlgTranslations {
+        id: dlgTranslations
+        height: Math.min(500, root.height - 50 * Stylesheet.pixelScaleRatio)
+        width: Math.min(800, root.width - 200 * Stylesheet.pixelScaleRatio)
+        modality: Qt.WindowModal
+        programLanguage: root.programLanguage
+        documentLanguage: root.documentLanguage
+        appSettings: appSettings
+        trId: ""
+        onTranslationChanged: {
+            invoice.setIsModified(true)
         }
     }
 

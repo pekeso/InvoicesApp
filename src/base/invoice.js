@@ -22,7 +22,7 @@
 function invoiceCreateNew(tabPos, id) {
     var settingsNewDocs = getSettings().new_documents;
     var isEstimate = tabPos.tableName === "Estimates" ? true : false;
-    var docNumber = id ? id : Banana.document.table(tabPos.tableName).progressiveNumber('RowId');
+    var docNumber = id ? id : invoiceGetNextNumber(isEstimate);
 
     // Get translator for the document's language
     // Translations currently doesn't work if called from updateRow cz the translators are not loaded
@@ -53,6 +53,19 @@ function invoiceCreateNew(tabPos, id) {
             'rounding_total': settingsNewDocs.rounding_total,
             'vat_mode': settingsNewDocs.vat_mode,
             'doc_type': isEstimate ? "17" : "10",
+            'custom_fields': [
+                {
+                    'id': 'custom_field_1',
+                    'title': 'Custom field 1',
+                    'value': ''
+                },
+                {
+                    'id': 'custom_field_2',
+                    'title': 'Custom field 2',
+                    'value': ''
+                }
+
+            ]
         },
         'billing_info' : {
             'total_vat_rates': ''
@@ -83,7 +96,7 @@ function invoiceCreateNew(tabPos, id) {
                 "description": "",
                 "item_type": "",
                 "mesure_unit": "",
-                "number": id,
+                "number": "",
                 "quantity": "",
                 "total": "",
                 "total_amount_vat_exclusive": "",
@@ -114,6 +127,7 @@ function invoiceCreateFromEstimate(tabPos) {
     if (!estimateObj)
         return null;
     invoiceUpdateCreatorInfo(estimateObj);
+    invoiceUpdateSupplierInfo(estimateObj);
     return invoiceCreateFromEstimateObj(estimateObj);
 }
 
@@ -125,7 +139,30 @@ function invoiceCreateFromEstimateObj(estimateObj) {
     estimateObj.document_info.doc_type = "10";
     invoiceSetDate(estimateObj, new Date().toISOString().substring(0,10));
     invoiceUpdateCreatorInfo(estimateObj);
+    invoiceUpdateSupplierInfo(estimateObj);
     return estimateObj;
+}
+
+function invoiceGetNextNumber(isEstimate) {
+    let table = Banana.document.table(isEstimate ? "Estimates" : "Invoices");
+    if (table) {
+        let nextNumber = 0;
+        for (let i = 0; i < table.rowCount; ++i) {
+            let rowId = Number(table.value(i, 'RowId'))
+            if (rowId > nextNumber)
+                nextNumber = rowId;
+        }
+        let archiveTable = table.list('Archive')
+        if (archiveTable) {
+            for (let i = 0; i < archiveTable.rowCount; ++i) {
+                let rowId = Number(archiveTable.value(i, 'RowId'))
+                if (rowId > nextNumber)
+                    nextNumber = rowId;
+            }
+        }
+        return (nextNumber + 1).toString();
+    }
+    return "1";
 }
 
 function invoiceUpdateCreatorInfo(invoiceObj) {
@@ -138,6 +175,12 @@ function invoiceUpdateCreatorInfo(invoiceObj) {
             invoiceObj.creator_info.pubdate = Banana.script.getParamValue('pubdate');
             invoiceObj.creator_info.publisher = Banana.script.getParamValue('publisher');
         }
+    }
+}
+
+function invoiceUpdateSupplierInfo(invoiceObj) {
+    if (invoiceObj) {
+        invoiceObj.supplier_info = invoiceSupplierInfoGet();
     }
 }
 
@@ -162,6 +205,7 @@ function invoiceDuplicateObj(invoiceObj, tabPos) {
     invoiceObj.payment_info.due_date = dateAdd(invoiceObj.document_info.date, due_date_days);
 
     invoiceUpdateCreatorInfo(invoiceObj);
+    invoiceUpdateSupplierInfo(invoiceObj);
 
     return invoiceObj;
 }
@@ -366,6 +410,18 @@ function invoiceInfoSummaryGet(invoiceObj, infoObj) {
     }
 }
 
+function invoiceCustomFieldGet(invoiceObj, fieldId) {
+    if (invoiceObj && invoiceObj.document_info && invoiceObj.document_info.custom_fields) {
+        let custom_fields = invoiceObj.document_info.custom_fields;
+        for (let i = 0; i < custom_fields.length; ++i) {
+            if (custom_fields[i].id === fieldId) {
+                return custom_fields[i].value;
+            }
+        }
+    }
+    return "";
+}
+
 function invoicePrint(invoiceObj) {
     if (invoiceObj) {
         let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
@@ -399,4 +455,21 @@ function invoicePrepareForPrinting(invoiceObj) {
         item.item = item.number
     }
 
+    // Update custom fields descriptions
+    if (invoiceObj.document_info.custom_fields) {
+        let settings = getSettings();
+        for (let i = 0; i < invoiceObj.document_info.custom_fields.length; ++i) {
+            let field = invoiceObj.document_info.custom_fields[i];
+            let fieldTrId = "invoice_" + field.id
+            if (translationExists(settings, fieldTrId, invoiceObj.document_info.locale)) {
+                field.title = getTranslatedText(settings, fieldTrId, invoiceObj.document_info.locale);
+            }
+        }
+    }
+
+    // Update supplier info
+    invoiceUpdateSupplierInfo(invoiceObj);
+
+    // Update creator info
+    invoiceUpdateCreatorInfo(invoiceObj);
 }

@@ -39,14 +39,17 @@ QtObject {
     property bool docChangeRowAddAdded : false
 
     // Signals
-    signal invoiceModified()
+    signal invoiceChanged()
     signal invoiceSaved()
+
+    property int signalInvoiceChanged: 1
 
     // Methods
 
     function calculate() {
         clearError()
         Invoice.invoiceUpdateCreatorInfo(json)
+        Invoice.invoiceUpdateSupplierInfo(json)
 
         // Set item quantity to 1 if empty
         for (var i = 0; i < json.items.length; ++i) {
@@ -85,7 +88,8 @@ QtObject {
     }
 
     function save() {
-        invoiceUpdateCreatorInfo(invoice.json);
+        Invoice.invoiceUpdateCreatorInfo(invoice.json);
+        Invoice.invoiceUpdateSupplierInfo(invoice.json)
 
         var invoiceRow = invoiceRowGet(invoice.tabPos)
         var changedRowFields = invoiceChangedFieldsGet(invoice.json, invoiceRow)
@@ -125,7 +129,8 @@ QtObject {
 
     function setIsModified(modified) {
         isModified = modified
-        invoiceModified()
+        invoiceChanged()
+        signalInvoiceChanged++
     }
 
     function setIsEstimate(estimate) {
@@ -142,6 +147,8 @@ QtObject {
 
     function setInvoice(invoice) {
         json = invoice
+        invoiceChanged()
+        signalInvoiceChanged++
     }
 
     function setPosition(pos) {

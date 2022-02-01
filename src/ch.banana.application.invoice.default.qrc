@@ -47,5 +47,10 @@
         <file>ui/components/StyledLabel.qml</file>
         <file>ui/components/StyledSwitch.qml</file>
         <file>ui/components/StyledSettingsSwitch.qml</file>
+        <file>ui/DlgTranslations.qml</file>
+        <file>base/languages.js</file>
+        <file>base/invoices.js</file>
+        <file>ui/components/StyledKeyDescrComboBox.qml</file>
+        <file>ui/DlgPixelMetrics.qml</file>
     </qresource>
 </RCC>

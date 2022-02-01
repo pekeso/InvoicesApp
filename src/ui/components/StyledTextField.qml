@@ -42,6 +42,8 @@ TextField {
 
    property bool _copyAllOnCopy: false
 
+   Keys.onReturnPressed: focus = false
+
    Keys.onEscapePressed:{
        undo()
        modified = false

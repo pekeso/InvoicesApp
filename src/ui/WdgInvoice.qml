@@ -24,6 +24,7 @@ import "../base/utils.js" as Utils
 import "../base/invoice.js" as Invoice
 import "../base/contacts.js" as Contacts
 import "../base/items.js" as Items
+import "../base/settings.js" as Settings
 import "../base/vatcodes.js" as VatCodes
 
 Item {
@@ -39,7 +40,7 @@ Item {
     required property Invoice invoice
 
     property string currentView: appSettings.data.interface.invoice.current_view ?
-                                   appSettings.data.interface.invoice.current_view :
+                                     appSettings.data.interface.invoice.current_view :
                                      appSettings.view_id_base
 
     onCurrentViewChanged: {
@@ -80,17 +81,25 @@ Item {
     }
 
     function printInvoice() {
+        if (appSettings.modified) {
+            // We have to save the settings before printing
+            // if not the changes to customs fields are not taken over
+            appSettings.saveSettings()
+        }
+
         if (invoice.isModified) {
             invoice.save()
 
             notificationPopUp.text = invoice.isEstimate() ? qsTr("Estimate saved") : qsTr("Invoice saved");
             notificationPopUp.visible = true
         }
+
+        invoiceUpdateCustomFields()
+
         Invoice.invoicePrint(invoice.json);
     }
 
     Component.onCompleted: {
-        appSettings.loadSettings()
         loadLanguages()
         loadCurrencies()
         loadCustomerAddresses()
@@ -120,12 +129,10 @@ Item {
 
     ListModel {
         id: languagesModel
-        ListElement {code: ''; descr: ''}
     }
 
     ListModel {
         id: currenciesModel
-        ListElement {currency: ''; descr: ''}
     }
 
     ColumnLayout {
@@ -138,7 +145,7 @@ Item {
 
             StyledLabel{
                 text: qsTr("Views:")
-             }
+            }
 
             StyledLabel{
                 property string viewId: appSettings.view_id_base
@@ -193,8 +200,7 @@ Item {
 
             StyledLabel{
                 property string viewId: appSettings.view_id_full
-                text: appSettings.getViewTitle(viewId)
-                visible: appSettings.isViewVisible(viewId)
+                text: appSettings.getDefaultViewTitle(viewId)
                 font.bold: currentView === viewId
                 font.underline: currentView != viewId
                 color: currentView === viewId ? Stylesheet.textColor : Stylesheet.linkColor
@@ -259,7 +265,6 @@ Item {
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.document_info.number ? invoice.json.document_info.number : "{invoice_no}"
-                            Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.document_info.number = text
@@ -274,34 +279,27 @@ Item {
                             visible: invoice_language.visible
                         }
 
-                        StyledComboBox {
+                        StyledKeyDescrComboBox {
                             id: invoice_language
-                            visible: isInvoiceFieldVisible("show_invoice_language")
-                            editable: false
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Keys.onReturnPressed: focus = false
+                            visible: isInvoiceFieldVisible("show_invoice_language")
+
+                            editable: true
                             model: languagesModel
                             textRole: "descr"
-                            currentIndex: getLanguageIndex()
-                            displayText: getLanguageIndex() === -1
-                                         ? (invoice.json && invoice.json.document_info && invoice.json.document_info.locale ? invoice.json.document_info.locale : '')
-                                         : currentText
 
-                            onActivated: {
-                                invoice.json.document_info.locale = model.get(index).code
-                                displayText = model.get(index).descr
-                                setDocumentModified()
+                            Connections {
+                                target: invoice
+                                function onInvoiceChanged() {
+                                    invoice_language.setCurrentKey(
+                                                invoice.json && invoice.json.document_info.locale ?
+                                                    invoice.json.document_info.locale : ""
+                                                )
+                                }
                             }
 
-                            function getLanguageIndex() {
-                                if (invoice.json && invoice.json.document_info.locale) {
-                                    for (var i = 0; i < model.count; i++) {
-                                        if (model.get(i).code === invoice.json.document_info.locale) {
-                                            return i
-                                        }
-                                    }
-                                }
-                                return -1;
+                            onCurrentKeySet: function(key, isExistingKey) {
+                                setDocumentLocale(key)
                             }
 
                         }
@@ -312,35 +310,32 @@ Item {
                             visible: invoice_currency.visible
                         }
 
-                        StyledComboBox {
+                        StyledKeyDescrComboBox {
                             id: invoice_currency
                             visible: isInvoiceFieldVisible("show_invoice_currency")
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             editable: true
                             enabled: !invoice.isReadOnly
-                            Keys.onReturnPressed: focus = false
                             model: currenciesModel
-                            textRole: "currency"
-                            currentIndex: getCurrencyIndex()
-                            displayText: getCurrencyIndex() === -1
-                                         ? (invoice.json && invoice.json.document_info && invoice.json.document_info.currency ? invoice.json.document_info.currency : '')
-                                         : currentText
+                            textRole: "key"
 
-                            onActivated: {
-                                invoice.json.document_info.currency = model.get(index).currency
-                                displayText = model.get(index).currency
-                                setDocumentModified()
+                            cleanKey: function(text) {
+                                return text.trim().toUpperCase()
                             }
 
-                            function getCurrencyIndex() {
-                                if (invoice.json && invoice.json.document_info.currency) {
-                                    for (var i = 0; i < model.count; i++) {
-                                        if (model.get(i).code === invoice.json.document_info.currency) {
-                                            return i
-                                        }
-                                    }
+                            Connections {
+                                target: invoice
+                                function onInvoiceChanged() {
+                                    invoice_currency.setCurrentKey(
+                                                invoice.json && invoice.json.document_info.currency ?
+                                                    invoice.json.document_info.currency : ""
+                                                )
                                 }
-                                return -1;
+                            }
+
+                            onCurrentKeySet: function(key, isExistingKey) {
+                                invoice.json.document_info.currency = key
+                                setDocumentModified()
                             }
                         }
 
@@ -350,30 +345,31 @@ Item {
                             visible: invoice_vat_mode.visible
                         }
 
-                        StyledComboBox {
+                        StyledKeyDescrComboBox {
                             id: invoice_vat_mode
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: isInvoiceFieldVisible("show_invoice_vat_mode")
 
-                            model: vatModesModel
                             editable: false
+                            model: vatModesModel
                             textRole: "descr"
-                            currentIndex: invoice.json ? getVatModeIndex(invoice.json.document_info.vat_mode) : 0
+                            listItemTextIncludesKey: false
 
-                            onActivated: {
-                                invoice.json.document_info.vat_mode = vatModesModel.get(index).mode
+                            Connections {
+                                target: invoice
+                                function onInvoiceChanged() {
+                                    if (invoice.json && invoice.json.document_info.vat_mode) {
+                                        invoice_vat_mode.setCurrentKey(invoice.json.document_info.vat_mode)
+                                    }
+                                }
+                            }
+
+                            onCurrentKeySet: function(key, isExistingKey) {
+                                invoice.json.document_info.vat_mode = key
                                 setDocumentModified()
                                 calculateInvoice()
                             }
 
-                            function getVatModeIndex(vatMode) {
-                                for (var i = 0; i < vatModesModel.count; i++) {
-                                    if (vatModesModel.get(i).mode === vatMode) {
-                                        return i
-                                    }
-                                }
-                                return 0;
-                            }
                         }
 
                         StyledLabel{
@@ -386,23 +382,44 @@ Item {
                             id: invoice_date
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_date", text)
+                            property int updateText: 1 // Binding for updating the text
 
                             readOnly: invoice.isReadOnly
                             text: {
-                                if (invoice.json && invoice.json.document_info.date) {
+                                if (updateText && invoice.json && invoice.json.document_info.date) {
                                     var dateString = invoice.json.document_info.date.split('T')[0]
                                     Banana.Converter.toLocaleDateFormat(dateString)
                                 } else {
                                     ""
                                 }
                             }
-                            Keys.onReturnPressed: focus = false
+
                             onEditingFinished: {
                                 if (modified) {
-                                    invoiceSetDate(invoice.json, Banana.Converter.toInternalDateFormat(text));
+                                    // Check date
+                                    let date = Banana.Converter.toInternalDateFormat(text)
+                                    let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                    if (!localDate || localDate.length === 0) {
+                                        errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                        errorMessageDialog.visible = true
+                                        updateText++
+                                        return
+                                    }
+                                    // Set date
+                                    invoiceSetDate(invoice.json, date);
                                     invoice_due_date.update()
                                     setDocumentModified()
                                 }
+                            }
+                            function getDate() {
+                                if (updateText > 0) {
+                                    if (invoice.json && invoice.json.document_info.date) {
+                                        var dateString = invoice.json.document_info.date.split('T')[0]
+                                        return Banana.Converter.toLocaleDateFormat(dateString)
+                                    }
+                                }
+                                return ""
+
                             }
                         }
 
@@ -421,7 +438,17 @@ Item {
 
                             onEditingFinished: {
                                 if (modified) {
-                                    invoice.json.payment_info.due_date = Banana.Converter.toInternalDateFormat(text)
+                                    // Check date
+                                    let date = Banana.Converter.toInternalDateFormat(text)
+                                    let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                    if (!localDate || localDate.length === 0) {
+                                        errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                        errorMessageDialog.visible = true
+                                        update()
+                                        return
+                                    }
+                                    // Set date
+                                    invoice.json.payment_info.due_date = date
                                     setDocumentModified()
                                 }
                             }
@@ -452,7 +479,6 @@ Item {
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.document_info.order_number ? invoice.json.document_info.order_number : ""
-                            Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.document_info.order_number = text
@@ -473,7 +499,6 @@ Item {
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.document_info.order_date ? toLocaleDateTimeFormat(invoice.json.document_info.order_date) : ""
-                            Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.document_info.order_date = toInternalDateTimeFormat(text)
@@ -548,98 +573,9 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_customer_reference", text)
                             readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.document_info.customer_reference ? invoice.json.document_info.customer_reference : ""
-                            Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.document_info.customer_reference = text
-                                    setDocumentModified()
-                                }
-                            }
-                        }
-
-                        StyledLabel{
-                            text: qsTr("Custom field 1")
-                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
-                            visible: invoice_custom_field_1.visible
-                        }
-
-                        StyledTextField {
-                            id: invoice_custom_field_1
-                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Layout.fillWidth: true
-                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_1", text)
-                            readOnly: invoice.isReadOnly
-                            text: invoice.json && invoice.json.document_info.custom_field_1 ? invoice.json.document_info.custom_field_1 : ""
-                            Keys.onReturnPressed: focus = false
-                            onEditingFinished: {
-                                if (modified) {
-                                    invoice.json.document_info.custom_field_1 = text
-                                    setDocumentModified()
-                                }
-                            }
-                        }
-
-                        StyledLabel{
-                            text: qsTr("Custom field 2")
-                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
-                            visible: invoice_custom_field_2.visible
-                        }
-
-                        StyledTextField {
-                            id: invoice_custom_field_2
-                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Layout.fillWidth: true
-                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_2", text)
-                            readOnly: invoice.isReadOnly
-                            text: invoice.json && invoice.json.document_info.custom_field_2 ? invoice.json.document_info.custom_field_2 : ""
-                            Keys.onReturnPressed: focus = false
-                            onEditingFinished: {
-                                if (modified) {
-                                    invoice.json.document_info.custom_field_2 = text
-                                    setDocumentModified()
-                                }
-                            }
-                        }
-
-                        StyledLabel{
-                            text: qsTr("Custom field 3")
-                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
-                            visible: invoice_custom_field_3.visible
-                        }
-
-                        StyledTextField {
-                            id: invoice_custom_field_3
-                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Layout.fillWidth: true
-                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_3", text)
-                            readOnly: invoice.isReadOnly
-                            text: invoice.json && invoice.json.document_info.custom_field_3 ? invoice.json.document_info.custom_field_3 : ""
-                            Keys.onReturnPressed: focus = false
-                            onEditingFinished: {
-                                if (modified) {
-                                    invoice.json.document_info.custom_field_3 = text
-                                    setDocumentModified()
-                                }
-                            }
-                        }
-
-                        StyledLabel{
-                            text: qsTr("Custom field 4")
-                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
-                            visible: invoice_custom_field_4.visible
-                        }
-
-                        StyledTextField {
-                            id: invoice_custom_field_4
-                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Layout.fillWidth: true
-                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_4", text)
-                            readOnly: invoice.isReadOnly
-                            text: invoice.json && invoice.json.document_info.custom_field_4 ? invoice.json.document_info.custom_field_4 : ""
-                            Keys.onReturnPressed: focus = false
-                            onEditingFinished: {
-                                if (modified) {
-                                    invoice.json.document_info.custom_field_4 = text
                                     setDocumentModified()
                                 }
                             }
@@ -652,7 +588,265 @@ Item {
                                      invoice_custom_field_1.visible |
                                      invoice_custom_field_2.visible |
                                      invoice_custom_field_3.visible |
-                                     invoice_custom_field_4.visible
+                                     invoice_custom_field_4.visible |
+                                     invoice_custom_field_5.visible |
+                                     invoice_custom_field_6.visible |
+                                     invoice_custom_field_7.visible |
+                                     invoice_custom_field_8.visible
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_1"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_1.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_1
+                            property string customFieldId: "custom_field_1"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_1", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_1")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_1")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_2"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_2.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_2
+                            property string customFieldId: "custom_field_2"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_2", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_2")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_1")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_3"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_3.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_3
+                            property string customFieldId: "custom_field_3"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_3", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_3")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_3")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_4"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_4.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_4
+                            property string customFieldId: "custom_field_4"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_4", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_4")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_4")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_5"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_5.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_5
+                            property string customFieldId: "custom_field_5"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_5", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_5")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_5")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_6"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_6.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_6
+                            property string customFieldId: "custom_field_6"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_6", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_6")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_6")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_7"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_7.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_7
+                            property string customFieldId: "custom_field_7"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_7", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_7")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_7")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            property string trId: "invoice_custom_field_8"
+                            text: appSettings.signalTranslationsChanged ?
+                                      Settings.getTranslatedText(appSettings.data, trId, Banana.application.locale.substring(0, 2)) :
+                                      trId
+                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
+                            visible: invoice_custom_field_8.visible
+                        }
+
+                        StyledTextField {
+                            id: invoice_custom_field_8
+                            property string customFieldId: "custom_field_8"
+                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            Layout.fillWidth: true
+                            visible: focus || isInvoiceFieldVisible("show_invoice_custom_field_8", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_8")
+                            text: invoiceCustomFieldGet(invoice.json, customFieldId)
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoiceUpdateCustomFields();
+                                    setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_custom_field_8")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
+                        }
+
+                        StyledLabel{
+                            Layout.columnSpan: 2
+                            height: Stylesheet.defaultMargin
+                            visible: invoice_customer_reference.visible |
+                                     invoice_custom_field_1.visible |
+                                     invoice_custom_field_2.visible |
+                                     invoice_custom_field_3.visible |
+                                     invoice_custom_field_4.visible |
+                                     invoice_custom_field_5.visible |
+                                     invoice_custom_field_6.visible |
+                                     invoice_custom_field_7.visible |
+                                     invoice_custom_field_8.visible
                         }
 
                         StyledLabel{
@@ -668,7 +862,6 @@ Item {
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_title", text)
                             text: invoice.json && invoice.json.document_info.description ? invoice.json.document_info.description : ""
-                            Keys.onReturnPressed: focus = false
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.document_info.description = text
@@ -742,33 +935,41 @@ Item {
                             visible: address_customer_selector.visible
                         }
 
-                        StyledComboBox {
+                        StyledKeyDescrComboBox {
                             id: address_customer_selector
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_customer_selector")
+                            popupMinWidth: 400  * Stylesheet.pixelScaleRatio
+                            popupAlign: Qt.AlignRight
 
                             editable: true
-                            textRole: "descr"
-                            currentIndex: -1
-
                             model: customerAddressesModel
+                            textRole: "descr"
+                            filterEnabled: true
+                            displayTextIncludesKey: true
 
-                            onActivated: {
-                                if (index < 0) {
-                                    invoice.json.customer_info.number = "";
-
-                                } else {
-                                    var contactId = customerAddressesModel.get(index).id
-                                    invoice.json.customer_info = Contacts.contactAddressGet(contactId)
-                                    invoice.json.customer_info.number = contactId
-                                    invoice.json.document_info.locale = Contacts.contactLocaleGet(contactId);
-                                    updateViewAddress()
-
+                            Connections {
+                                target: invoice
+                                function onInvoiceChanged() {
+                                    address_customer_selector.setCurrentKey(
+                                                invoice.json && invoice.json.customer_info.number ?
+                                                    invoice.json.customer_info.number : ""
+                                                )
                                 }
-
-                                setDocumentModified()
                             }
 
+                            onCurrentKeySet: function(key, isExistingKey) {
+                                if (isExistingKey) {
+                                    var contactId = key
+                                    invoice.json.customer_info = Contacts.contactAddressGet(key)
+                                    invoice.json.customer_info.number = contactId
+                                    setDocumentLocale(Contacts.contactLocaleGet(contactId))
+                                    updateViewAddress()
+                                } else {
+                                    invoice.json.customer_info.number = "";
+                                }
+                                setDocumentModified()
+                            }
                         }
 
                         StyledLabel{
@@ -794,7 +995,6 @@ Item {
                             id: address_courtesy
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_courtesy", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
-                            Keys.onReturnPressed: focus = false
                             placeholderText: qsTr("Prefix")
                             onEditingFinished: {
                                 if (modified) {
@@ -809,7 +1009,6 @@ Item {
                                 id: address_first_name
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_first_and_last_name", text)
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("First name")
                                 onEditingFinished: {
                                     if (modified) {
@@ -823,7 +1022,6 @@ Item {
                                 id: address_last_name
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_first_and_last_name", text)
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("Last name")
                                 onEditingFinished: {
                                     if (modified) {
@@ -838,7 +1036,6 @@ Item {
                             id: address_address1
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_street", text)
-                            Keys.onReturnPressed: focus = false
                             placeholderText: qsTr("Street")
                             onEditingFinished: {
                                 if (modified) {
@@ -852,7 +1049,6 @@ Item {
                             id: address_address2
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_extra", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
-                            Keys.onReturnPressed: focus = false
                             placeholderText: qsTr("Extra")
                             onEditingFinished: {
                                 if (modified) {
@@ -866,7 +1062,6 @@ Item {
                             id: address_address3
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_postbox", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
-                            Keys.onReturnPressed: focus = false
                             placeholderText: qsTr("P.O.Box")
                             onEditingFinished: {
                                 if (modified) {
@@ -880,7 +1075,6 @@ Item {
                             StyledTextField {
                                 id: address_country_code
                                 Layout.preferredWidth: 50 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("CC")
                                 ToolTip.visible: hovered
                                 ToolTip.text: qsTr("Country code")
@@ -900,7 +1094,6 @@ Item {
                             StyledTextField {
                                 id: address_postal_code
                                 Layout.preferredWidth: 60 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("Zip")
                                 ToolTip.visible: hovered
                                 ToolTip.text: qsTr("Postal code")
@@ -916,7 +1109,6 @@ Item {
                             StyledTextField {
                                 id: address_city
                                 Layout.preferredWidth: 188 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("City")
                                 onEditingFinished: {
                                     if (modified) {
@@ -936,7 +1128,6 @@ Item {
                                 id: address_email
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_phone_and_email")
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("Email")
 
                                 onEditingFinished: {
@@ -951,7 +1142,6 @@ Item {
                                 id: address_phone
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_phone_and_email")
                                 Layout.preferredWidth: 157 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("Phone")
 
                                 onEditingFinished: {
@@ -971,7 +1161,6 @@ Item {
                                 id: address_vat_number
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_and_fiscal_number", text)
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("VAT number")
 
                                 onEditingFinished: {
@@ -986,7 +1175,6 @@ Item {
                                 id: address_fiscal_number
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_and_fiscal_number", text)
                                 Layout.preferredWidth: 157 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
                                 placeholderText: qsTr("Fiscal number")
 
                                 onEditingFinished: {
@@ -1059,60 +1247,46 @@ Item {
                         property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
                         visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_number", role)
                         delegate: Item {
-                            StyledComboBox {
+                            StyledKeyDescrComboBox {
                                 id: invoiceItemComboBox
-                                model: itemsModel
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.topMargin: 3 * Stylesheet.pixelScaleRatio
                                 anchors.rightMargin: 3 * Stylesheet.pixelScaleRatio
                                 anchors.leftMargin: 3 * Stylesheet.pixelScaleRatio
-                                editable: true
-                                textRole: "id"
                                 popupMinWidth: 300 * Stylesheet.pixelScaleRatio
-                                displayText: styleData.value
 
-                                delegate: ItemDelegate {
-                                    text: id + "   " + descr
-                                    width: parent.width
+                                editable: true
+                                model: itemsModel
+                                textRole: "key"
+                                filterEnabled: true
+
+                                currentIndex: -1
+                                displayText: {
+                                    undoKey = styleData.value
+                                    styleData.value
                                 }
 
-                                onEditingFinished: {
-                                    if (modified) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                onCurrentKeySet: function(key, isExistingKey) {
+                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        if (isExistingKey) {
+                                            var itemId = key
                                             var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                                            var item = Items.itemGet(currentText, vatExclusive)
+                                            var item = Items.itemGet(itemId, vatExclusive)
                                             if (item) {
                                                 var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
                                                 if (vatCode)
                                                     item.unit_price.vat_rate = vatCode.rate
-                                                invoice.json.items[styleData.row] = item
-                                                invoiceItemsModel.setProperty(styleData.row, styleData.role, item.number)
                                             } else {
-                                                invoice.json.items[styleData.row].number = editText
-                                                invoiceItemsModel.setProperty(styleData.row, styleData.role, editText)
+                                                item = emptyInvoiceItem()
                                             }
-                                        }
-                                        setDocumentModified()
-                                        calculateInvoice()
-                                    }
-                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-
-                                onActivated: {
-                                    if (popup.visible) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                                            var itemId = currentIndex === -1 ? currentText : itemsModel.get(index).id
-                                            var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                                            var item = Items.itemGet(itemId, vatExclusive)
-                                            var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
-                                            if (vatCode)
-                                                item.unit_price.vat_rate = vatCode.rate
                                             invoice.json.items[styleData.row] = item
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                        } else {
+                                            invoice.json.items[styleData.row].number = key
+                                            setDocumentModified()
                                         }
-                                        setDocumentModified()
-                                        calculateInvoice()
-                                        focus = false
                                     }
                                 }
 
@@ -1122,7 +1296,6 @@ Item {
                                         currentInvoiceItemCol = styleData.role
                                     }
                                 }
-
                             }
                         }
                         onWidthChanged: {
@@ -1151,7 +1324,8 @@ Item {
                                 anchors.left: parent.left
                                 anchors.margins: 3 * Stylesheet.pixelScaleRatio
                                 horizontalAlignment: styleData.textAlignment
-                                text: styleData.value ? Banana.Converter.toLocaleDateFormat(styleData.value) : ""
+                                property int updateText: 1  // Binding for updating the text
+                                text: updateText && styleData.value ? Banana.Converter.toLocaleDateFormat(styleData.value) : ""
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
@@ -1161,11 +1335,22 @@ Item {
                                             let date = text
                                             if (date) {
                                                 date = Banana.Converter.toInternalDateFormat(date)
+                                                // Check date
+                                                let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                                if (!localDate || localDate.length === 0) {
+                                                    errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                                    errorMessageDialog.visible = true
+                                                    updateText++
+                                                    modified = false
+                                                    focus = false
+                                                    return
+                                                }
                                             }
                                             invoice.json.items[styleData.row].date = date
-                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, Banana.Converter.toLocaleDateFormat(date))
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, date)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1221,6 +1406,7 @@ Item {
                                             invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1277,6 +1463,7 @@ Item {
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1319,11 +1506,12 @@ Item {
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {                                            
+                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
                                             invoice.json.items[styleData.row].mesure_unit = text
                                             invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
                                         }
                                         setDocumentModified()
+                                        modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
@@ -1378,6 +1566,7 @@ Item {
                                             }
                                             setDocumentModified()
                                             calculateInvoice()
+                                            modified = false
                                         }
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
@@ -1438,6 +1627,7 @@ Item {
                                             }
                                             setDocumentModified()
                                             calculateInvoice()
+                                            modified = false
                                         }
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
@@ -1506,32 +1696,37 @@ Item {
 
                     QuickControls14.TableViewColumn {
                         id: itemVatRateColumn
-                        role: "vat_rate"
+                        role: "vat_code"
                         title: qsTr("VAT")
                         width: getColumnWidth()
                         property int defaultWidth: 80 * Stylesheet.pixelScaleRatio
                         horizontalAlignment: Text.AlignRight
                         visible: !isVatModeVatNone
                         delegate: Item {
-
-                            StyledComboBox {
+                            StyledKeyDescrComboBox {
                                 id: invoice_item_vat
-                                model: taxRatesModel
-                                textRole: "code"
-                                editable: false
-                                currentIndex: getCurrentVatCodeIndex()
-                                displayText: getDisplayText(styleData.value)
                                 anchors.right: parent.right
                                 anchors.left: parent.left
                                 anchors.margins: 3 * Stylesheet.pixelScaleRatio
+                                popupMinWidth: 300  * Stylesheet.pixelScaleRatio
+                                popupAlign: Qt.AlignRight
 
-                                onActivated: {
-                                    updateInvoiceItem()
-                                }
+                                currentIndex: getCurrentVatCodeIndex()
+                                displayText: getDisplayText()
 
-                                onAccepted: {
-                                    if (currentIndex === -1) {
-                                        updateInvoiceItem()
+                                model: taxRatesModel
+                                textRole: "key"
+                                editable: false
+
+                                onCurrentKeySet: function(key, isExistingKey) {
+                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        let vatItem = invoice_item_vat.getCurrentItem()
+                                        if (vatItem) {
+                                            invoice.json.items[styleData.row].unit_price.vat_code = vatItem.key
+                                            invoice.json.items[styleData.row].unit_price.vat_rate = vatItem.rate
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                        }
                                     }
                                 }
 
@@ -1550,14 +1745,16 @@ Item {
                                     }
                                 }
 
-                                function getDisplayText(rate) {
-                                    if (!rate)
-                                        return ""
-                                    for (let i = 0; i < taxRatesModel.count; ++i) {
-                                        if (taxRatesModel.get(i).rate === rate)
-                                            return taxRatesModel.get(i).code
+                                function getDisplayText() {
+                                    if (styleData.value) {
+                                        return styleData.value
+                                    } else if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                        // If the code is not set, show the rate
+                                        if (invoice.json.items[styleData.row].unit_price.vat_rate) {
+                                            return invoice.json.items[styleData.row].unit_price.vat_rate
+                                        }
                                     }
-                                    return rate;
+                                    return "";
                                 }
 
                                 function updateInvoiceItem() {
@@ -1712,6 +1909,9 @@ Item {
 
                     function isColumnVisible(fieldId, dataRole) {
                         if (appSettings.signalFieldsVisibilityChanged) {
+                            if (currentView === appSettings.view_id_full) {
+                                return true // In full view all items are visible
+                            }
                             let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
                             if (fieldId in viewAppearance) {
                                 if (viewAppearance[fieldId]) {
@@ -1811,6 +2011,9 @@ Item {
 
                     function getMaxVisibleItems() {
                         let maxVisibleItems = 0
+                        if (currentView === appSettings.view_id_full) {
+                            return 0 // In full view all items are visible
+                        }
                         if (appSettings.data.interface.invoice.views[currentView] &&
                                 ('invoce_max_visible_items_without_scrolling' in appSettings.data.interface.invoice.views[currentView].appearance)) {
                             maxVisibleItems = appSettings.data.interface.invoice.views[currentView].appearance['invoce_max_visible_items_without_scrolling'];
@@ -1947,7 +2150,6 @@ Item {
                                 readOnly: invoice.isReadOnly
                                 borderless: !hovered && !focus
                                 Layout.minimumWidth: 150 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1985,8 +2187,6 @@ Item {
                                 text: invoice.json ? getDiscount() : ""
                                 placeholderText: hovered ? qsTr("30% or 30.00") : ""
                                 horizontalAlignment: Text.AlignRight
-
-                                Keys.onReturnPressed: focus = false
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -2117,7 +2317,6 @@ Item {
                                 readOnly: invoice.isReadOnly
                                 borderless: !hovered && !focus
                                 Layout.minimumWidth: 150 * Stylesheet.pixelScaleRatio
-                                Keys.onReturnPressed: focus = false
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -2224,16 +2423,27 @@ Item {
                                 var totalVatRatesLength = invoice.json.billing_info.total_vat_rates.length;
                                 for (var i = 0; i < totalVatRatesLength; i++) {
                                     var vatRatesObj = invoice.json.billing_info.total_vat_rates[i];
-                                    var vatText = qsTr("VAT %1% %4 %2 (%4 %3)");
-                                    vatText = vatText.replace("%1", vatRatesObj["vat_rate"]);
-                                    vatText = vatText.replace("%2", Banana.Converter.toLocaleNumberFormat(vatRatesObj["total_vat_amount"], invoice.json.document_info.decimals_amounts, true));
-                                    vatText = vatText.replace("%3", Banana.Converter.toLocaleNumberFormat(vatRatesObj["total_amount_vat_exclusive"], invoice.json.document_info.decimals_amounts, true));
-                                    vatText = vatText.replace(/%4/g, (invoice.json.document_info.currency ? invoice.json.document_info.currency.toUpperCase() : ""));
-                                    if (i > 0)
+                                    var vatText = getVatRateDetails(vatRatesObj);
+                                    if (vatDetails.length > 0)
                                         vatDetails += "\n";
                                     vatDetails += vatText;
                                 }
+                                if (invoice.json.billing_info.total_vat_rate_zero &&
+                                        invoice.json.billing_info.total_vat_rate_zero.total_amount_vat_exclusive) {
+                                    if (vatDetails.length > 0)
+                                        vatDetails += "\n";
+                                    vatDetails += getVatRateDetails(invoice.json.billing_info.total_vat_rate_zero);
+                                }
                                 return vatDetails;
+                            }
+
+                            function getVatRateDetails(vatRateObj) {
+                                var vatText = qsTr("VAT %1% %4 %2 (%4 %3)");
+                                vatText = vatText.replace("%1", vatRateObj["vat_rate"] ? vatRateObj["vat_rate"] : "0");
+                                vatText = vatText.replace("%2", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_vat_amount"], invoice.json.document_info.decimals_amounts, true));
+                                vatText = vatText.replace("%3", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_amount_vat_exclusive"], invoice.json.document_info.decimals_amounts, true));
+                                vatText = vatText.replace(/%4/g, (invoice.json.document_info.currency ? invoice.json.document_info.currency.toUpperCase() : ""));
+                                return vatText;
                             }
 
                         }
@@ -2347,6 +2557,14 @@ Item {
             }
         }
         return Banana.document.rounding.decimals
+    }
+
+    function setDocumentLocale(lang) {
+        if (lang) {
+            invoice.json.document_info.locale = lang;
+            invoiceUpdateCustomFields();
+            setDocumentModified()
+        }
     }
 
     function setDocumentModified() {
@@ -2492,7 +2710,7 @@ Item {
 
     function loadCustomerAddresses() {
         customerAddressesModel.clear()
-        customerAddressesModel.append({'id': '','descr': ''})
+        customerAddressesModel.append({'key': '','descr': ''})
         var contacts = Contacts.contactsAddressesGet()
         for (var i = 0; i < contacts.length; ++i) {
             customerAddressesModel.append(contacts[i])
@@ -2501,7 +2719,7 @@ Item {
 
     function loadItems() {
         itemsModel.clear();
-        itemsModel.append({'id': '','descr': ''})
+        itemsModel.append({'key': '','descr': ''})
         var items = Items.itemsGet()
         for (var i = 0; i < items.length; ++i) {
             itemsModel.append(items[i]);
@@ -2537,13 +2755,13 @@ Item {
         for (let i = 0; i < languagesCodes.length; ++i) {
             let langCode = languagesCodes[i]
             let language = languages[langCode];
-            languagesModel.append({code: langCode, descr: langCode + "\t" + language.nativeName})
+            languagesModel.append({key: langCode, descr: language.nativeName})
         }
     }
 
     function loadCurrencies() {
         // Get default currencies
-        var currenciesAbbreviations = {
+        var currencies = {
             'CHF' : {"descr":  qsTr('Swiss Franc')},
             'EUR' : {"descr":  qsTr('Euro')},
             'USD' : {"descr":  qsTr('US Dollar')},
@@ -2555,8 +2773,8 @@ Item {
             let contactsLanguagesCodes = Object.keys(contactsCurrencies);
             for (let i = 0; i < contactsLanguagesCodes.length; ++i) {
                 let currencyCode = contactsLanguagesCodes[i]
-                if (!currenciesAbbreviations[currencyCode]) {
-                    currenciesAbbreviations[currencyCode] = contactsCurrencies[currencyCode]
+                if (!currencies[currencyCode]) {
+                    currencies[currencyCode] = contactsCurrencies[currencyCode]
                 }
             }
             */
@@ -2567,18 +2785,18 @@ Item {
             let invoicesLanguagesCodes = Object.keys(invoicesCurrencies);
             for (let i = 0; i < invoicesLanguagesCodes.length; ++i) {
                 let currencyCode = contactsLanguagesCodes[i]
-                if (!currenciesAbbreviations[currencyCode]) {
-                    currenciesAbbreviations[currencyCode] = invoicesCurrencies[currencyCode]
+                if (!currencies[currencyCode]) {
+                    currencies[currencyCode] = invoicesCurrencies[currencyCode]
                 }
             }
             */
 
         // Sort languages by code and fill the model
         currenciesModel.clear()
-        currenciesAbbreviations = Object.keys(currenciesAbbreviations).sort();
+        let currenciesAbbreviations = Object.keys(currencies).sort();
         for (let i = 0; i < currenciesAbbreviations.length; ++i) {
             let currencyCode = currenciesAbbreviations[i]
-            currenciesModel.append({currency: currencyCode, descr: ""})
+            currenciesModel.append({key: currencyCode, descr: currencies[currencyCode].descr})
         }
     }
 
@@ -2586,8 +2804,9 @@ Item {
         taxRatesModel.clear();
         taxRatesModel.append(
                     {
-                        'rate': "",
-                        'code': ""
+                        'key': "",
+                        'descr' : "",
+                        'rate': ""
                     })
         var vatCodes = VatCodes.vatCodesGet()
         for (var i = 0; i < vatCodes.length; ++i) {
@@ -2599,18 +2818,6 @@ Item {
         updateViewAddress()
         updateViewVatMode()
         updateViewItems()
-        updateViewCustomerAddressId()
-    }
-
-    function updateViewCustomerAddressId() {
-        if (!invoice.json || !invoice.json.customer_info.number)
-            address_customer_selector.displayText = ""
-
-        for (var i = 0; i < customerAddressesModel.count; ++i) {
-            if (customerAddressesModel.get(i).id === invoice.json.customer_info.number) {
-                address_customer_selector.currentIndex = i;
-            }
-        }
     }
 
     function updateViewAddress() {
@@ -2748,6 +2955,94 @@ Item {
             invoice.items = []
     }
 
+    function invoiceUpdateCustomFields() {
+
+        // Read form custom fields
+        let language = invoice && invoice.json && invoice.json.document_info && invoice.json.document_info.locale ?
+                invoice.json.document_info.locale.substring(0,2) : Banana.document.locale.substring(0,2);
+        let custom_fields = []
+        if (invoice_custom_field_1.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_1.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_1.customFieldId, language),
+                                  "value": invoice_custom_field_1.text
+                              });
+        }
+        if (invoice_custom_field_2.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_2.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_2.customFieldId, language),
+                                  "value": invoice_custom_field_2.text
+                              });
+        }
+        if (invoice_custom_field_3.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_3.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_3.customFieldId, language),
+                                  "value": invoice_custom_field_3.text
+                              });
+        }
+        if (invoice_custom_field_4.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_4.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_4.customFieldId, language),
+                                  "value": invoice_custom_field_4.text
+                              });
+        }
+        if (invoice_custom_field_5.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_5.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_5.customFieldId, language),
+                                  "value": invoice_custom_field_5.text
+                              });
+        }
+        if (invoice_custom_field_6.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_6.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_6.customFieldId, language),
+                                  "value": invoice_custom_field_6.text
+                              });
+        }
+        if (invoice_custom_field_7.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_7.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_7.customFieldId, language),
+                                  "value": invoice_custom_field_7.text
+                              });
+        }
+        if (invoice_custom_field_8.text) {
+            custom_fields.push({
+                                  'id': invoice_custom_field_8.customFieldId,
+                                  "title": Settings.getTranslatedText(appSettings.data, "invoice_" + invoice_custom_field_8.customFieldId, language),
+                                  "value": invoice_custom_field_8.text
+                              });
+        }
+
+        // Keeps custom fields not present in the form
+        if (invoice.json.document_info.custom_fields) {
+            let implFields = [
+                    'invoice_custom_field_1',
+                    'invoice_custom_field_2',
+                    'invoice_custom_field_3',
+                    'invoice_custom_field_4',
+                    'custom_field_1',
+                    'custom_field_2',
+                    'custom_field_3',
+                    'custom_field_4',
+                    'custom_field_5',
+                    'custom_field_6',
+                    'custom_field_7',
+                    'custom_field_8',
+                ]
+            for (let i = 0; i < invoice.json.document_info.custom_fields; ++i) {
+                if (implFields.indexOf(invoice.json.document_info.custom_fields[i].id) === -1) {
+                    custom_fields.push(invoice.json.document_info.custom_fields[i]);
+                }
+            }
+        }
+
+        invoice.json.document_info.custom_fields = custom_fields;
+    }
 
     // Convertion functions
 
@@ -2871,32 +3166,6 @@ Item {
         return Banana.Converter.toInternalDateFormat(datetimeParts[0]);
     }
 
-    function getSupplierInfo() {
-        var supplier_info = {}
-
-        supplier_info.courtesy = Banana.document.info('AccountingDataBase', 'Courtesy');
-        supplier_info.business_name = Banana.document.info('AccountingDataBase', 'Company');
-        supplier_info.first_name = Banana.document.info('AccountingDataBase', 'Name');
-        supplier_info.last_name = Banana.document.info('AccountingDataBase', 'FamilyName');
-        supplier_info.address1 = Banana.document.info('AccountingDataBase', 'Address1');
-        supplier_info.address2 = Banana.document.info('AccountingDataBase', 'Address2');
-        supplier_info.address3 = "";
-        supplier_info.postal_code = Banana.document.info('AccountingDataBase', 'Zip');
-        supplier_info.city = Banana.document.info('AccountingDataBase', 'City');
-        supplier_info.country = Banana.document.info('AccountingDataBase', 'Country');
-        supplier_info.country_code = Banana.document.info('AccountingDataBase', 'CountryCode');
-        supplier_info.web = Banana.document.info('AccountingDataBase', 'Web');
-        supplier_info.email = Banana.document.info('AccountingDataBase', 'Email');
-        supplier_info.phone = Banana.document.info('AccountingDataBase', 'Phone');
-        supplier_info.mobile = Banana.document.info('AccountingDataBase', 'Mobile');
-        supplier_info.fax = Banana.document.info('AccountingDataBase', 'Fax');
-        supplier_info.fiscal_number = Banana.document.info('AccountingDataBase', 'FiscalNumber');
-        supplier_info.vat_number = Banana.document.info('AccountingDataBase', 'VatNumber');
-        supplier_info.iban_number = Banana.document.info('AccountingDataBase', 'IBAN');
-
-        return supplier_info;
-    }
-
     function showHelp() {
         Banana.Ui.showHelp("dlginvoiceedit");
     }
@@ -2905,6 +3174,9 @@ Item {
 
     function isInvoiceFieldVisible(fieldId, isNotEmpty) {
         if (appSettings.signalFieldsVisibilityChanged) {
+            if (currentView === appSettings.view_id_full) {
+                return true
+            }
             let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
             if (fieldId in viewAppearance) {
                 if (viewAppearance[fieldId]) {

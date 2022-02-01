@@ -123,6 +123,22 @@ Item {
                 }
             }
 
+            RowLayout {
+                StyledLabel {
+                    text: "Test with updated version notification visible"
+                    Layout.fillWidth: true
+                }
+
+                StyledSwitch {
+                    id: showUpdatedVersionInstalledSwitch
+                    enabled: Banana.application.isInternal
+                    checked: appSettings.isNotificationVisible("show_updated_version_installed")
+                    onToggled: {
+                        appSettings.setNotificationVisible("show_updated_version_installed", checked)
+                    }
+                }
+            }
+
             Rectangle {
                 Layout.fillWidth: true
                 Layout.topMargin: styleSectionSeparatorHeight / 2
@@ -168,12 +184,7 @@ Item {
                     text: "Show pixel metrics"
                     Layout.minimumWidth: styleButtonMinWidth
                     onClicked: {
-                        let text = "Pixel density: " + Screen.pixelDensity + "\n"
-                        text += "Device pixel ratio: " + Screen.devicePixelRatio + "\n"
-                        text += "TextField height: " + pixelMetricsTextField.height + "\n"
-                        text += "Font xHeight: " + pixelMetricsFont.xHeight + "\n"
-                        messaggeDialog.text = text
-                        messaggeDialog.visible = true
+                        dlgPixelMetrics.visible = true
                     }
                 }
             }
@@ -195,14 +206,8 @@ Item {
         onAccepted: visible = false
     }
 
-    TextField {
-        id: pixelMetricsTextField
-        text: "AÈjJÇ"
-        visible: false
-    }
-
-    FontMetrics {
-        id: pixelMetricsFont
+    DlgPixelMetrics {
+        id: dlgPixelMetrics
     }
 
     SimpleMessageDialog {

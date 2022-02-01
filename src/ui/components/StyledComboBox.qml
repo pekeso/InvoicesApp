@@ -17,28 +17,16 @@ import QtQuick.Controls 2.15
 
 ComboBox {
     id: control
+
     implicitHeight: 28 * Stylesheet.pixelScaleRatio
     indicator.width: 20 * Stylesheet.pixelScaleRatio
     indicator.height: 20 * Stylesheet.pixelScaleRatio
 
+    // Popup minimun widht (popup can be larger than the control
     property int popupMinWidth: 0
-    property bool modified: false
 
-    signal editingFinished
-
-    contentItem: StyledTextField {
-        id: textField
-        readOnly: !control.editable
-        text: control.displayText
-        onEditingFinished: {
-            control.modified = modified
-            control.editingFinished()
-        }
-    }
-
-    onActivated: {
-        textField.ensureVisible(0)
-    }
+    // Popup alignment, to the left or right to the control
+    property int popupAlign: Qt.AlignLeft
 
     background: Rectangle {
         color: Stylesheet.baseColor
@@ -48,13 +36,16 @@ ComboBox {
     }
 
     popup: Popup {
+        x: popupAlign === Qt.AlignRight ? (width > control.width ? control.width - width : 0) : 0
         y: control.height - 1 * Stylesheet.pixelScaleRatio
-        width: Math.max(control.width, popupMinWidth)
+        width: !control.model || control.model.count === 0 ? 0 : Math.max(control.width, popupMinWidth)
         padding: 1 * Stylesheet.pixelScaleRatio
+        property var listView: listView
 
         contentItem: ListView {
+            id: listView
             clip: true
-            implicitHeight: contentHeight
+            implicitHeight: Math.min(200 * Stylesheet.pixelScaleRatio, contentHeight)
             model: control.popup.visible ? control.delegateModel : null
             ScrollIndicator.vertical: ScrollIndicator { }
         }
@@ -65,4 +56,5 @@ ComboBox {
             radius: 2 * Stylesheet.pixelScaleRatio
         }
     }
+
 }

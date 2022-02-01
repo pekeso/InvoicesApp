@@ -42,6 +42,8 @@ QtObject {
     property int signalViewsSettingsChanged: 1
     property int signalFieldsVisibilityChanged: 1
     property int signalItemsVisibilityChanged: 1
+    property int signalTranslationsChanged: 1
+    property int signalNotificationsChanged: 1
 
     // Other properties
     property DevSettings devSettings: null
@@ -87,6 +89,9 @@ QtObject {
     // Fields visibility
 
     function getInvoiceFieldVisible(fieldId, viewId) {
+        if (viewId === view_id_full) {
+            return true;
+        }
         let viewAppearance = data.interface.invoice.views[viewId].appearance
         if (fieldId in viewAppearance) {
             return viewAppearance[fieldId];
@@ -163,6 +168,29 @@ QtObject {
         data.interface.invoice.views[viewId].visible = value
         modified = true
         signalViewsSettingsChanged++
+    }
+
+    // Notifications
+
+    function isNotificationVisible(notificationId) {
+        if (signalNotificationsChanged) {
+            if (data.interface.notifications && data.interface.notifications[notificationId]) {
+                return true
+            }
+        }
+        return false
+    }
+
+    function setNotificationVisible(notificationId, value) {
+        if (!data.interface.notifications)
+            data.interface.notifications = {}
+        if (value) {
+            data.interface.notifications[notificationId] = true
+        } else {
+            data.interface.notifications[notificationId] = false
+        }
+        modified = true
+        signalNotificationsChanged++
     }
 
     // Other methods
