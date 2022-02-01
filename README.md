@@ -46,6 +46,14 @@ src/                            Source code
 test/                           Tests
 ```
 
+## Branches
+
+* main: this branch correspond to the stable release
+* beta: this branch correspond to the beta release
+* develop: this branch correspond to the develop release
+
+All other branches are used internally for developping and testing of new functionalities.
+
 ## Resources
 
 * [Banana.ch - Estimates and Invoices user documentation](https://www.banana.ch/doc/en/node/9752)  
