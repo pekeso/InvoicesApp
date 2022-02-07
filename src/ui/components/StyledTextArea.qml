@@ -24,6 +24,7 @@ TextArea {
    color: Stylesheet.textColor
    selectionColor : Stylesheet.selectionColor
    selectedTextColor: Stylesheet.selectedTextColor
+   wrapMode: TextEdit.Wrap
 
    background: Rectangle {
       color: Stylesheet.baseColor
