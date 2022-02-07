@@ -362,11 +362,15 @@ function invoiceChangedFieldsGet(invoiceObj, row) {
             if (rowValue === changedRowFields[propertyName]) {
                 delete changedRowFields[propertyName];
             } else if (propertyName === "InvoiceDate" ) {
-                // Bug in DocumentChange.apply, dates have to be in the format yyyymmdd
-                changedRowFields["InvoiceDate"] = changedRowFields["InvoiceDate"].replace(/-/g, "");
+                if (changedRowFields["InvoiceDate"]) {
+                    // Bug in DocumentChange.apply, dates have to be in the format yyyymmdd
+                    changedRowFields["InvoiceDate"] = changedRowFields["InvoiceDate"].replace(/-/g, "");
+                }
             } else if (propertyName === "InvoiceDateExpiration" ) {
-                // Bug in DocumentChange.apply, dates have to be in the format yyyymmdd
-                changedRowFields["InvoiceDateExpiration"] = changedRowFields["InvoiceDateExpiration"].replace(/-/g, "");
+                if (changedRowFields["InvoiceDateExpiration"]) {
+                    // Bug in DocumentChange.apply, dates have to be in the format yyyymmdd
+                    changedRowFields["InvoiceDateExpiration"] = changedRowFields["InvoiceDateExpiration"].replace(/-/g, "");
+                }
             }
         }
     }

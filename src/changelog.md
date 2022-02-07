@@ -1,5 +1,9 @@
 # Changelog
  
+## 2022-02-07
+
+* [FIX] Fix save button not working due to a property missing in the invoice document
+
 ## 2022-02-01
 
 * [RELEASE STABLE] Released as Stable
