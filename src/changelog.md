@@ -5,6 +5,7 @@
 * [RELEASE STABLE] Released as Stable
 * [FIX] Fix save button not working due to a property missing in the invoice document
 * [FIX] Fix text fields doesn't automatically scroll horizontally, edited text beyond the field's with is not visible
+* [TODO] Fix overwrapping article's descriptions that span over more lines
 
 ## 2022-02-01
 
