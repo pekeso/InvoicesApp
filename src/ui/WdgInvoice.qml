@@ -51,7 +51,7 @@ Item {
         if (invoice.isModified) {
             invoice.save()
         }
-        invoice.setType(p_invoice.type_invoice)
+        invoice.setType(invoice.type_invoice)
         invoice.json = Invoice.invoiceCreateFromEstimateObj(invoice.json)
         invoice.tabPos.tableName = "Invoices"
         invoice.tabPos.rowNr = Banana.document.table("Invoices").rowCount
@@ -68,7 +68,7 @@ Item {
         if (invoice.isModified) {
             invoice.save()
         }
-        invoice.setType(p_invoice.type_invoice)
+        invoice.setType(invoice.type_invoice)
         invoice.json = Invoice.invoiceDuplicateObj(invoice.json, invoice.tabPos)
         invoice.tabPos.rowNr = Banana.document.table(invoice.tabPos.tableName).rowCount
 
