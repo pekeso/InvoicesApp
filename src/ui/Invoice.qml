@@ -51,16 +51,6 @@ QtObject {
         Invoice.invoiceUpdateCreatorInfo(json)
         Invoice.invoiceUpdateSupplierInfo(json)
 
-        // Set item quantity to 1 if empty
-        for (var i = 0; i < json.items.length; ++i) {
-            if (json.items[i].quantity === "") {
-                if (json.items[i].unit_price.amount_vat_inclusive ||
-                        json.items[i].unit_price.amount_vat_exclusive) {
-                    json.items[i].quantity = "1"
-                }
-            }
-        }
-
         // Calculate
         var jsonData = JSON.stringify(json)
         jsonData = Banana.document.calculateInvoice(jsonData)

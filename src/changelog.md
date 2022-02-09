@@ -1,5 +1,10 @@
 # Changelog
  
+## 2022-02-09
+
+* [FIX] Fix can not clear the item quantity, the user can not enter an item as description (quantity and price empty)
+* [FIX] Fix quantity for articles without price is set to 1, the user can not use predefined articles as description (quantity and price empty)
+
 ## 2022-02-08
 
 * [RELEASE STABLE] Released as Stable

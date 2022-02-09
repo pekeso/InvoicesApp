@@ -1556,7 +1556,7 @@ Item {
                                 onEditingFinished: {
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                                            var internalAmountFormat = toInternalItemNumberFormat(text)
+                                            let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
                                             if (isVatModeVatInclusive) {
                                                 invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = internalAmountFormat
                                                 invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = null
@@ -1564,6 +1564,11 @@ Item {
                                                 invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = null
                                                 invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = internalAmountFormat
                                             }
+                                            if (internalAmountFormat && !invoice.json.items[styleData.row].quantity) {
+                                                // Set quantity if a price is set
+                                                invoice.json.items[styleData.row].quantity = "1"
+                                            }
+
                                             setDocumentModified()
                                             calculateInvoice()
                                             modified = false
