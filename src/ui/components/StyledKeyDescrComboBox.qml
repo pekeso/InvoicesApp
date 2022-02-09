@@ -309,9 +309,10 @@ StyledComboBox {
             return 0;
         }
 
+        let lowerCaseKey = key.toLowerCase()
         for (let i = 0; i < model.count; ++i) {
             let obj = model.get(i);
-            if (obj.key.startsWith(key)) {
+            if (obj.key.toLowerCase().startsWith(lowerCaseKey)) {
                 return i;
             }
         }
