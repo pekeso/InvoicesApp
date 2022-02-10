@@ -272,7 +272,7 @@ StyledComboBox {
             model = filteredModel
         }
 
-        currentHighlightIndex = -1
+        updateCurrentIndex(text)
         filter.running = false
     }
 
@@ -295,9 +295,10 @@ StyledComboBox {
             return -1;
         }
 
+        let lowerCaseKey = key.toLowerCase()
         for (let i = 0; i < model.count; ++i) {
             let obj = model.get(i);
-            if (obj.key === key) {
+            if (obj.key.toLowerCase() === lowerCaseKey) {
                 return i;
             }
         }
@@ -373,8 +374,11 @@ StyledComboBox {
     }
 
     function updateCurrentIndex(text) {
-        let index = findPartialKey(text)
+        let index = findKey(text) // Highlight first exact match
+        if (index < 0)
+            index = findPartialKey(text) // Highlight first partial match
         if (index >= 0) {
+
             currentHighlightIndex = index
             popup.listView.positionViewAtIndex(index, ListView.Beginning)
         } else {
