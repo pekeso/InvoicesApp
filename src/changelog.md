@@ -2,6 +2,7 @@
  
 ## 2022-02-10
 
+* [RELEASE STABLE] Released as Stable
 * [FIX] Fix article search is case sensitive
 * [FIX] Fix highlight in the combo box, the item that match completely of partially the entered text is not highlighted
 * [FIX] Fix can not clear the item quantity, the user can not enter an item as description (quantity and price empty)
