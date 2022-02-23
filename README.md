@@ -17,7 +17,7 @@ doc/                            Documentation
 
 src/                            Source code
 
-    main.js                     Main file that implement the JsAction interface
+    CMakeLists.txt              Project file for building the sbaa package and update the translations
 
     changelog.md                Cronology of modifications
 
@@ -27,7 +27,7 @@ src/                            Source code
     ch.banana.application.invoice.default.qrc
                                 Qrc file for the creation of the extension's package
 
-    invoice-app.pro             Project file for Qt Creator
+    main.js                     Main file that implement the JsAction interface
 
     base/                       Js code
 
