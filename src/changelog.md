@@ -2,11 +2,12 @@
  
 ## 2022-03-31
 
+* [RELEASE STABLE] Released as Stable
 * [Fix] Fix the language of the invoice title is not that of the document
 * [Fix] Fix the language of the invoice title is not updated when changing the language
 * [Fix] Fix the language of the invoice title is not updated when changing the customer
-* [Enhancement] Show extension's version in the notification bar message.
-* [Enhancement] Add fields for business units names
+* [Enhancement] Show extension's version in the notification bar message
+* [Enhancement] Add fields for business units names (advanced plan)
 
 ## 2022-03-08
 
