@@ -994,6 +994,7 @@ Item {
                         StyledTextField {
                             id: address_business_unit
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Business unit")
                             onEditingFinished: {
@@ -1002,11 +1003,17 @@ Item {
                                     setDocumentModified()
                                 }
                             }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
                         }
 
                         StyledTextField {
                             id: address_business_unit_2
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_2", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_2")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Business unit 2")
                             onEditingFinished: {
@@ -1015,11 +1022,17 @@ Item {
                                     setDocumentModified()
                                 }
                             }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_2")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
                         }
 
                         StyledTextField {
                             id: address_business_unit_3
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_3", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_3")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Business unit 3")
                             onEditingFinished: {
@@ -1028,17 +1041,28 @@ Item {
                                     setDocumentModified()
                                 }
                             }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_3")) {
+                                    dlgLicense.visible = true
+                                }
+                            }
                         }
 
                         StyledTextField {
                             id: address_business_unit_4
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_4", text)
+                            readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_4")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Business unit 4")
                             onEditingFinished: {
                                 if (modified) {
                                     invoice.json.customer_info.business_unit4 = text
                                     setDocumentModified()
+                                }
+                            }
+                            onPressed: {
+                                if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_address_business_unit_4")) {
+                                    dlgLicense.visible = true
                                 }
                             }
                         }

@@ -1319,7 +1319,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Business unit")
+                        text: addLicenseRequirementText(qsTr("Business unit"), "show_invoice_address_business_unit")
                         Layout.fillWidth: true
                     }
 
@@ -1342,7 +1342,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Business unit 2")
+                        text: addLicenseRequirementText(qsTr("Business unit 2"), "show_invoice_address_business_unit_2")
                         Layout.fillWidth: true
                     }
 
@@ -1365,7 +1365,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Business unit 3")
+                        text: addLicenseRequirementText(qsTr("Business unit 3"), "show_invoice_address_business_unit_3")
                         Layout.fillWidth: true
                     }
 
@@ -1388,7 +1388,7 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Business unit 4")
+                        text: addLicenseRequirementText(qsTr("Business unit 4"), "show_invoice_address_business_unit_4")
                         Layout.fillWidth: true
                     }
 

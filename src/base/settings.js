@@ -511,6 +511,7 @@ function getSettingsRequiringAdvancedPlan() {
             'show_invoice_custom_field_6',
             'show_invoice_custom_field_7',
             'show_invoice_custom_field_8',
+            'show_invoice_address_business_unit',
             'show_invoice_address_business_unit_2',
             'show_invoice_address_business_unit_3',
             'show_invoice_address_business_unit_4',
