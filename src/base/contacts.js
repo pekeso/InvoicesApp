@@ -17,6 +17,10 @@ function contactAddressGet(id) {
     var customer_info = {
         'number': id,
         'business_name': '',
+        'business_unit': '',
+        'business_unit2': '',
+        'business_unit3': '',
+        'business_unit4': '',
         'first_name': '',
         'last_name': '',
         'address1': '',
@@ -38,6 +42,10 @@ function contactAddressGet(id) {
         if (contactRow) {
             customer_info.courtesy = contactRow.value('NamePrefix');
             customer_info.business_name = contactRow.value('OrganisationName');
+            customer_info.business_unit = contactRow.value('OrganisationUnit');
+            customer_info.business_unit2 = contactRow.value('OrganisationUnit2');
+            customer_info.business_unit3 = contactRow.value('OrganisationUnit3');
+            customer_info.business_unit4 = contactRow.value('OrganisationUnit4');
             customer_info.first_name = contactRow.value('FirstName');
             customer_info.last_name = contactRow.value('FamilyName');
             customer_info.address1 = contactRow.value('Street');

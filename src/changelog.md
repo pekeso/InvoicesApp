@@ -6,6 +6,7 @@
 * [Fix] Fix the language of the invoice title is not updated when changing the language
 * [Fix] Fix the language of the invoice title is not updated when changing the customer
 * [Enhancement] Show extension's version in the notification bar message.
+* [Enhancement] Add fields for business units names
 
 ## 2022-03-08
 

@@ -992,6 +992,58 @@ Item {
                         }
 
                         StyledTextField {
+                            id: address_business_unit
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Business unit")
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.business_unit = text
+                                    setDocumentModified()
+                                }
+                            }
+                        }
+
+                        StyledTextField {
+                            id: address_business_unit_2
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_2", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Business unit 2")
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.business_unit2 = text
+                                    setDocumentModified()
+                                }
+                            }
+                        }
+
+                        StyledTextField {
+                            id: address_business_unit_3
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_3", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Business unit 3")
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.business_unit3 = text
+                                    setDocumentModified()
+                                }
+                            }
+                        }
+
+                        StyledTextField {
+                            id: address_business_unit_4
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_business_unit_4", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Business unit 4")
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.business_unit4 = text
+                                    setDocumentModified()
+                                }
+                            }
+                        }
+
+                        StyledTextField {
                             id: address_courtesy
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_courtesy", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
@@ -2842,6 +2894,10 @@ Item {
             return
 
         address_business_name.text = invoice.json ? invoice.json.customer_info.business_name : ""
+        address_business_unit.text = invoice.json && invoice.json.customer_info.business_unit ? invoice.json.customer_info.business_unit : ""
+        address_business_unit_2.text = invoice.json && invoice.json.customer_info.business_unit2 ? invoice.json.customer_info.business_unit2 : ""
+        address_business_unit_3.text = invoice.json && invoice.json.customer_info.business_unit3 ? invoice.json.customer_info.business_unit3 : ""
+        address_business_unit_4.text = invoice.json && invoice.json.customer_info.business_unit4 ? invoice.json.customer_info.business_unit4 : ""
         address_courtesy.text = invoice.json.customer_info.courtesy ? invoice.json.customer_info.courtesy : ""
         address_first_name.text = invoice.json.customer_info.first_name
         address_last_name.text = invoice.json.customer_info.last_name

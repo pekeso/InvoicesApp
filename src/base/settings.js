@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const _settings_id = "invoices";
-const _settings_version = "1.0.0";
+const _settings_version = "1.0.2";
 
 function saveSettings(settings) {
     settings.creator = getCreatorInfo();
@@ -69,6 +69,18 @@ function upgradeSettings(settings) {
                 settings.interface = defaultSettings.interface;
             if (!settings.translations)
                 settings.translations = defaultSettings.translations;
+        }
+
+        if (Banana.compareVersion(settings.version, '1.0.2') < 0) {
+
+            // Insert show property for address business unit fields
+            let invoiceViews = settings.interface.invoice.views;
+            for (const viewName in invoiceViews) {
+                invoiceViews[viewName].appearence.show_invoice_address_business_unit = false;
+                invoiceViews[viewName].appearence.show_invoice_address_business_unit_2 = false;
+                invoiceViews[viewName].appearence.show_invoice_address_business_unit_3 = false;
+                invoiceViews[viewName].appearence.show_invoice_address_business_unit_4 = false;
+            }
         }
 
         settings.version = _settings_version;
@@ -146,6 +158,10 @@ function getDefaultSettings() {
 
                             'show_invoice_customer_selector': true,
                             'show_invoice_address_business': true,
+                            'show_invoice_address_business_unit': false,
+                            'show_invoice_address_business_unit_2': false,
+                            'show_invoice_address_business_unit_3': false,
+                            'show_invoice_address_business_unit_4': false,
                             'show_invoice_address_courtesy': false,
                             'show_invoice_address_first_and_last_name': true,
                             'show_invoice_address_street': true,
@@ -214,6 +230,10 @@ function getDefaultSettings() {
 
                             'show_invoice_customer_selector': true,
                             'show_invoice_address_business': true,
+                            'show_invoice_address_business_unit': false,
+                            'show_invoice_address_business_unit_2': false,
+                            'show_invoice_address_business_unit_3': false,
+                            'show_invoice_address_business_unit_4': false,
                             'show_invoice_address_courtesy': false,
                             'show_invoice_address_first_and_last_name': true,
                             'show_invoice_address_street': false,
@@ -282,6 +302,10 @@ function getDefaultSettings() {
 
                             'show_invoice_customer_selector': true,
                             'show_invoice_address_business': true,
+                            'show_invoice_address_business_unit': false,
+                            'show_invoice_address_business_unit_2': false,
+                            'show_invoice_address_business_unit_3': false,
+                            'show_invoice_address_business_unit_4': false,
                             'show_invoice_address_courtesy': false,
                             'show_invoice_address_first_and_last_name': true,
                             'show_invoice_address_street': true,
@@ -487,6 +511,9 @@ function getSettingsRequiringAdvancedPlan() {
             'show_invoice_custom_field_6',
             'show_invoice_custom_field_7',
             'show_invoice_custom_field_8',
+            'show_invoice_address_business_unit_2',
+            'show_invoice_address_business_unit_3',
+            'show_invoice_address_business_unit_4',
             'show_invoice_item_column_date',
             'show_invoice_item_column_discount'
         ]
