@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2022-03-08
+// @pubdate = 2022-03-31
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -36,8 +36,8 @@ var JsAction = class JsAction {
     // API JsBanAction
 
     /**
-     * This method is used to update the row after the object is changed.
-     * It return a json patch document to be applied, null if no changes, or an Error object.
+     * This method is used to create a new invoice or estimate.
+     * It returns the json of the created invoice or estimate.
      */
     create(tabPos, id) {
         return JSON.stringify(invoiceCreateNew(tabPos, id));

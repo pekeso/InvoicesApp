@@ -1,5 +1,11 @@
 # Changelog
  
+## 2022-03-31
+
+* [Fix] Fix the language of the invoice title is not that of the document
+* [Fix] Fix the language of the invoice title is not updated when changing the language
+* [Fix] Fix the language of the invoice title is not updated when changing the customer
+
 ## 2022-03-08
 
 * [Fix] Update chinese translations

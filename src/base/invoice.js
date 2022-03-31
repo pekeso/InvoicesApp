@@ -20,25 +20,10 @@
  */
 
 function invoiceCreateNew(tabPos, id) {
-    var settingsNewDocs = getSettings().new_documents;
-    var isEstimate = tabPos.tableName === "Estimates" ? true : false;
-    var docNumber = id ? id : invoiceGetNextNumber(isEstimate);
-
-    // Get translator for the document's language
-    // Translations currently doesn't work if called from updateRow cz the translators are not loaded
-    var translator = null;
-    if (Banana.document) {
-        translator = Banana.Translations.getTranslator(Banana.document.locale.substring(0,2), "invoice");
-    }
-    if (!translator || !translator.valid) {
-        translator = Banana.Translations.getTranslator(Banana.application.locale.substring(0,2), "invoice");
-    }
-
-    // Invoice description
-    var descrNewInvoice = isEstimate ? settingsNewDocs.estimate_title : settingsNewDocs.invoice_title;
-    // TODO: riprendere lingua dalla lingua cliente
-    // descrNewInvoice = translator.tr(descrNewInvoice)
-    descrNewInvoice = descrNewInvoice.replace('%1', docNumber)
+    let settings = getSettings()
+    let settingsNewDocs = settings.new_documents;
+    let isEstimate = tabPos.tableName === "Estimates" ? true : false;
+    let docNumber = id ? id : invoiceGetNextNumber(isEstimate);
 
     var currentDate = new Date().toISOString().substring(0,10);
 
@@ -48,7 +33,7 @@ function invoiceCreateNew(tabPos, id) {
             'locale': Banana.document.locale.substring(0,2),
             'currency': settingsNewDocs.currency,
             'date': currentDate,
-            'description': descrNewInvoice,
+            'description': invoiceGetTitle(isEstimate, docNumber),
             'decimals_amounts': settingsNewDocs.decimals_amounts,
             'rounding_total': settingsNewDocs.rounding_total,
             'vat_mode': settingsNewDocs.vat_mode,
@@ -163,6 +148,38 @@ function invoiceGetNextNumber(isEstimate) {
         return (nextNumber + 1).toString();
     }
     return "1";
+}
+
+function invoiceGetTitle(isEstimate, nr, lang) {
+    let settings = getSettings()
+
+    // Invoice description
+    let trId = isEstimate ? "new_estimate_title" : "new_invoice_title";
+    let descrNewInvoice = "";
+    if (lang) {
+        if (translationExists(settings, trId, lang)) {
+            descrNewInvoice = getTranslatedText(settings, trId, lang)
+        }
+    }
+    if (!descrNewInvoice) {
+        if (Banana.document) {
+            let trLang = Banana.document.locale.substring(0,2);
+            if (translationExists(settings, trId, trLang)) {
+                descrNewInvoice = getTranslatedText(settings, trId, trLang)
+            }
+        }
+        if (!descrNewInvoice) {
+            let trLang = Banana.document.application.substring(0,2);
+            if (translationExists(settings, trId, trLang)) {
+                descrNewInvoice = getTranslatedText(settings, trId, trLang)
+            }
+            if (!descrNewInvoice) {
+                descrNewInvoice = qsTr("Document %1");
+            }
+        }
+    }
+    descrNewInvoice = descrNewInvoice.replace('%1', nr);
+    return descrNewInvoice;
 }
 
 function invoiceUpdateCreatorInfo(invoiceObj) {

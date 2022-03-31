@@ -961,12 +961,12 @@ Item {
                             onCurrentKeySet: function(key, isExistingKey) {
                                 if (isExistingKey) {
                                     var contactId = key
-                                    invoice.json.customer_info = Contacts.contactAddressGet(key)
+                                    invoice.json.customer_info = Contacts.contactAddressGet(contactId)
                                     invoice.json.customer_info.number = contactId
                                     setDocumentLocale(Contacts.contactLocaleGet(contactId))
                                     updateViewAddress()
                                 } else {
-                                    invoice.json.customer_info.number = "";
+                                    invoice.json.customer_info.number = ""
                                 }
                                 setDocumentModified()
                             }
@@ -2566,6 +2566,18 @@ Item {
 
     function setDocumentLocale(lang) {
         if (lang) {
+            let curLang = invoice.json.document_info.locale;
+            if (curLang !== lang) {
+                // Update document title if not modified
+                let docNr = invoice.json.document_info.number;
+                let defaultTitle = Invoice.invoiceGetTitle(invoice.isEstimate(), docNr, curLang);
+                if (defaultTitle === invoice.json.document_info.description) {
+                    // Update document title
+                    let newDescription = Invoice.invoiceGetTitle(invoice.isEstimate(), docNr, lang);
+                    invoice_description.text = newDescription;
+                    invoice.json.document_info.description = newDescription;
+                }
+            }
             invoice.json.document_info.locale = lang;
             invoiceUpdateCustomFields();
             setDocumentModified()
