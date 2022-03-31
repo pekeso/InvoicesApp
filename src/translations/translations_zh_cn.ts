@@ -253,7 +253,7 @@
         <translation type="vanished">设置...</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="382"/>
+        <location filename="../ui/DlgInvoice.qml" line="383"/>
         <source>Print</source>
         <translation>打印</translation>
     </message>
@@ -266,7 +266,7 @@
         <translation type="vanished">已保存发票</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="391"/>
+        <location filename="../ui/DlgInvoice.qml" line="392"/>
         <source>Create invoice</source>
         <translation>创建发票</translation>
     </message>
@@ -275,7 +275,7 @@
         <translation type="vanished">已创建发票</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="402"/>
+        <location filename="../ui/DlgInvoice.qml" line="403"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
@@ -313,67 +313,71 @@
         <translation>新发票 %1</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="214"/>
         <source>An updated version of Estimate and Invoices extension has been installed. See %1.</source>
-        <translation>已安装预估和发票扩展程序的更新版本。见 %1。</translation>
+        <translation type="vanished">已安装预估和发票扩展程序的更新版本。见 %1。</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="216"/>
+        <location filename="../ui/DlgInvoice.qml" line="214"/>
+        <source>An updated version of Estimate and Invoices extension has been installed. The new version is %1. See %2.</source>
+        <translation>已安装预估和发票扩展程序的更新版本。新版本是 %1。见 %2。</translation>
+    </message>
+    <message>
+        <location filename="../ui/DlgInvoice.qml" line="217"/>
         <source>what&apos;s new</source>
         <translation>最新信息</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="245"/>
+        <location filename="../ui/DlgInvoice.qml" line="246"/>
         <source>Invoice</source>
         <translation>发票</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="249"/>
+        <location filename="../ui/DlgInvoice.qml" line="250"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="254"/>
+        <location filename="../ui/DlgInvoice.qml" line="255"/>
         <source>Source</source>
         <translation>来源</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="261"/>
+        <location filename="../ui/DlgInvoice.qml" line="262"/>
         <source>Development</source>
         <translation>开发</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="268"/>
+        <location filename="../ui/DlgInvoice.qml" line="269"/>
         <source>Changelog</source>
         <translation>更改日志</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="373"/>
+        <location filename="../ui/DlgInvoice.qml" line="374"/>
         <source>Help</source>
         <translation>帮助</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="412"/>
+        <location filename="../ui/DlgInvoice.qml" line="413"/>
         <source>Edit</source>
         <translation>编辑</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="412"/>
+        <location filename="../ui/DlgInvoice.qml" line="413"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="428"/>
+        <location filename="../ui/DlgInvoice.qml" line="429"/>
         <source>Cancel</source>
         <translation>取消</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="428"/>
+        <location filename="../ui/DlgInvoice.qml" line="429"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../ui/DlgInvoice.qml" line="462"/>
+        <location filename="../ui/DlgInvoice.qml" line="463"/>
         <source>Discard changes?</source>
         <translation>放弃更改?</translation>
     </message>
@@ -563,17 +567,17 @@ Would you like to upgrade to the Advanced plan?</source>
 <context>
     <name>StyledTextArea</name>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="103"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="104"/>
         <source>Cut</source>
         <translation>剪切</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="109"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="110"/>
         <source>Copy</source>
         <translation>复制</translation>
     </message>
     <message>
-        <location filename="../ui/components/StyledTextArea.qml" line="123"/>
+        <location filename="../ui/components/StyledTextArea.qml" line="124"/>
         <source>Paste</source>
         <translation>粘贴</translation>
     </message>
@@ -644,39 +648,39 @@ Would you like to upgrade to the Advanced plan?</source>
         <translation>发票已复制</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="87"/>
+        <location filename="../ui/WdgInvoice.qml" line="93"/>
         <source>Estimate saved</source>
         <translation>已保存预估</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="87"/>
+        <location filename="../ui/WdgInvoice.qml" line="93"/>
         <source>Invoice saved</source>
         <translation>发票已保存</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="139"/>
+        <location filename="../ui/WdgInvoice.qml" line="147"/>
         <source>Views:</source>
         <translation>视图：</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="216"/>
-        <location filename="../ui/WdgInvoice.qml" line="1655"/>
-        <location filename="../ui/WdgInvoice.qml" line="2388"/>
+        <location filename="../ui/WdgInvoice.qml" line="224"/>
+        <location filename="../ui/WdgInvoice.qml" line="1668"/>
+        <location filename="../ui/WdgInvoice.qml" line="2401"/>
         <source>Total</source>
         <translation>总计</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="249"/>
+        <location filename="../ui/WdgInvoice.qml" line="257"/>
         <source>Invoice No</source>
         <translation>发票号码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="269"/>
+        <location filename="../ui/WdgInvoice.qml" line="277"/>
         <source>Language</source>
         <translation>语言</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="300"/>
+        <location filename="../ui/WdgInvoice.qml" line="308"/>
         <source>Currency</source>
         <translation>货币</translation>
     </message>
@@ -685,195 +689,195 @@ Would you like to upgrade to the Advanced plan?</source>
         <translation type="obsolete">增值税模式</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="368"/>
+        <location filename="../ui/WdgInvoice.qml" line="376"/>
         <source>Invoice date</source>
         <translation>发票日期</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="419"/>
+        <location filename="../ui/WdgInvoice.qml" line="427"/>
         <source>Due date</source>
         <translation>截止日期</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="463"/>
+        <location filename="../ui/WdgInvoice.qml" line="471"/>
         <source>Order No</source>
         <translation>订单号</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="483"/>
+        <location filename="../ui/WdgInvoice.qml" line="491"/>
         <source>Order date</source>
         <translation>订单日期</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="509"/>
+        <location filename="../ui/WdgInvoice.qml" line="517"/>
         <source>Decimal points</source>
         <translation>小数点后的位数</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="530"/>
+        <location filename="../ui/WdgInvoice.qml" line="538"/>
         <source>Total rounding</source>
         <translation>四舍五入</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="556"/>
+        <location filename="../ui/WdgInvoice.qml" line="564"/>
         <source>Customer ref.</source>
         <translation>客户参数</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="845"/>
+        <location filename="../ui/WdgInvoice.qml" line="853"/>
         <source>Object</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="866"/>
+        <location filename="../ui/WdgInvoice.qml" line="874"/>
         <source>Begin text</source>
         <translation>初始文字</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="890"/>
+        <location filename="../ui/WdgInvoice.qml" line="898"/>
         <source>End text</source>
         <translation>结束语</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="926"/>
+        <location filename="../ui/WdgInvoice.qml" line="934"/>
         <source>Customer</source>
         <translation>客户</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="969"/>
+        <location filename="../ui/WdgInvoice.qml" line="977"/>
         <source>Address</source>
         <translation>地址</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="977"/>
+        <location filename="../ui/WdgInvoice.qml" line="985"/>
         <source>Business name</source>
         <translation>商家名称</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="990"/>
+        <location filename="../ui/WdgInvoice.qml" line="998"/>
         <source>Prefix</source>
         <translation>尊称</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1004"/>
+        <location filename="../ui/WdgInvoice.qml" line="1012"/>
         <source>First name</source>
         <translation>名</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1017"/>
+        <location filename="../ui/WdgInvoice.qml" line="1025"/>
         <source>Last name</source>
         <translation>姓</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1031"/>
+        <location filename="../ui/WdgInvoice.qml" line="1039"/>
         <source>Street</source>
         <translation>街道</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1044"/>
+        <location filename="../ui/WdgInvoice.qml" line="1052"/>
         <source>Extra</source>
         <translation>额外</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1057"/>
+        <location filename="../ui/WdgInvoice.qml" line="1065"/>
         <source>P.O.Box</source>
         <translation>邮政信箱</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1070"/>
+        <location filename="../ui/WdgInvoice.qml" line="1078"/>
         <source>CC</source>
         <translation>国家代码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1072"/>
+        <location filename="../ui/WdgInvoice.qml" line="1080"/>
         <source>Country code</source>
         <translation>国家代码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1089"/>
+        <location filename="../ui/WdgInvoice.qml" line="1097"/>
         <source>Zip</source>
         <translation>邮政编码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1091"/>
+        <location filename="../ui/WdgInvoice.qml" line="1099"/>
         <source>Postal code</source>
         <translation>邮政编码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1104"/>
+        <location filename="../ui/WdgInvoice.qml" line="1112"/>
         <source>City</source>
         <translation>城市</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1123"/>
+        <location filename="../ui/WdgInvoice.qml" line="1131"/>
         <source>Email</source>
         <translation>电子邮件</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1137"/>
+        <location filename="../ui/WdgInvoice.qml" line="1145"/>
         <source>Phone</source>
         <translation>电话</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1170"/>
+        <location filename="../ui/WdgInvoice.qml" line="1178"/>
         <source>Fiscal number</source>
         <translation>财政编号</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1206"/>
+        <location filename="../ui/WdgInvoice.qml" line="1214"/>
         <source>#</source>
         <translation>#</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1237"/>
+        <location filename="../ui/WdgInvoice.qml" line="1245"/>
         <source>Item</source>
         <translation>物品</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1308"/>
+        <location filename="../ui/WdgInvoice.qml" line="1316"/>
         <source>Date</source>
         <translation>日期</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1377"/>
+        <location filename="../ui/WdgInvoice.qml" line="1385"/>
         <source>Description</source>
         <translation>摘要</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1436"/>
+        <location filename="../ui/WdgInvoice.qml" line="1444"/>
         <source>Qty</source>
         <translation>数量</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1485"/>
+        <location filename="../ui/WdgInvoice.qml" line="1493"/>
         <source>Unit</source>
         <translation>单位</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1534"/>
+        <location filename="../ui/WdgInvoice.qml" line="1542"/>
         <source>Price</source>
         <translation>价格</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1535"/>
+        <location filename="../ui/WdgInvoice.qml" line="1543"/>
         <source>Price incl.</source>
         <translation>价格包括</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1535"/>
+        <location filename="../ui/WdgInvoice.qml" line="1543"/>
         <source>Price excl.</source>
         <translation>价格不含</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1589"/>
-        <location filename="../ui/WdgInvoice.qml" line="2150"/>
-        <location filename="../ui/WdgInvoice.qml" line="2160"/>
+        <location filename="../ui/WdgInvoice.qml" line="1602"/>
+        <location filename="../ui/WdgInvoice.qml" line="2163"/>
+        <location filename="../ui/WdgInvoice.qml" line="2173"/>
         <source>Discount</source>
         <translation>折扣</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1601"/>
-        <location filename="../ui/WdgInvoice.qml" line="2180"/>
+        <location filename="../ui/WdgInvoice.qml" line="1614"/>
+        <location filename="../ui/WdgInvoice.qml" line="2193"/>
         <source>30% or 30.00</source>
         <translation>30% 或 30.00</translation>
     </message>
@@ -882,84 +886,84 @@ Would you like to upgrade to the Advanced plan?</source>
         <translation type="obsolete">增值税</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2022"/>
+        <location filename="../ui/WdgInvoice.qml" line="2035"/>
         <source>Add</source>
         <translation>添加</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="335"/>
+        <location filename="../ui/WdgInvoice.qml" line="343"/>
         <source>VAT mode</source>
         <translation>增值税模式</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1156"/>
+        <location filename="../ui/WdgInvoice.qml" line="1164"/>
         <source>VAT number</source>
         <translation>增值税号码</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="1692"/>
-        <location filename="../ui/WdgInvoice.qml" line="2271"/>
+        <location filename="../ui/WdgInvoice.qml" line="1705"/>
+        <location filename="../ui/WdgInvoice.qml" line="2284"/>
         <source>VAT</source>
         <translation>增值税</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2038"/>
+        <location filename="../ui/WdgInvoice.qml" line="2051"/>
         <source>Remove</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2057"/>
+        <location filename="../ui/WdgInvoice.qml" line="2070"/>
         <source>Move up</source>
         <translation>向上移</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2079"/>
+        <location filename="../ui/WdgInvoice.qml" line="2092"/>
         <source>Move Down</source>
         <translation>向下移</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2120"/>
+        <location filename="../ui/WdgInvoice.qml" line="2133"/>
         <source>Subtotal</source>
         <translation>小计</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2120"/>
+        <location filename="../ui/WdgInvoice.qml" line="2133"/>
         <source>Total Net</source>
         <translation>总净额</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2287"/>
+        <location filename="../ui/WdgInvoice.qml" line="2300"/>
         <source>Rounding</source>
         <translation>四舍五入</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2317"/>
-        <location filename="../ui/WdgInvoice.qml" line="2326"/>
+        <location filename="../ui/WdgInvoice.qml" line="2330"/>
+        <location filename="../ui/WdgInvoice.qml" line="2339"/>
         <source>Deposit</source>
         <translation>订金</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2433"/>
+        <location filename="../ui/WdgInvoice.qml" line="2446"/>
         <source>VAT %1% %4 %2 (%4 %3)</source>
         <translation>增值税 %1% %4 %2 (%4 %3)</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2491"/>
+        <location filename="../ui/WdgInvoice.qml" line="2504"/>
         <source>Internal notes</source>
         <translation>内部信息</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2757"/>
+        <location filename="../ui/WdgInvoice.qml" line="2782"/>
         <source>Swiss Franc</source>
         <translation>瑞郎</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2758"/>
+        <location filename="../ui/WdgInvoice.qml" line="2783"/>
         <source>Euro</source>
         <translation>欧元</translation>
     </message>
     <message>
-        <location filename="../ui/WdgInvoice.qml" line="2759"/>
+        <location filename="../ui/WdgInvoice.qml" line="2784"/>
         <source>US Dollar</source>
         <translation>美元</translation>
     </message>
@@ -1375,17 +1379,22 @@ Would you like to upgrade to the Advanced plan?</source>
         <translation type="vanished">新发票</translation>
     </message>
     <message>
-        <location filename="../base/invoice.js" line="384"/>
+        <location filename="../base/invoice.js" line="177"/>
+        <source>Document %1</source>
+        <translation>文件 %1</translation>
+    </message>
+    <message>
+        <location filename="../base/invoice.js" line="405"/>
         <source>Invoice</source>
         <translation>发票</translation>
     </message>
     <message>
-        <location filename="../base/invoice.js" line="390"/>
+        <location filename="../base/invoice.js" line="411"/>
         <source>Address</source>
         <translation>地址</translation>
     </message>
     <message>
-        <location filename="../base/invoice.js" line="399"/>
+        <location filename="../base/invoice.js" line="420"/>
         <source>Products:</source>
         <translation>产品:</translation>
     </message>
@@ -1436,7 +1445,7 @@ Would you like to upgrade to the Advanced plan?</source>
 <context>
     <name>main</name>
     <message>
-        <location filename="../main.js" line="354"/>
+        <location filename="../main.js" line="368"/>
         <source>Print invoice</source>
         <translation>打印发票</translation>
     </message>

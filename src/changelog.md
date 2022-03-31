@@ -5,6 +5,7 @@
 * [Fix] Fix the language of the invoice title is not that of the document
 * [Fix] Fix the language of the invoice title is not updated when changing the language
 * [Fix] Fix the language of the invoice title is not updated when changing the customer
+* [Enhancement] Show extension's version in the notification bar message.
 
 ## 2022-03-08
 

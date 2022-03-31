@@ -211,7 +211,8 @@ Item {
 
         StyledLabel {
              text: "&#x24D8; " +
-                   qsTr("An updated version of Estimate and Invoices extension has been installed. See %1.")
+                   qsTr("An updated version of Estimate and Invoices extension has been installed. The new version is %1. See %2.")
+                   .arg(Banana.script.getParamValue('pubdate'))
                    .arg("<a href=\"dlginvoiceedit::changelog\">%1</a>")
                    .arg(qsTr("what's new"))
              textFormat: Text.RichText
