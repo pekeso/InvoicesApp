@@ -1,5 +1,9 @@
 # Changelog
  
+## 2022-05-11
+
+* [Fix] Fix percentages without decimals include in the print a dot '.' (ex.: 30.%)
+
 ## 2022-03-31
 
 * [RELEASE STABLE] Released as Stable

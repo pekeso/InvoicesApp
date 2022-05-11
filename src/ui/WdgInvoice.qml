@@ -3168,7 +3168,7 @@ Item {
             let perc = value.substring(0, value.indexOf('%')).trim()
             if (!Banana.SDecimal.isZero(perc)) {
                 result.isZero = false
-                result.value = value
+                result.value = perc
             }
         } else {
             result.isPercentage = false
