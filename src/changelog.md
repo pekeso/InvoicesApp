@@ -2,7 +2,8 @@
  
 ## 2022-05-11
 
-* [Fix] Fix percentages without decimals include in the print a dot '.' (ex.: 30.%)
+* [RELEASE DEV] Released as Dev
+* [Fix] Fix percentages without decimals include a dot '.' in the print (ex.: 30.%)
 
 ## 2022-03-31
 
