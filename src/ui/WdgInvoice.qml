@@ -543,12 +543,14 @@ Item {
                         StyledTextField {
                             id: invoice_rounding_total
                             visible: focus || isInvoiceFieldVisible("show_invoice_rounding_totals")
-                            text: invoice.json && invoice.json.document_info.rounding_total ? invoice.json.document_info.rounding_total : ""
+                            text: invoice.json && invoice.json.document_info.rounding_total ?
+                                      Banana.Converter.toLocaleNumberFormat(invoice.json.document_info.rounding_total) : ""
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
 
                             onEditingFinished: {
                                 if (modified) {
-                                    invoice.json.document_info.rounding_total = text
+                                    invoice.json.document_info.rounding_total =
+                                            Banana.Converter.toInternalNumberFormat(text)
                                     wdgInvoice.setDocumentModified(true)
                                     wdgInvoice.calculateInvoice()
                                 }
@@ -1528,14 +1530,15 @@ Item {
                                 anchors.left: parent.left
                                 anchors.margins: 3 * Stylesheet.pixelScaleRatio
                                 horizontalAlignment: styleData.textAlignment
-                                text: styleData.value
+                                text: Banana.Converter.toLocaleNumberFormat(styleData.value)
                                 selected: invoiceItemsTable.focus &&
                                           currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
                                 onEditingFinished: {
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                                            invoice.json.items[styleData.row].quantity = text ? text : ""
-                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text ? text : "")
+                                            let quantity = text ? Banana.Converter.toInternalNumberFormat(text) : ""
+                                            invoice.json.items[styleData.row].quantity = quantity
+                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, quantity)
                                         }
                                         setDocumentModified()
                                         calculateInvoice()
@@ -1699,11 +1702,11 @@ Item {
                                                 delete invoice.json.items[styleData.row].discount
                                             } else if (discount.isPercentage) {
                                                 invoice.json.items[styleData.row].discount = {
-                                                    'percent' : Banana.Converter.toInternalNumberFormat(discount.value)
+                                                    'percent' : discount.value
                                                 }
                                             } else {
                                                 invoice.json.items[styleData.row].discount = {
-                                                    'amount' : Banana.Converter.toInternalNumberFormat(discount.value)
+                                                    'amount' : discount.value
                                                 }
                                             }
                                             setDocumentModified()
@@ -2277,7 +2280,7 @@ Item {
                                         } else if (discount.isPercentage) {
                                             if (!invoice.json.billing_info.discount)
                                                 invoice.json.billing_info.discount = {}
-                                            invoice.json.billing_info.discount.percent = Banana.Converter.toInternalNumberFormat(discount.value)
+                                            invoice.json.billing_info.discount.percent = discount.value
                                             delete invoice.json.billing_info.discount.amount
                                             delete invoice.json.billing_info.discount.amount_vat_inclusive
                                             delete invoice.json.billing_info.discount.amount_vat_exclusive
@@ -2287,10 +2290,10 @@ Item {
                                             delete invoice.json.billing_info.discount.percent
                                             delete invoice.json.billing_info.discount.amount
                                             if (!isVatModeVatInclusive) {
-                                                invoice.json.billing_info.discount.amount_vat_exclusive = Banana.Converter.toInternalNumberFormat(discount.value)
+                                                invoice.json.billing_info.discount.amount_vat_exclusive = discount.value
                                                 delete invoice.json.billing_info.discount.amount_vat_inclusive
                                             } else {
-                                                invoice.json.billing_info.discount.amount_vat_inclusive = Banana.Converter.toInternalNumberFormat(discount.value)
+                                                invoice.json.billing_info.discount.amount_vat_inclusive = discount.value
                                                 delete invoice.json.billing_info.discount.amount_vat_exclusive
                                             }
                                         }
@@ -2327,7 +2330,7 @@ Item {
                             readOnly: true
                             borderless: true
                             visible: discount_amount.focus ||
-                                     isInvoiceFieldVisible("show_invoice_discount", !Banana.SDecimal.isZero(text))
+                                     isInvoiceFieldVisible("show_invoice_discount", !isLocaleZero(text))
                             text: toLocaleNumberFormat(invoice.json ? getDiscountAmount() : "", true)
 
                             function getDiscountAmount() {
@@ -2383,7 +2386,7 @@ Item {
                             id: rounding_total_amounts
                             readOnly: true
                             borderless: true
-                            visible: isInvoiceFieldVisible("show_invoice_rounding", !Banana.SDecimal.isZero(text))
+                            visible: isInvoiceFieldVisible("show_invoice_rounding", !isLocaleZero(text))
                             Layout.alignment: Qt.AlignRight
                             text: toLocaleNumberFormat(
                                       invoice.json ? invoice.json.billing_info.total_rounding_difference : "",
@@ -2434,9 +2437,9 @@ Item {
                                 onEditingFinished: {
                                     if (modified) {
                                         let amount = ""
-                                        if (!Banana.SDecimal.isZero(text)) {
+                                        if (!isLocaleZero(text)) {
                                             amount = toInternalNumberFormat(text)
-                                            amount =  Banana.SDecimal.invert(amount)
+                                            amount = Banana.SDecimal.invert(amount)
                                             amount = Banana.SDecimal.round(amount, {'decimals': getRoundingDecimals()})
                                         }
                                         invoice.json.billing_info.total_advance_payment = amount
@@ -2460,7 +2463,7 @@ Item {
                             text: invoice.json ? getDepositAmount() : ""
                             Layout.alignment: Qt.AlignRight
                             visible: deposit_amount.focus ||
-                                     isInvoiceFieldVisible("show_invoice_deposit", !Banana.SDecimal.isZero(text))
+                                     isInvoiceFieldVisible("show_invoice_deposit", !isLocaleZero(text))
 
                             function getDepositAmount() {
                                 if (invoice.json && invoice.json.billing_info && invoice.json.billing_info.total_advance_payment) {
@@ -3156,6 +3159,12 @@ Item {
         return 0
     }
 
+    function isLocaleZero(value) {
+        if (!value)
+            return true
+        return Banana.SDecimal.isZero(Banana.Converter.toInternalNumberFormat(value))
+    }
+
     function parseDiscountFormat(value) {
         let result = {
             'isZero': true,
@@ -3165,14 +3174,14 @@ Item {
 
         if (value.indexOf('%') >= 0) {
             result.isPercentage = true
-            let perc = value.substring(0, value.indexOf('%')).trim()
+            let perc = Banana.Converter.toInternalNumberFormat(value.substring(0, value.indexOf('%')))
             if (!Banana.SDecimal.isZero(perc)) {
                 result.isZero = false
                 result.value = perc
             }
         } else {
             result.isPercentage = false
-            let amount = value.trim()
+            let amount = Banana.Converter.toInternalNumberFormat(value)
             if (!Banana.SDecimal.isZero(amount)) {
                 result.isZero = false
                 result.value = amount
@@ -3230,22 +3239,25 @@ Item {
 
     /* This method convert a local amount to the interal amount format */
     function toInternalNumberFormat(value) {
-        if (Banana.SDecimal.isZero(value))
+        if (!value)
             return ""
-
+        let retValue = Banana.Converter.toInternalNumberFormat(value)
+        if (Banana.SDecimal.isZero(retValue))
+            return ""
         var dec = getRoundingDecimals()
-        var roundedValue = Banana.SDecimal.round(value, {'decimals': dec})
-        return Banana.Converter.toInternalNumberFormat(value)
+        retValue = Banana.SDecimal.round(retValue, {'decimals': dec})
+        return retValue
     }
 
     /* This method convert a local amount to the interal amount format */
     function toInternalItemNumberFormat(value) {
-        if (Banana.SDecimal.isZero(value))
+        if (!value)
             return ""
-
         var amount = Banana.Converter.toInternalNumberFormat(value)
+        if (Banana.SDecimal.isZero(amount))
+            return ""
         if (getDecimalsCount(amount) < getRoundingDecimals()) {
-            amount = Banana.SDecimal.round(value, {'decimals': getRoundingDecimals()})
+            amount = Banana.SDecimal.round(amount, {'decimals': getRoundingDecimals()})
         }
         return amount
     }
