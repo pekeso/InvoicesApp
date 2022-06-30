@@ -194,11 +194,12 @@ Item {
 
                     StyledTextField {
                         implicitWidth: stylePropertyWidth
-                        text: appSettings.data.new_documents.rounding_total
+                        text: Banana.Converter.toLocaleNumberFormat(appSettings.data.new_documents.rounding_total)
                         validator: DoubleValidator{bottom: 0.00; top: 1.00; decimals: 24;}
                         onEditingFinished: {
                             if (modified) {
-                                appSettings.data.new_documents.rounding_total = text
+                                appSettings.data.new_documents.rounding_total =
+                                        Banana.Converter.toInternalNumberFormat(text)
                                 appSettings.modified = true
                                 focus = false
                             }
