@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2022-05-11
+// @pubdate = 2022-07-07
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -30,7 +30,13 @@ var JsAction = class JsAction {
 
     constructor() {
         this.version = '1.0';
-        this.uiFileName = 'ui/DlgInvoice.qml';
+
+        this.getUiFileName = function() {
+            if (Banana.compareVersion(Banana.application.version, "10.0.13.22188") < 0)
+                return 'ui/qt5/DlgInvoice.qml';
+            else
+                return 'ui/DlgInvoice.qml';
+        }
     }
 
     // API JsBanAction
@@ -305,7 +311,7 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml(this.uiFileName);
+        var editor = Banana.Ui.createQml(this.getUiFileName());
         editor.qmlObject.setInvoice(invoiceObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
@@ -418,7 +424,7 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        var editor = Banana.Ui.createQml("Invoice", this.getUiFileName());
         editor.qmlObject.setInvoice(invoiceObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
@@ -452,7 +458,7 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        var editor = Banana.Ui.createQml("Invoice", this.getUiFileName());
         editor.qmlObject.setInvoice(duplicatedObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
