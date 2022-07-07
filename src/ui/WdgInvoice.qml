@@ -1267,7 +1267,7 @@ Item {
                 }
 
                 // Items
-                QuickControls14.TableView {
+                TableView {
                     // Items table
                     id: invoiceItemsTable
                     model: invoiceItemsModel
@@ -1276,11 +1276,9 @@ Item {
                     //Layout.fillHeight: true
                     Layout.minimumHeight: getTableHeigth()
 
-                    selectionMode: QuickControls14.SelectionMode.NoSelection
-
-                    verticalScrollBarPolicy: getMaxVisibleItems() === 0 ?
-                                                 Qt.ScrollBarAlwaysOff :
-                                                 Qt.ScrollBarAlwaysOn
+//                    verticalScrollBarPolicy: getMaxVisibleItems() === 0 ?
+//                                                 Qt.ScrollBarAlwaysOff :
+//                                                 Qt.ScrollBarAlwaysOn
 
                     property int signalUpdateRowHeights: 1
                     property int signalUpdateTableHeight: 1
@@ -1920,60 +1918,60 @@ Item {
                         onTriggered: invoiceItemsTable.updateColDescrWidth()
                     }
 
-                    headerDelegate: Rectangle {
-                        height: textItem.implicitHeight * 1.8
-                        color: Stylesheet.baseColor
-                        anchors.bottom: parent.top
-                        anchors.bottomMargin: -textItem.implicitHeight * 1.8 + (6 * Stylesheet.pixelScaleRatio)
+//                    headerDelegate: Rectangle {
+//                        height: textItem.implicitHeight * 1.8
+//                        color: Stylesheet.baseColor
+//                        anchors.bottom: parent.top
+//                        anchors.bottomMargin: -textItem.implicitHeight * 1.8 + (6 * Stylesheet.pixelScaleRatio)
 
 
-                        Text {
-                            id: textItem
-                            anchors.fill: parent
-                            verticalAlignment: Text.AlignVCenter
-                            horizontalAlignment: styleData.textAlignment
-                            anchors.rightMargin: 6 * Stylesheet.pixelScaleRatio
-                            anchors.leftMargin: 6 * Stylesheet.pixelScaleRatio
-                            anchors.topMargin: 6 * Stylesheet.pixelScaleRatio
-                            text: styleData.value
-                            elide: Text.ElideRight
-                            renderType: Text.NativeRendering
-                            color: Stylesheet.textColor
-                        }
-                        Rectangle {
-                            anchors.right: parent.right
-                            anchors.top: parent.top
-                            anchors.bottom: parent.bottom
-                            anchors.bottomMargin: 1 * Stylesheet.pixelScaleRatio
-                            anchors.topMargin: 1 * Stylesheet.pixelScaleRatio
-                            width: 1
-                            color: "#ccc"
-                        }
-                    }
+//                        Text {
+//                            id: textItem
+//                            anchors.fill: parent
+//                            verticalAlignment: Text.AlignVCenter
+//                            horizontalAlignment: styleData.textAlignment
+//                            anchors.rightMargin: 6 * Stylesheet.pixelScaleRatio
+//                            anchors.leftMargin: 6 * Stylesheet.pixelScaleRatio
+//                            anchors.topMargin: 6 * Stylesheet.pixelScaleRatio
+//                            text: styleData.value
+//                            elide: Text.ElideRight
+//                            renderType: Text.NativeRendering
+//                            color: Stylesheet.textColor
+//                        }
+//                        Rectangle {
+//                            anchors.right: parent.right
+//                            anchors.top: parent.top
+//                            anchors.bottom: parent.bottom
+//                            anchors.bottomMargin: 1 * Stylesheet.pixelScaleRatio
+//                            anchors.topMargin: 1 * Stylesheet.pixelScaleRatio
+//                            width: 1
+//                            color: "#ccc"
+//                        }
+//                    }
 
-                    rowDelegate: Item {
-                        height: getRowHeight(styleData.row)
-                        //anchors.bottom: parent.top
-                        anchors.top: parent.top
+//                    rowDelegate: Item {
+//                        height: getRowHeight(styleData.row)
+//                        //anchors.bottom: parent.top
+//                        anchors.top: parent.top
 
-                        function getRowHeight(rowNr) {
-                            let rowHeight = 30
-                            if (invoiceItemsTable.signalUpdateRowHeights) {
-                                if (invoice.json && invoice.json.items.length > rowNr) {
-                                    if (invoice.json.items[rowNr]) {
-                                        let linesCount = invoice.json.items[rowNr].description.split('\n').length
-                                        rowHeight = 30 + 16 * (linesCount - 1)
-                                    }
-                                }
-                            }
-                            return rowHeight * Stylesheet.pixelScaleRatio
-                        }
+//                        function getRowHeight(rowNr) {
+//                            let rowHeight = 30
+//                            if (invoiceItemsTable.signalUpdateRowHeights) {
+//                                if (invoice.json && invoice.json.items.length > rowNr) {
+//                                    if (invoice.json.items[rowNr]) {
+//                                        let linesCount = invoice.json.items[rowNr].description.split('\n').length
+//                                        rowHeight = 30 + 16 * (linesCount - 1)
+//                                    }
+//                                }
+//                            }
+//                            return rowHeight * Stylesheet.pixelScaleRatio
+//                        }
 
-                        TextArea {
-                            id: dummyTextArea
-                            visible: false
-                        }
-                    }
+//                        TextArea {
+//                            id: dummyTextArea
+//                            visible: false
+//                        }
+//                    }
 
                     onCurrentRowChanged: {
                         currentInvoiceItemRow = currentRow
@@ -2023,7 +2021,7 @@ Item {
                         let visColCount = getVisibleColumnCount() // just for binding
                         let colDescription = null
                         let availableWidth = viewport.width - 5
-                        for (let i = 0; i < columnCount; ++i) {
+                        for (let i = 0; i < columns; ++i) {
                             let col = getColumn(i)
                             if (col.role !== "description") {
                                 if (col.visible) {
@@ -2040,7 +2038,7 @@ Item {
                     }
 
                     function updateColumnsWidths() {
-                        for (let i = 0; i < columnCount; ++i) {
+                        for (let i = 0; i < columns; ++i) {
                             let col = getColumn(i)
                             if (col.role !== "description") {
                                 col.updateColumnWidth()
@@ -2058,14 +2056,14 @@ Item {
 
                     function getVisibleColumnCount() {
                         let c = 0
-                        if (itemRowNrColumn.visible) c++
-                        if (itemNumberColumn.visible) c++
-                        if (itemDateColumn.visible) c++
-                        if (itemDescriptionColumn.visible) c++
-                        if (itemQuantityColumn.visible) c++
-                        if (itemUnitColumn.visible) c++
-                        if (itemDiscountColumn.visible) c++
-                        if (itemVatRateColumn.visible) c++
+//                        if (itemRowNrColumn.visible) c++
+//                        if (itemNumberColumn.visible) c++
+//                        if (itemDateColumn.visible) c++
+//                        if (itemDescriptionColumn.visible) c++
+//                        if (itemQuantityColumn.visible) c++
+//                        if (itemUnitColumn.visible) c++
+//                        if (itemDiscountColumn.visible) c++
+//                        if (itemVatRateColumn.visible) c++
                         return c
                     }
 
