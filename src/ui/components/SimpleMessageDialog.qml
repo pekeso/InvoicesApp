@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import "." 1.0
+import QtQuick
+import QtQuick.Controls
+import "."
 
 /**
 This dialog replace the component MessageDialog.
