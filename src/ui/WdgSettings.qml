@@ -2058,7 +2058,7 @@ Item {
         modality: Qt.WindowModal
         programLanguage: root.programLanguage
         documentLanguage: root.documentLanguage
-        appSettings: appSettings
+        appSettings: root.appSettings
         trId: ""
         onTranslationChanged: {
             invoice.setIsModified(true)
