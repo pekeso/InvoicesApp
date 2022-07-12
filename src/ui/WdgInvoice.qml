@@ -1414,7 +1414,7 @@ Item {
                     property int signalUpdateTableHeight: 1
 
                     columnWidthProvider: function(column) {
-                        Banana.console.log('column: ' + column)
+                        //TODO: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
                         let header = invoiceItemsModel.headers[column]
                         if (header) {
                             let columnId = 'show_' + header.id
@@ -1426,20 +1426,15 @@ Item {
                                     return width * Stylesheet.pixelScaleRatio
                                 }
                             } else {
-                                console.log("appearance flag '" + columnId + "' in view '" + currentView + "' not found")
+                                //TODO: console.log("appearance flag '" + columnId + "' in view '" + currentView + "' not found")
                             }
-                            Banana.console.log('  width default:' + header.width)
-                            return header.width * Stylesheet.pixelScaleRatio
+                             return header.width * Stylesheet.pixelScaleRatio
                         }
                         Banana.console.log('  width n/a: 100')
-                        return 100 * Stylesheet.pixelScaleRatio
                     }
 
-                    //                    rowHeightProvider: function(column) {
-                    //                        return d20;
-                    //                    }
-
                     delegate: DelegateChooser {
+
                         DelegateChoice {
                             column: 0
                             StyledTextField {
@@ -1463,9 +1458,15 @@ Item {
                                 filterEnabled: true
 
                                 currentIndex: -1
+                                displayText: {
+                                    // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
+                                    undoKey = display
+                                    display
+                                }
 
                                 onCurrentKeySet: function(key, isExistingKey) {
-                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                    // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
+                                    if (row >= 0 && row < invoice.json.items.length) {
                                         if (isExistingKey) {
                                             var itemId = key
                                             var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
@@ -1477,11 +1478,11 @@ Item {
                                             } else {
                                                 item = emptyInvoiceItem()
                                             }
-                                            invoice.json.items[styleData.row] = item
+                                            invoice.json.items[row] = item
                                             setDocumentModified()
                                             calculateInvoice()
                                         } else {
-                                            invoice.json.items[styleData.row].number = key
+                                            invoice.json.items[row].number = key
                                             setDocumentModified()
                                         }
                                     }
@@ -1489,648 +1490,395 @@ Item {
 
                                 onFocusChanged: {
                                     if (focus) {
-//                                        currentInvoiceItemRow = styleData.row
-//                                        currentInvoiceItemCol = styleData.role
+                                        currentInvoiceItemRow = row
+                                        currentInvoiceItemCol = column
                                     }
                                 }
                             }
                         }
 
                         DelegateChoice {
-                                StyledTextField {
-                                    horizontalAlignment: invoiceItemsModel.headers[model.column].align
-                                    text: model.display
+                            column: 2
+                            StyledTextField {
+                                property int updateText: 1  // Binding for updating the text
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: updateText && model.display ? Banana.Converter.toLocaleDateFormat( model.display) : ""
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            let date = text
+                                            if (date) {
+                                                date = Banana.Converter.toInternalDateFormat(date)
+                                                // Check date
+                                                let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                                if (!localDate || localDate.length === 0) {
+                                                    errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                                    errorMessageDialog.visible = true
+                                                    updateText++
+                                                    modified = false
+                                                    focus = false
+                                                    return
+                                                }
+                                            }
+                                            invoice.json.items[model.row].date = date
+                                            let index = invoiceItemsModel.index(model.row, model.column)
+                                            invoiceItemsModel.setData(index, 'display', date)
+                                        }
+                                        setDocumentModified()
+                                        modified = false
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                                onPressed: {
+                                    if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")) {
+                                        dlgLicense.visible = true
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 3
+                            StyledTextArea {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: model.display
+
+                                Keys.onTabPressed: {
+                                    // Steal key press, it is not nice because the navigation doesn't work but ...
+                                    focus = false
+                                    event.accepted = true;
+                                }
+
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            invoice.json.items[model.row].description = text
+                                            let index = invoiceItemsModel.index(model.row, model.column)
+                                            invoiceItemsModel.setData(index, 'display', text)
+                                        }
+                                        setDocumentModified()
+                                        modified = false
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+
+                                // In case the lines count change we emit a signal to update the row heigth
+                                property int textLinesCount: 1
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                        textLinesCount = text.split('\n').length
+                                    }
+                                }
+
+                                onTextChanged: {
+                                    let newLinesCount = text.split('\n').length
+                                    if (newLinesCount !== textLinesCount) {
+                                        textLinesCount = newLinesCount
+                                        // Save text to let calculate the right row height
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            invoice.json.items[model.row].description = text
+                                        }
+                                        // emit signal to update the row height
+                                        ++invoiceItemsTable.signalUpdateRowHeights
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 4
+                            StyledTextField {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: model.display ? Banana.Converter.toLocaleNumberFormat(model.display) : ""
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            let quantity = text ? Banana.Converter.toInternalNumberFormat(text) : ""
+                                            invoice.json.items[model.row].quantity = quantity
+                                            let index = invoiceItemsModel.index(model.row, model.column)
+                                            invoiceItemsModel.setData(index, 'display', text)
+                                        }
+                                        setDocumentModified()
+                                        calculateInvoice()
+                                        modified = false
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 5
+                            StyledTextField {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: model.display
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            invoice.json.items[model.row].mesure_unit = text
+                                            let index = invoiceItemsModel.index(model.row, model.column)
+                                            invoiceItemsModel.setData(index, 'display', text)
+                                        }
+                                        setDocumentModified()
+                                        modified = false
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 6
+                            StyledTextField {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: toLocaleItemNumberFormat(model.display)
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
+                                            if (isVatModeVatInclusive) {
+                                                invoice.json.items[model.row].unit_price.amount_vat_inclusive = internalAmountFormat
+                                                invoice.json.items[model.row].unit_price.amount_vat_exclusive = null
+                                            } else {
+                                                invoice.json.items[model.row].unit_price.amount_vat_inclusive = null
+                                                invoice.json.items[model.row].unit_price.amount_vat_exclusive = internalAmountFormat
+                                            }
+                                            if (internalAmountFormat && !invoice.json.items[model.row].quantity) {
+                                                // Set quantity if a price is set
+                                                invoice.json.items[model.row].quantity = "1"
+                                            }
+
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                            modified = false
+                                        }
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 7
+                            StyledTextField {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: toLocaleItemDiscountFormat(model.display)
+                                placeholderText: hovered ? qsTr("30% or 30.00") : ""
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")
+                                onEditingFinished: {
+                                    if (modified) {
+                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
+                                            let discount = parseDiscountFormat(text)
+                                            if (discount.isZero) {
+                                                delete invoice.json.items[model.row].discount
+                                            } else if (discount.isPercentage) {
+                                                invoice.json.items[model.row].discount = {
+                                                    'percent' : discount.value
+                                                }
+                                            } else {
+                                                invoice.json.items[model.row].discount = {
+                                                    'amount' : discount.value
+                                                }
+                                            }
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                            modified = false
+                                        }
+                                    }
+                                    focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                                onPressed: {
+                                    if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")) {
+                                        dlgLicense.visible = true
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 8
+                            StyledTextField {
+                                readOnly: true
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: toLocaleItemTotalFormat(model.display, model.row)
+                                selected: invoiceItemsTable.focus &&
+                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = model.row
+                                        currentInvoiceItemCol = model.column
+                                    }
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            column: 9
+                            StyledKeyDescrComboBox {
+                                id: invoice_item_vat
+                                popupMinWidth: 300  * Stylesheet.pixelScaleRatio
+                                popupAlign: Qt.AlignRight
+
+                                currentIndex: getCurrentVatCodeIndex()
+                                displayText: getDisplayText()
+
+                                model: taxRatesModel
+                                textRole: "key"
+                                editable: false
+
+                                onCurrentKeySet: function(key, isExistingKey) {
+                                    // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
+                                    if (row >= 0 && row < invoice.json.items.length) {
+                                        let vatItem = invoice_item_vat.getCurrentItem()
+                                        if (vatItem) {
+                                            invoice.json.items[row].unit_price.vat_code = vatItem.key
+                                            invoice.json.items[row].unit_price.vat_rate = vatItem.rate
+                                            setDocumentModified()
+                                            calculateInvoice()
+                                        }
+                                    }
+                                }
+
+                                Keys.onPressed: {
+                                    if (event.key === Qt.Key_Tab) {
+                                        if (currentIndex === -1) {
+                                            updateInvoiceItem()
+                                        }
+                                    }
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        currentInvoiceItemRow = row
+                                        currentInvoiceItemCol = column
+                                    }
+                                }
+
+                                function getDisplayText() {
+                                    if (display) {
+                                        return display
+                                    } else if (row >= 0 && row < invoice.json.items.length) {
+                                        // If the code is not set, show the rate
+                                        if (invoice.json.items[row].unit_price.vat_rate) {
+                                            return invoice.json.items[row].unit_price.vat_rate
+                                        }
+                                    }
+                                    return "";
+                                }
+
+                                function updateInvoiceItem() {
+                                    if (row >= 0 && row < invoice.json.items.length) {
+                                        var vatRate = getCurrentVatCode()
+                                        invoice.json.items[row].unit_price.vat_rate = vatRate.rate
+                                        if (vatRate.code)
+                                            invoice.json.items[row].unit_price.vat_code = vatRate.code
+                                        else
+                                            delete invoice.json.items[row].unit_price.vat_code
+                                        setDocumentModified()
+                                        calculateInvoice()
+                                    }
+                                }
+
+                                function getCurrentVatCodeIndex() {
+                                    if (row >= 0 && row < invoice.json.items.length) {
+                                        if (invoice.json.items[row].unit_price.vat_code) {
+                                            var itemVatCode = invoice.json.items[row].unit_price.vat_code
+                                            for (var i = 0; i < model.count; i++) {
+                                                if (model.get(i).code === itemVatCode) {
+                                                    return i
+                                                }
+                                            }
+                                        }
+                                        invoice_item_vat.editText = invoice.json.items[row].unit_price.vat_rate
+                                    }
+                                    return -1
+                                }
+
+                                function getCurrentVatCode() {
+                                    var vatRate = ""
+                                    if (currentIndex > 0) {
+                                        var currentVatRate = model.get(currentIndex)
+                                        vatRate = {
+                                            rate: currentVatRate.rate,
+                                            code: currentVatRate.code,
+                                        }
+
+                                    } else if (currentIndex === 0) {
+                                        vatRate = {
+                                            rate: ""
+                                        }
+
+                                    } else if (currentIndex < 0) {
+                                        var vatCode = VatCodes.vatCodeGet(editText)
+                                        vatRate = {
+                                            rate: editText,
+                                        }
+
+                                    } else {
+                                        vatRate = {
+                                            rate: ""
+                                        }
+                                    }
+
+                                    if (Banana.SDecimal.isZero(vatRate.rate))
+                                        vatRate.rate = ""
+
+                                    return vatRate
+                                }
+                            }
+                        }
+
+                        DelegateChoice {
+                            StyledTextField {
+                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                text: model.display
                             }
                         }
                     }
-
-                    //                    TableViewColumn {
-                    //                        id: itemRowNrColumn
-                    //                        role: "number"
-                    //                        title: qsTr("#")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 30 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignLeft;
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_row_number")
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                borderless: true
-                    //                                readOnly: true
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: styleData.row + 1
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_row_number", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_row_number", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemNumberColumn
-                    //                        role: "number"
-                    //                        title: qsTr("Item")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_number", role)
-                    //                        delegate: Item {
-                    //                            StyledKeyDescrComboBox {
-                    //                                id: invoiceItemComboBox
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.topMargin: 3 * Stylesheet.pixelScaleRatio
-                    //                                anchors.rightMargin: 3 * Stylesheet.pixelScaleRatio
-                    //                                anchors.leftMargin: 3 * Stylesheet.pixelScaleRatio
-                    //                                popupMinWidth: 300 * Stylesheet.pixelScaleRatio
-
-                    //                                editable: true
-                    //                                model: itemsModel
-                    //                                textRole: "key"
-                    //                                filterEnabled: true
-
-                    //                                currentIndex: -1
-                    //                                displayText: {
-                    //                                    undoKey = styleData.value
-                    //                                    styleData.value
-                    //                                }
-
-                    //                                onCurrentKeySet: function(key, isExistingKey) {
-                    //                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                        if (isExistingKey) {
-                    //                                            var itemId = key
-                    //                                            var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                    //                                            var item = Items.itemGet(itemId, vatExclusive)
-                    //                                            if (item) {
-                    //                                                var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
-                    //                                                if (vatCode)
-                    //                                                    item.unit_price.vat_rate = vatCode.rate
-                    //                                            } else {
-                    //                                                item = emptyInvoiceItem()
-                    //                                            }
-                    //                                            invoice.json.items[styleData.row] = item
-                    //                                            setDocumentModified()
-                    //                                            calculateInvoice()
-                    //                                        } else {
-                    //                                            invoice.json.items[styleData.row].number = key
-                    //                                            setDocumentModified()
-                    //                                        }
-                    //                                    }
-                    //                                }
-
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_number", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_number", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemDateColumn
-                    //                        role: "date";
-                    //                        title: qsTr("Date");
-                    //                        width: getColumnWidth();
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignLeft;
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                property int updateText: 1  // Binding for updating the text
-                    //                                text: updateText && styleData.value ? Banana.Converter.toLocaleDateFormat(styleData.value) : ""
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            let date = text
-                    //                                            if (date) {
-                    //                                                date = Banana.Converter.toInternalDateFormat(date)
-                    //                                                // Check date
-                    //                                                let localDate = Banana.Converter.toLocaleDateFormat(date)
-                    //                                                if (!localDate || localDate.length === 0) {
-                    //                                                    errorMessageDialog.text = qsTr("Invalid date: " + text)
-                    //                                                    errorMessageDialog.visible = true
-                    //                                                    updateText++
-                    //                                                    modified = false
-                    //                                                    focus = false
-                    //                                                    return
-                    //                                                }
-                    //                                            }
-                    //                                            invoice.json.items[styleData.row].date = date
-                    //                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, date)
-                    //                                        }
-                    //                                        setDocumentModified()
-                    //                                        modified = false
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                                onPressed: {
-                    //                                    if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")) {
-                    //                                        dlgLicense.visible = true
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_date", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_date", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemDescriptionColumn
-                    //                        role: "description"
-                    //                        title: qsTr("Description")
-                    //                        width: defaultWidth
-                    //                        property int defaultWidth: 220 * Stylesheet.pixelScaleRatio
-                    //                        delegate: Item {
-                    //                            StyledTextArea {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: styleData.value
-
-                    //                                Keys.onTabPressed: {
-                    //                                    // Steal key press, it is not nice because the navigation doesn't work but ...
-                    //                                    focus = false
-                    //                                    event.accepted = true;
-                    //                                }
-
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            invoice.json.items[styleData.row].description = text
-                    //                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
-                    //                                        }
-                    //                                        setDocumentModified()
-                    //                                        modified = false
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-
-                    //                                // In case the lines count change we emit a signal to update the row heigth
-                    //                                property int textLinesCount: 1
-
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                        textLinesCount = text.split('\n').length
-                    //                                    }
-                    //                                }
-
-                    //                                onTextChanged: {
-                    //                                    let newLinesCount = text.split('\n').length
-                    //                                    if (newLinesCount !== textLinesCount) {
-                    //                                        textLinesCount = newLinesCount
-                    //                                        // Save text to let calculate the right row height
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            invoice.json.items[styleData.row].description = text
-                    //                                        }
-                    //                                        // emit signal to update the row height
-                    //                                        ++invoiceItemsTable.signalUpdateRowHeights
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemQuantityColumn
-                    //                        role: "quantity"
-                    //                        title: qsTr("Qty")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_quantity", role)
-                    //                        horizontalAlignment: Text.AlignRight;
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: Banana.Converter.toLocaleNumberFormat(styleData.value)
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            let quantity = text ? Banana.Converter.toInternalNumberFormat(text) : ""
-                    //                                            invoice.json.items[styleData.row].quantity = quantity
-                    //                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, quantity)
-                    //                                        }
-                    //                                        setDocumentModified()
-                    //                                        calculateInvoice()
-                    //                                        modified = false
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_quantity", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_quantity", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemUnitColumn
-                    //                        role: "mesure_unit"
-                    //                        title: qsTr("Unit")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 60 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignRight
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_unit", role)
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: styleData.value
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            invoice.json.items[styleData.row].mesure_unit = text
-                    //                                            invoiceItemsModel.setProperty(styleData.row, styleData.role, text)
-                    //                                        }
-                    //                                        setDocumentModified()
-                    //                                        modified = false
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_unit", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_unit", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemPriceColumn
-                    //                        role: "price"
-                    //                        title: isVatModeVatNone ?
-                    //                                   qsTr("Price") : isVatModeVatInclusive ?
-                    //                                       qsTr("Price incl.") : qsTr("Price excl.")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignRight
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: toLocaleItemNumberFormat(styleData.value)
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
-                    //                                            if (isVatModeVatInclusive) {
-                    //                                                invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = internalAmountFormat
-                    //                                                invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = null
-                    //                                            } else {
-                    //                                                invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = null
-                    //                                                invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = internalAmountFormat
-                    //                                            }
-                    //                                            if (internalAmountFormat && !invoice.json.items[styleData.row].quantity) {
-                    //                                                // Set quantity if a price is set
-                    //                                                invoice.json.items[styleData.row].quantity = "1"
-                    //                                            }
-
-                    //                                            setDocumentModified()
-                    //                                            calculateInvoice()
-                    //                                            modified = false
-                    //                                        }
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_price", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_price", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemDiscountColumn
-                    //                        role: "discount"
-                    //                        title: qsTr("Discount")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignRight
-                    //                        visible: invoiceItemsTable.isColumnVisible("show_invoice_item_column_discount", role)
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: toLocaleItemDiscountFormat(styleData.value)
-                    //                                placeholderText: hovered ? qsTr("30% or 30.00") : ""
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")
-                    //                                onEditingFinished: {
-                    //                                    if (modified) {
-                    //                                        if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                            let discount = parseDiscountFormat(text)
-                    //                                            if (discount.isZero) {
-                    //                                                delete invoice.json.items[styleData.row].discount
-                    //                                            } else if (discount.isPercentage) {
-                    //                                                invoice.json.items[styleData.row].discount = {
-                    //                                                    'percent' : discount.value
-                    //                                                }
-                    //                                            } else {
-                    //                                                invoice.json.items[styleData.row].discount = {
-                    //                                                    'amount' : discount.value
-                    //                                                }
-                    //                                            }
-                    //                                            setDocumentModified()
-                    //                                            calculateInvoice()
-                    //                                            modified = false
-                    //                                        }
-                    //                                    }
-                    //                                    focus = false // call at the end, if not with the tab key the edited text is lost
-                    //                                }
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                                onPressed: {
-                    //                                    if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")) {
-                    //                                        dlgLicense.visible = true
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_discount", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_discount", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemTotalColumn
-                    //                        role: "total"
-                    //                        title: qsTr("Total")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 100 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignRight
-                    //                        delegate: Item {
-                    //                            StyledTextField {
-                    //                                readOnly: true
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                horizontalAlignment: styleData.textAlignment
-                    //                                text: toLocaleItemTotalFormat(styleData.value, styleData.row)
-                    //                                selected: invoiceItemsTable.focus &&
-                    //                                          currentInvoiceItemRow === styleData.row && currentInvoiceItemCol === styleData.role
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_total", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_total", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
-
-                    //                    TableViewColumn {
-                    //                        id: itemVatRateColumn
-                    //                        role: "vat_code"
-                    //                        title: qsTr("VAT")
-                    //                        width: getColumnWidth()
-                    //                        property int defaultWidth: 80 * Stylesheet.pixelScaleRatio
-                    //                        horizontalAlignment: Text.AlignRight
-                    //                        visible: !isVatModeVatNone
-                    //                        delegate: Item {
-                    //                            StyledKeyDescrComboBox {
-                    //                                id: invoice_item_vat
-                    //                                anchors.right: parent.right
-                    //                                anchors.left: parent.left
-                    //                                anchors.margins: 3 * Stylesheet.pixelScaleRatio
-                    //                                popupMinWidth: 300  * Stylesheet.pixelScaleRatio
-                    //                                popupAlign: Qt.AlignRight
-
-                    //                                currentIndex: getCurrentVatCodeIndex()
-                    //                                displayText: getDisplayText()
-
-                    //                                model: taxRatesModel
-                    //                                textRole: "key"
-                    //                                editable: false
-
-                    //                                onCurrentKeySet: function(key, isExistingKey) {
-                    //                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                        let vatItem = invoice_item_vat.getCurrentItem()
-                    //                                        if (vatItem) {
-                    //                                            invoice.json.items[styleData.row].unit_price.vat_code = vatItem.key
-                    //                                            invoice.json.items[styleData.row].unit_price.vat_rate = vatItem.rate
-                    //                                            setDocumentModified()
-                    //                                            calculateInvoice()
-                    //                                        }
-                    //                                    }
-                    //                                }
-
-                    //                                Keys.onPressed: {
-                    //                                    if (event.key === Qt.Key_Tab) {
-                    //                                        if (currentIndex === -1) {
-                    //                                            updateInvoiceItem()
-                    //                                        }
-                    //                                    }
-                    //                                }
-
-                    //                                onFocusChanged: {
-                    //                                    if (focus) {
-                    //                                        currentInvoiceItemRow = styleData.row
-                    //                                        currentInvoiceItemCol = styleData.role
-                    //                                    }
-                    //                                }
-
-                    //                                function getDisplayText() {
-                    //                                    if (styleData.value) {
-                    //                                        return styleData.value
-                    //                                    } else if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                        // If the code is not set, show the rate
-                    //                                        if (invoice.json.items[styleData.row].unit_price.vat_rate) {
-                    //                                            return invoice.json.items[styleData.row].unit_price.vat_rate
-                    //                                        }
-                    //                                    }
-                    //                                    return "";
-                    //                                }
-
-                    //                                function updateInvoiceItem() {
-                    //                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                        var vatRate = getCurrentVatCode()
-                    //                                        invoice.json.items[styleData.row].unit_price.vat_rate = vatRate.rate
-                    //                                        if (vatRate.code)
-                    //                                            invoice.json.items[styleData.row].unit_price.vat_code = vatRate.code
-                    //                                        else
-                    //                                            delete invoice.json.items[styleData.row].unit_price.vat_code
-                    //                                        setDocumentModified()
-                    //                                        calculateInvoice()
-                    //                                    }
-                    //                                }
-
-                    //                                function getCurrentVatCodeIndex() {
-                    //                                    if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
-                    //                                        if (invoice.json.items[styleData.row].unit_price.vat_code) {
-                    //                                            var itemVatCode = invoice.json.items[styleData.row].unit_price.vat_code
-                    //                                            for (var i = 0; i < model.count; i++) {
-                    //                                                if (model.get(i).code === itemVatCode) {
-                    //                                                    return i
-                    //                                                }
-                    //                                            }
-                    //                                        }
-                    //                                        invoice_item_vat.editText = invoice.json.items[styleData.row].unit_price.vat_rate
-                    //                                    }
-                    //                                    return -1
-                    //                                }
-
-                    //                                function getCurrentVatCode() {
-                    //                                    var vatRate = ""
-                    //                                    if (currentIndex > 0) {
-                    //                                        var currentVatRate = model.get(currentIndex)
-                    //                                        vatRate = {
-                    //                                            rate: currentVatRate.rate,
-                    //                                            code: currentVatRate.code,
-                    //                                        }
-
-                    //                                    } else if (currentIndex === 0) {
-                    //                                        vatRate = {
-                    //                                            rate: ""
-                    //                                        }
-
-                    //                                    } else if (currentIndex < 0) {
-                    //                                        var vatCode = VatCodes.vatCodeGet(editText)
-                    //                                        vatRate = {
-                    //                                            rate: editText,
-                    //                                        }
-
-                    //                                    } else {
-                    //                                        vatRate = {
-                    //                                            rate: ""
-                    //                                        }
-                    //                                    }
-
-                    //                                    if (Banana.SDecimal.isZero(vatRate.rate))
-                    //                                        vatRate.rate = ""
-
-                    //                                    return vatRate
-                    //                                }
-                    //                            }
-                    //                        }
-                    //                        onWidthChanged: {
-                    //                            saveInvoiceItemColumnWidth("width_invoice_item_column_vat", width)
-                    //                            updateColumnDescrWidhtTimer.restart()
-                    //                        }
-                    //                        function getColumnWidth() {
-                    //                            return getInvoiceItemColumnWidth("width_invoice_item_column_vat", defaultWidth)
-                    //                        }
-                    //                        function updateColumnWidth() {
-                    //                            width = getColumnWidth()
-                    //                        }
-                    //                    }
 
                     Timer {
                         id: updateColumnDescrWidhtTimer
@@ -2139,69 +1887,10 @@ Item {
                         onTriggered: invoiceItemsTable.updateColDescrWidth()
                     }
 
-                    //                    headerDelegate: Rectangle {
-                    //                        height: textItem.implicitHeight * 1.8
-                    //                        color: Stylesheet.baseColor
-                    //                        anchors.bottom: parent.top
-                    //                        anchors.bottomMargin: -textItem.implicitHeight * 1.8 + (6 * Stylesheet.pixelScaleRatio)
-
-
-                    //                        Text {
-                    //                            id: textItem
-                    //                            anchors.fill: parent
-                    //                            verticalAlignment: Text.AlignVCenter
-                    //                            horizontalAlignment: styleData.textAlignment
-                    //                            anchors.rightMargin: 6 * Stylesheet.pixelScaleRatio
-                    //                            anchors.leftMargin: 6 * Stylesheet.pixelScaleRatio
-                    //                            anchors.topMargin: 6 * Stylesheet.pixelScaleRatio
-                    //                            text: styleData.value
-                    //                            elide: Text.ElideRight
-                    //                            renderType: Text.NativeRendering
-                    //                            color: Stylesheet.textColor
-                    //                        }
-                    //                        Rectangle {
-                    //                            anchors.right: parent.right
-                    //                            anchors.top: parent.top
-                    //                            anchors.bottom: parent.bottom
-                    //                            anchors.bottomMargin: 1 * Stylesheet.pixelScaleRatio
-                    //                            anchors.topMargin: 1 * Stylesheet.pixelScaleRatio
-                    //                            width: 1
-                    //                            color: "#ccc"
-                    //                        }
-                    //                    }
-
-                    //                    rowDelegate: Item {
-                    //                        height: getRowHeight(styleData.row)
-                    //                        //anchors.bottom: parent.top
-                    //                        anchors.top: parent.top
-
-                    //                        function getRowHeight(rowNr) {
-                    //                            let rowHeight = 30
-                    //                            if (invoiceItemsTable.signalUpdateRowHeights) {
-                    //                                if (invoice.json && invoice.json.items.length > rowNr) {
-                    //                                    if (invoice.json.items[rowNr]) {
-                    //                                        let linesCount = invoice.json.items[rowNr].description.split('\n').length
-                    //                                        rowHeight = 30 + 16 * (linesCount - 1)
-                    //                                    }
-                    //                                }
-                    //                            }
-                    //                            return rowHeight * Stylesheet.pixelScaleRatio
-                    //                        }
-
-                    //                        TextArea {
-                    //                            id: dummyTextArea
-                    //                            visible: false
-                    //                        }
-                    //                    }
-
-//                    onCurrentRowChanged: {
-//                        currentInvoiceItemRow = currentRow
-//                    }
-
                     onFocusChanged: {
                         if (!focus) {
-                            //currentInvoiceItemRow = -1
-                            //currentInvoiceItemCol = ""
+                            currentInvoiceItemRow = -1
+                            currentInvoiceItemCol = -1
                         }
                     }
 
