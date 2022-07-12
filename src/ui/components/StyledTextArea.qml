@@ -40,19 +40,19 @@ TextArea {
 
    signal textEdited()
 
-   onTextChanged: {
+   onTextChanged: function() {
       if (focus) {
          textArea.textEdited()
          modified = true
       }
    }
 
-   onFocusChanged: {
+   onFocusChanged: function() {
        if (focus)
            modified = false
    }
 
-   Keys.onEscapePressed:{
+   Keys.onEscapePressed: function(event) {
        undo()
        modified = false
        focus = false
