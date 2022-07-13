@@ -1406,9 +1406,12 @@ Item {
                     rowSpacing: 2
                     columnSpacing: 4
 
-                    //                    verticalScrollBarPolicy: getMaxVisibleItems() === 0 ?
-                    //                                                 Qt.ScrollBarAlwaysOff :
-                    //                                                 Qt.ScrollBarAlwaysOn
+                    flickableDirection: Flickable.AutoFlickIfNeeded
+                    pointerNavigationEnabled: true
+                    keyNavigationEnabled: true
+                    reuseItems: true
+
+                    selectionModel: ItemSelectionModel {}
 
                     property int signalUpdateRowHeights: 1
                     property int signalUpdateTableHeight: 1
@@ -1438,6 +1441,9 @@ Item {
                         DelegateChoice {
                             column: 0
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 borderless: true
                                 readOnly: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
@@ -1449,9 +1455,10 @@ Item {
                         DelegateChoice {
                             column: 1
                             StyledKeyDescrComboBox {
-                                id: invoiceItemComboBox
-                                popupMinWidth: 300 * Stylesheet.pixelScaleRatio
+                                required property bool selected
+                                required property bool current
 
+                                popupMinWidth: 300 * Stylesheet.pixelScaleRatio
                                 editable: true
                                 model: itemsModel
                                 textRole: "key"
@@ -1500,6 +1507,9 @@ Item {
                         DelegateChoice {
                             column: 2
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 property int updateText: 1  // Binding for updating the text
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: updateText && model.display ? Banana.Converter.toLocaleDateFormat( model.display) : ""
@@ -1549,12 +1559,15 @@ Item {
                         DelegateChoice {
                             column: 3
                             StyledTextArea {
+                                required property bool selected
+                                required property bool current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
 
-                                Keys.onTabPressed: {
-                                    // Steal key press, it is not nice because the navigation doesn't work but ...
-                                    focus = false
+                                Keys.onTabPressed: function (event) {
+                                    // Steal tab press, it is not nice because the navigation doesn't work but ...
+                                    invoiceItemsTable.itemAtCell(model.column + 1, model.row).focus = true
                                     event.accepted = true;
                                 }
 
@@ -1600,6 +1613,9 @@ Item {
                         DelegateChoice {
                             column: 4
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display ? Banana.Converter.toLocaleNumberFormat(model.display) : ""
                                 selected: invoiceItemsTable.focus &&
@@ -1630,6 +1646,9 @@ Item {
                         DelegateChoice {
                             column: 5
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
                                 selected: invoiceItemsTable.focus &&
@@ -1697,6 +1716,9 @@ Item {
                         DelegateChoice {
                             column: 7
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemDiscountFormat(model.display)
                                 placeholderText: hovered ? qsTr("30% or 30.00") : ""
@@ -1742,6 +1764,9 @@ Item {
                         DelegateChoice {
                             column: 8
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 readOnly: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemTotalFormat(model.display, model.row)
@@ -1759,6 +1784,9 @@ Item {
                         DelegateChoice {
                             column: 9
                             StyledKeyDescrComboBox {
+                                required property bool selected
+                                required property bool current
+
                                 id: invoice_item_vat
                                 popupMinWidth: 300  * Stylesheet.pixelScaleRatio
                                 popupAlign: Qt.AlignRight
@@ -1768,7 +1796,7 @@ Item {
 
                                 model: taxRatesModel
                                 textRole: "key"
-                                editable: false
+                                editable: true // set to true to make tab navitation working
 
                                 onCurrentKeySet: function(key, isExistingKey) {
                                     // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
@@ -1779,14 +1807,6 @@ Item {
                                             invoice.json.items[row].unit_price.vat_rate = vatItem.rate
                                             setDocumentModified()
                                             calculateInvoice()
-                                        }
-                                    }
-                                }
-
-                                Keys.onPressed: {
-                                    if (event.key === Qt.Key_Tab) {
-                                        if (currentIndex === -1) {
-                                            updateInvoiceItem()
                                         }
                                     }
                                 }
@@ -1874,6 +1894,9 @@ Item {
 
                         DelegateChoice {
                             StyledTextField {
+                                required property bool selected
+                                required property bool current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
                             }
