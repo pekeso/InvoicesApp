@@ -1401,7 +1401,7 @@ Item {
                     model: invoiceItemsModel
 
                     Layout.fillWidth: true
-                    Layout.minimumHeight: 200 //getTableHeigth()
+                    Layout.minimumHeight: getTableHeigth()
 
                     rowSpacing: 2
                     columnSpacing: 4
@@ -1428,7 +1428,7 @@ Item {
                             } else {
                                 //TODO: console.log("appearance flag '" + columnId + "' in view '" + currentView + "' not found")
                             }
-                             return header.width * Stylesheet.pixelScaleRatio
+                            return header.width * Stylesheet.pixelScaleRatio
                         }
                         Banana.console.log('  width n/a: 100')
                     }
@@ -2096,7 +2096,6 @@ Item {
                         Layout.preferredWidth: 10 * Stylesheet.pixelScaleRatio
                     }
 
-
                 }
 
                 GridLayout {
@@ -2172,7 +2171,6 @@ Item {
 
                             StyledTextField {
                                 id: discount_amount
-                                Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
                                 Layout.alignment: Qt.AlignRight
                                 readOnly: invoice.isReadOnly
                                 text: invoice.json ? getDiscount() : ""
@@ -2506,6 +2504,10 @@ Item {
                 }
 
             }
+        }
+
+        Item {
+            Layout.fillHeight: true
         }
     }
 
