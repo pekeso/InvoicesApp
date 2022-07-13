@@ -375,7 +375,7 @@
         <location filename="../ui/DlgInvoice.qml" line="269"/>
         <location filename="../ui/qt5/DlgInvoice.qml" line="269"/>
         <source>Changelog</source>
-        <translation>Journal modifications</translation>
+        <translation>Journal</translation>
     </message>
     <message>
         <location filename="../ui/DlgInvoice.qml" line="374"/>
