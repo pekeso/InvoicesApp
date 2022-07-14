@@ -1694,8 +1694,8 @@ Item {
                                         if (model.row >= 0 && model.row < invoice.json.items.length) {
                                             invoice.json.items[model.row].description = text
                                         }
-                                        // emit signal to update the row height
-                                        ++invoiceItemsTable.signalUpdateRowHeights
+                                        invoiceItemsTable.forceLayout()
+                                        invoiceItemsTable.signalUpdateRowHeights++
                                     }
                                 }
                             }
