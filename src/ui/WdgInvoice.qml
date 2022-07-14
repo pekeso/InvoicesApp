@@ -1377,22 +1377,118 @@ Item {
                     }
                 }
 
-                // Items
                 HorizontalHeaderView {
                     id: horizontalHeader
+                    model: invoiceItemsModel
                     syncView: invoiceItemsTable
-                    //keyNavigationEnabled: false
-                    columnSpacing: 4
+
+                    Layout.topMargin: Stylesheet.defaultMargin
+
                     delegate: DelegateChooser {
                         DelegateChoice {
-                            StyledLabel {
-                                clip: true
-                                text: invoiceItemsModel.headers[model.column].title
-                                horizontalAlignment: invoiceItemsModel.headers[model.column].align
-                                anchors.rightMargin: 2
+                            Item {
+                                Rectangle {
+                                    anchors.fill: parent
+                                    color: Stylesheet.baseColor
+                                }
+
+                                StyledLabel {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 4 * Stylesheet.pixelScaleRatio
+                                    anchors.rightMargin: 4 * Stylesheet.pixelScaleRatio
+                                    verticalAlignment: Qt.AlignVCenter
+
+                                    clip: true
+                                    text: invoiceItemsModel.headers[model.column].title
+                                    horizontalAlignment: invoiceItemsModel.headers[model.column].align
+                                }
+
+                                Rectangle {
+                                    x: parent.width
+                                    y: 0
+                                    width: 5 * Stylesheet.pixelScaleRatio
+                                    height: parent.height
+                                    color: Stylesheet.baseColor
+
+                                    Rectangle {
+                                        anchors.centerIn: parent
+                                        width: 1
+                                        height: parent.height
+                                        color: "#bdbebf"
+                                    }
+
+                                }
                             }
                         }
                     }
+
+                    rowHeightProvider: function(row) {
+                        return 28 * Stylesheet.pixelScaleRatio
+                    }
+
+                    MouseArea {
+                        id: headerdragarea
+                        anchors.fill: parent
+                        preventStealing: true
+                        hoverEnabled: true
+
+                        drag.axis: Drag.XAxis
+                        drag.smoothed: false
+                        drag.minimumX: 0
+                        drag.maximumX: 1200
+
+                        property bool isDragging: false
+                        property real dragInitialPos: 0
+                        property int dragColumnNo: 0
+                        property int dragColumnWidth: 0
+
+                        onPositionChanged: function(event) {
+                            if (isDragging) {
+                                cursorShape = Qt.SplitHCursor
+                                let newColWidth = dragColumnWidth + (event.x - dragInitialPos)
+                                if (newColWidth > 40) {
+                                    let header = invoiceItemsModel.headers[dragColumnNo]
+                                    let columnWidthId = 'width_' + header.id
+                                    saveInvoiceItemColumnWidth(columnWidthId, newColWidth)
+                                    invoiceItemsTable.forceLayout()
+                                }
+                            } else if (isOverDragHandle(event.x)) {
+                                cursorShape = Qt.SplitHCursor
+                            } else {
+                                cursorShape = Qt.ArrowCursor
+                            }
+                        }
+
+                        onPressed: function(event) {
+                            if (isOverDragHandle(event.x)) {
+                                isDragging = true
+                                dragInitialPos = event.x
+                            }
+                        }
+
+                        onReleased: function(event) {
+                            isDragging = false
+                        }
+
+                        onIsDraggingChanged: {
+                        }
+
+                        function isOverDragHandle(posx) {
+                            dragColumnNo = -1
+                            let colPos = 0;
+                            for (let c = 0; c < horizontalHeader.columns; ++c) {
+                                dragColumnWidth = horizontalHeader.columnWidth(c)
+                                colPos += dragColumnWidth + horizontalHeader.columnSpacing
+                                if (Math.abs(colPos - posx) < 7) {
+                                    dragColumnNo = c
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+
+                    }
+
                 }
 
                 TableView {
@@ -1404,7 +1500,7 @@ Item {
                     Layout.minimumHeight: getTableHeigth()
 
                     rowSpacing: 2
-                    columnSpacing: 4
+                    columnSpacing: 5 * Stylesheet.pixelScaleRatio
 
                     flickableDirection: Flickable.AutoFlickIfNeeded
                     pointerNavigationEnabled: true
@@ -1420,12 +1516,12 @@ Item {
                         //TODO: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
                         let header = invoiceItemsModel.headers[column]
                         if (header) {
-                            let columnId = 'show_' + header.id
+                            let settingIdColumnVisible = 'show_' + header.id
+                            let settingIdColumnWidth = 'width_' + header.id
                             let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
-                            if (columnId in viewAppearance) {
-                                let width = viewAppearance[columnId]
+                            if (settingIdColumnWidth in viewAppearance) {
+                                let width = viewAppearance[settingIdColumnWidth]
                                 if (width > 10) {
-                                    Banana.console.log('  width settings:' + width)
                                     return width * Stylesheet.pixelScaleRatio
                                 }
                             } else {
@@ -1433,21 +1529,16 @@ Item {
                             }
                             return header.width * Stylesheet.pixelScaleRatio
                         }
-                        Banana.console.log('  width n/a: 100')
                     }
 
                     delegate: DelegateChooser {
 
                         DelegateChoice {
                             column: 0
-                            StyledTextField {
-                                required property bool selected
-                                required property bool current
-
-                                borderless: true
-                                readOnly: true
+                            StyledLabel {
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
+                                verticalAlignment: Qt.AlignVCenter
                             }
                         }
 
@@ -1821,7 +1912,7 @@ Item {
                                 function getDisplayText() {
                                     if (display) {
                                         return display
-                                    } else if (row >= 0 && row < invoice.json.items.length) {
+                                    } else if (row >= 0 && invoice.json && row < invoice.json.items.length) {
                                         // If the code is not set, show the rate
                                         if (invoice.json.items[row].unit_price.vat_rate) {
                                             return invoice.json.items[row].unit_price.vat_rate
@@ -1844,7 +1935,7 @@ Item {
                                 }
 
                                 function getCurrentVatCodeIndex() {
-                                    if (row >= 0 && row < invoice.json.items.length) {
+                                    if (row >= 0 && row < invoice.json && invoice.json.items.length) {
                                         if (invoice.json.items[row].unit_price.vat_code) {
                                             var itemVatCode = invoice.json.items[row].unit_price.vat_code
                                             for (var i = 0; i < model.count; i++) {
