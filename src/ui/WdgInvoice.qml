@@ -33,9 +33,6 @@ Item {
     property bool isVatModeVatNone: false
     property bool isVatModeVatInclusive : true
 
-    property int currentInvoiceItemRow : -1
-    property string currentInvoiceItemCol : ""
-
     required property AppSettings appSettings
     required property Invoice invoice
 
@@ -1564,32 +1561,27 @@ Item {
 
                                 onCurrentKeySet: function(key, isExistingKey) {
                                     // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
-                                    if (row >= 0 && row < invoice.json.items.length) {
-                                        if (isExistingKey) {
-                                            var itemId = key
-                                            var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
-                                            var item = Items.itemGet(itemId, vatExclusive)
-                                            if (item) {
-                                                var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
-                                                if (vatCode)
-                                                    item.unit_price.vat_rate = vatCode.rate
-                                            } else {
-                                                item = emptyInvoiceItem()
-                                            }
-                                            invoice.json.items[row] = item
-                                            setDocumentModified()
-                                            calculateInvoice()
-                                        } else {
-                                            invoice.json.items[row].number = key
-                                            setDocumentModified()
-                                        }
+                                    if (invoiceItemsTable.isNewRow(row)) {
+                                        invoiceItemsTable.appendNewRow()
                                     }
-                                }
 
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = row
-                                        currentInvoiceItemCol = column
+                                    if (isExistingKey) {
+                                        var itemId = key
+                                        var vatExclusive = !isVatModeVatNone && !isVatModeVatInclusive
+                                        let item = Items.itemGet(itemId, vatExclusive)
+                                        if (item) {
+                                            var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
+                                            if (vatCode)
+                                                item.unit_price.vat_rate = vatCode.rate
+                                        } else {
+                                            item = emptyInvoiceItem()
+                                        }
+                                        invoice.json.items[row] = item
+                                        setDocumentModified()
+                                        calculateInvoice()
+                                    } else {
+                                        invoice.json.items[row].number = key
+                                        setDocumentModified()
                                     }
                                 }
                             }
@@ -1604,40 +1596,35 @@ Item {
                                 property int updateText: 1  // Binding for updating the text
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: updateText && model.display ? Banana.Converter.toLocaleDateFormat( model.display) : ""
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            let date = text
-                                            if (date) {
-                                                date = Banana.Converter.toInternalDateFormat(date)
-                                                // Check date
-                                                let localDate = Banana.Converter.toLocaleDateFormat(date)
-                                                if (!localDate || localDate.length === 0) {
-                                                    errorMessageDialog.text = qsTr("Invalid date: " + text)
-                                                    errorMessageDialog.visible = true
-                                                    updateText++
-                                                    modified = false
-                                                    focus = false
-                                                    return
-                                                }
-                                            }
-                                            invoice.json.items[model.row].date = date
-                                            let index = invoiceItemsModel.index(model.row, model.column)
-                                            invoiceItemsModel.setData(index, 'display', date)
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+                                        let date = text
+                                        if (date) {
+                                            date = Banana.Converter.toInternalDateFormat(date)
+                                            // Check date
+                                            let localDate = Banana.Converter.toLocaleDateFormat(date)
+                                            if (!localDate || localDate.length === 0) {
+                                                errorMessageDialog.text = qsTr("Invalid date: " + text)
+                                                errorMessageDialog.visible = true
+                                                updateText++
+                                                modified = false
+                                                focus = false
+                                                return
+                                            }
+                                        }
+                                        invoice.json.items[model.row].date = date
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsModel.setData(index, 'display', date)
+
                                         setDocumentModified()
                                         modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
                                 }
                                 onPressed: {
                                     if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")) {
@@ -1664,11 +1651,14 @@ Item {
 
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            invoice.json.items[model.row].description = text
-                                            let index = invoiceItemsModel.index(model.row, model.column)
-                                            invoiceItemsModel.setData(index, 'display', text)
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+                                        invoice.json.items[model.row].description = text
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsModel.setData(index, 'display', text)
+
                                         setDocumentModified()
                                         modified = false
                                     }
@@ -1677,14 +1667,6 @@ Item {
 
                                 // In case the lines count change we emit a signal to update the row heigth
                                 property int textLinesCount: 1
-
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                        textLinesCount = text.split('\n').length
-                                    }
-                                }
 
                                 onTextChanged: {
                                     let newLinesCount = text.split('\n').length
@@ -1704,32 +1686,29 @@ Item {
                         DelegateChoice {
                             column: 4
                             StyledTextField {
-                                required property bool selected
-                                required property bool current
+                                selected: model.row === invoiceItemsTable.currentRow &&
+                                          model.column === invoiceItemsTable.currentColumn
+
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display ? Banana.Converter.toLocaleNumberFormat(model.display) : ""
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            let quantity = text ? Banana.Converter.toInternalNumberFormat(text) : ""
-                                            invoice.json.items[model.row].quantity = quantity
-                                            let index = invoiceItemsModel.index(model.row, model.column)
-                                            invoiceItemsModel.setData(index, 'display', text)
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+
+                                        let quantity = text ? Banana.Converter.toInternalNumberFormat(text) : ""
+                                        invoice.json.items[model.row].quantity = quantity
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsModel.setData(index, 'display', text)
+
                                         setDocumentModified()
                                         calculateInvoice()
                                         modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
                                 }
                             }
                         }
@@ -1742,25 +1721,20 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            invoice.json.items[model.row].mesure_unit = text
-                                            let index = invoiceItemsModel.index(model.row, model.column)
-                                            invoiceItemsModel.setData(index, 'display', text)
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+                                        invoice.json.items[model.row].mesure_unit = text
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsModel.setData(index, 'display', text)
+
                                         setDocumentModified()
                                         modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
                                 }
                             }
                         }
@@ -1770,36 +1744,31 @@ Item {
                             StyledTextField {
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemNumberFormat(model.display)
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
-                                            if (isVatModeVatInclusive) {
-                                                invoice.json.items[model.row].unit_price.amount_vat_inclusive = internalAmountFormat
-                                                invoice.json.items[model.row].unit_price.amount_vat_exclusive = null
-                                            } else {
-                                                invoice.json.items[model.row].unit_price.amount_vat_inclusive = null
-                                                invoice.json.items[model.row].unit_price.amount_vat_exclusive = internalAmountFormat
-                                            }
-                                            if (internalAmountFormat && !invoice.json.items[model.row].quantity) {
-                                                // Set quantity if a price is set
-                                                invoice.json.items[model.row].quantity = "1"
-                                            }
-
-                                            setDocumentModified()
-                                            calculateInvoice()
-                                            modified = false
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+                                        let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
+                                        if (isVatModeVatInclusive) {
+                                            invoice.json.items[model.row].unit_price.amount_vat_inclusive = internalAmountFormat
+                                            invoice.json.items[model.row].unit_price.amount_vat_exclusive = null
+                                        } else {
+                                            invoice.json.items[model.row].unit_price.amount_vat_inclusive = null
+                                            invoice.json.items[model.row].unit_price.amount_vat_exclusive = internalAmountFormat
+                                        }
+                                        if (internalAmountFormat && !invoice.json.items[model.row].quantity) {
+                                            // Set quantity if a price is set
+                                            invoice.json.items[model.row].quantity = "1"
+                                        }
+
+                                        setDocumentModified()
+                                        calculateInvoice()
+                                        modified = false
                                     }
+
                                     focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
                                 }
                             }
                         }
@@ -1813,36 +1782,31 @@ Item {
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemDiscountFormat(model.display)
                                 placeholderText: hovered ? qsTr("30% or 30.00") : ""
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")
                                 onEditingFinished: {
                                     if (modified) {
-                                        if (model.row >= 0 && model.row < invoice.json.items.length) {
-                                            let discount = parseDiscountFormat(text)
-                                            if (discount.isZero) {
-                                                delete invoice.json.items[model.row].discount
-                                            } else if (discount.isPercentage) {
-                                                invoice.json.items[model.row].discount = {
-                                                    'percent' : discount.value
-                                                }
-                                            } else {
-                                                invoice.json.items[model.row].discount = {
-                                                    'amount' : discount.value
-                                                }
-                                            }
-                                            setDocumentModified()
-                                            calculateInvoice()
-                                            modified = false
+                                        if (invoiceItemsTable.isNewRow(row)) {
+                                            invoiceItemsTable.appendNewRow()
                                         }
+
+                                        let discount = parseDiscountFormat(text)
+                                        if (discount.isZero) {
+                                            delete invoice.json.items[model.row].discount
+                                        } else if (discount.isPercentage) {
+                                            invoice.json.items[model.row].discount = {
+                                                'percent' : discount.value
+                                            }
+                                        } else {
+                                            invoice.json.items[model.row].discount = {
+                                                'amount' : discount.value
+                                            }
+                                        }
+                                        setDocumentModified()
+                                        calculateInvoice()
+                                        modified = false
                                     }
+
                                     focus = false // call at the end, if not with the tab key the edited text is lost
-                                }
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
                                 }
                                 onPressed: {
                                     if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")) {
@@ -1861,14 +1825,6 @@ Item {
                                 readOnly: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemTotalFormat(model.display, model.row)
-                                selected: invoiceItemsTable.focus &&
-                                          currentInvoiceItemRow === model.row && currentInvoiceItemCol === model.column
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = model.row
-                                        currentInvoiceItemCol = model.column
-                                    }
-                                }
                             }
                         }
 
@@ -1891,22 +1847,18 @@ Item {
 
                                 onCurrentKeySet: function(key, isExistingKey) {
                                     // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
-                                    if (row >= 0 && row < invoice.json.items.length) {
-                                        let vatItem = invoice_item_vat.getCurrentItem()
-                                        if (vatItem) {
-                                            invoice.json.items[row].unit_price.vat_code = vatItem.key
-                                            invoice.json.items[row].unit_price.vat_rate = vatItem.rate
-                                            setDocumentModified()
-                                            calculateInvoice()
-                                        }
+                                    if (invoiceItemsTable.isNewRow(row)) {
+                                        invoiceItemsTable.appendNewRow()
                                     }
-                                }
 
-                                onFocusChanged: {
-                                    if (focus) {
-                                        currentInvoiceItemRow = row
-                                        currentInvoiceItemCol = column
+                                    let vatItem = invoice_item_vat.getCurrentItem()
+                                    if (vatItem) {
+                                        invoice.json.items[row].unit_price.vat_code = vatItem.key
+                                        invoice.json.items[row].unit_price.vat_rate = vatItem.rate
+                                        setDocumentModified()
+                                        calculateInvoice()
                                     }
+
                                 }
 
                                 function getDisplayText() {
@@ -2001,13 +1953,6 @@ Item {
                         onTriggered: invoiceItemsTable.updateColDescrWidth()
                     }
 
-                    onFocusChanged: {
-                        if (!focus) {
-                            currentInvoiceItemRow = -1
-                            currentInvoiceItemCol = -1
-                        }
-                    }
-
                     onWidthChanged: {
                         updateColDescrWidth()
                     }
@@ -2038,7 +1983,26 @@ Item {
                             }
                         }
                         return true;
+                    }
 
+                    function isNewRow(row) {
+                        if (row >= invoice.json.items.length) {
+                            return true
+                        }
+                        return false
+                    }
+
+                    function appendNewRow() {
+                        // Add new item in invoice, will be set next
+                        let newItem = emptyInvoiceItem()
+                        invoice.json.items.push(newItem)
+                        // Set row nr in model
+                        let index = invoiceItemsModel.index(invoiceItemsModel.rowCount - 1, 0)
+                        invoiceItemsModel.setData(index, 'display', invoiceItemsModel.rowCount)
+                        // Add new row in model
+                        let newRowItem = invoiceItemToModelItem(newItem, '*');
+                        invoiceItemsModel.appendRow(newRowItem)
+                        signalUpdateTableHeight++
                     }
 
                     function updateColDescrWidth() {
@@ -2135,7 +2099,7 @@ Item {
                         text: qsTr("Add")
                         enabled: !invoice.isReadOnly
                         onClicked: {
-                            var rowIndex = currentInvoiceItemRow
+                            var rowIndex = invoiceItemsTable.selectionModel.currentIndex.row
                             if (rowIndex < 0 || (rowIndex + 1 < rowIndex.count)) {
                                 invoice.json.items.push(emptyInvoiceItem())
                             } else {
@@ -2151,7 +2115,7 @@ Item {
                         text: qsTr("Remove")
                         enabled: !invoice.isReadOnly && invoiceItemsTable.currentRow >= 0
                         onClicked: {
-                            var rowIndex = currentInvoiceItemRow
+                            var rowIndex = invoiceItemsTable.selectionModel.currentIndex.row
                             if (rowIndex >= 0 && rowIndex < invoiceItemsModel.rowCount) {
                                 invoice.json.items.splice(rowIndex, 1)
                             }
@@ -2170,14 +2134,13 @@ Item {
                         text: qsTr("Move up")
                         enabled: !invoice.isReadOnly && invoiceItemsTable.currentRow > 0
                         onClicked: {
-                            var itemRow = currentInvoiceItemRow
+                            var itemRow = invoiceItemsTable.selectionModel.currentIndex.row
                             if (itemRow > 0 && itemRow < invoiceItemsModel.rowCount) {
                                 var itemCopy = invoice.json.items[itemRow]
                                 invoice.json.items[itemRow] = invoice.json.items[itemRow-1]
                                 invoice.json.items[itemRow - 1] = itemCopy
                                 calculateInvoice()
                                 updateViewItems()
-                                currentInvoiceItemRow--
                                 invoiceItemsTable.currentRow--
                                 invoiceItemsTable.focus = true
                                 //                                    invoiceItemsTable.currentRow = itemRow
@@ -2192,14 +2155,13 @@ Item {
                         text: qsTr("Move Down")
                         enabled: !invoice.isReadOnly && invoiceItemsTable.currentRow >= 0 && invoiceItemsTable.currentRow + 1 < invoiceItemsTable.rowCount
                         onClicked: {
-                            var itemRow = currentInvoiceItemRow
+                            var itemRow = invoiceItemsTable.selectionModel.currentIndex.row
                             if (itemRow >= 0 && itemRow < invoiceItemsModel.rowCount - 1) {
                                 var itemCopy = invoice.json.items[itemRow]
                                 invoice.json.items[itemRow] = invoice.json.items[itemRow+1]
                                 invoice.json.items[itemRow + 1] = itemCopy
                                 calculateInvoice()
                                 updateViewItems()
-                                currentInvoiceItemRow++
                                 invoiceItemsTable.currentRow++
                                 invoiceItemsTable.focus = true
                             }
@@ -2716,8 +2678,9 @@ Item {
         return invoiceItem;
     }
 
-    function invoiceItemToModelItem(invoiceItem, itemIndex) {
+    function invoiceItemToModelItem(invoiceItem, row) {
         var modelItem = {
+            'row': row,
             'item_type' : "",
             'number': "",
             'date': "",
@@ -2972,26 +2935,28 @@ Item {
     function updateViewItems() {
         var modelItem = null
         var modelIndex = 0;
-        var invoiceItemIndex = 0;
+        var jsonItemIndex = 0;
 
         // Aggiorna items esistenti
-        for (modelIndex = 0 ;modelIndex < invoiceItemsModel.rowCount && invoiceItemIndex < invoice.json.items.length; modelIndex++, invoiceItemIndex++) {
-            modelItem = invoiceItemToModelItem(invoice.json.items[invoiceItemIndex], invoiceItemIndex)
-            modelItem.row = modelIndex
+        for (modelIndex = 0, jsonItemIndex = 0; modelIndex < invoiceItemsModel.rowCount && jsonItemIndex < invoice.json.items.length; modelIndex++, jsonItemIndex++) {
+            modelItem = invoiceItemToModelItem(invoice.json.items[jsonItemIndex], jsonItemIndex + 1)
             invoiceItemsModel.setRow(modelIndex, modelItem)
         }
 
-        if (invoiceItemIndex < invoice.json.items.length) {
+        if (jsonItemIndex < invoice.json.items.length) {
             // Aggiungi nuovi items
-            for (;invoiceItemIndex < invoice.json.items.length; modelIndex++, invoiceItemIndex++) {
-                modelItem = invoiceItemToModelItem(invoice.json.items[invoiceItemIndex], invoiceItemIndex)
-                modelItem.row = modelIndex
+            for (;jsonItemIndex < invoice.json.items.length; modelIndex++, jsonItemIndex++) {
+                modelItem = invoiceItemToModelItem(invoice.json.items[jsonItemIndex], jsonItemIndex + 1)
                 invoiceItemsModel.appendRow(modelItem)
             }
-        } else if (modelIndex < invoiceItemsModel.rowCount) {
+        } else if (invoiceItemsModel.rowCount > invoice.json.items.length) {
             // Rimuovi items cancellati
-            //invoiceItemsModel.removeRow(modelIndex, invoiceItemsModel.count - modelIndex)
+            invoiceItemsModel.removeRow(modelIndex, invoiceItemsModel.rowCount - invoice.json.items.length)
         }
+
+        // Add new row
+        let newRowItem = invoiceItemToModelItem(null, '*');
+        invoiceItemsModel.appendRow(newRowItem)
     }
 
     function calculateInvoice() {
