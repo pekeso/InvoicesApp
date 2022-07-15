@@ -28,13 +28,14 @@ TextArea {
 
    background: Rectangle {
       color: Stylesheet.baseColor
-      border.color: textArea.activeFocus ? "#354793" : "#bdbebf"
+      border.color: textArea.activeFocus | selected ? "#354793" : "#bdbebf"
       border.width: 1
       radius: 2.0 * Stylesheet.pixelScaleRatio
    }
 
 
    property bool modified: false
+   property bool selected: false
    property var contextMenu: baseContextMenu
    property bool _copyAllOnCopy: false
 

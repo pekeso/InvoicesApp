@@ -49,6 +49,8 @@ StyledComboBox {
     /** This signal is emitted when the user selected or set a new key */
     signal currentKeySet(key: string, isExistingKey: bool)    
 
+    property alias selected: textField.selected
+
     /** The function cleanKey is used to clean the key inserted by the user */
     property var cleanKey: function(key) {
         return key.trim();

@@ -1532,7 +1532,12 @@ Item {
 
                         DelegateChoice {
                             column: 0
-                            StyledLabel {
+                            StyledTextField {
+                                required property bool current
+                                selected: current
+
+                                readOnly: true
+                                borderless: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
                                 verticalAlignment: Qt.AlignVCenter
@@ -1543,8 +1548,8 @@ Item {
                         DelegateChoice {
                             column: 1
                             StyledKeyDescrComboBox {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 popupMinWidth: 300 * Stylesheet.pixelScaleRatio
                                 editable: true
@@ -1590,8 +1595,8 @@ Item {
                         DelegateChoice {
                             column: 2
                             StyledTextField {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 property int updateText: 1  // Binding for updating the text
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
@@ -1637,8 +1642,8 @@ Item {
                         DelegateChoice {
                             column: 3
                             StyledTextArea {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
@@ -1686,9 +1691,8 @@ Item {
                         DelegateChoice {
                             column: 4
                             StyledTextField {
-                                selected: model.row === invoiceItemsTable.currentRow &&
-                                          model.column === invoiceItemsTable.currentColumn
-
+                                required property bool current
+                                selected: current
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display ? Banana.Converter.toLocaleNumberFormat(model.display) : ""
@@ -1716,8 +1720,8 @@ Item {
                         DelegateChoice {
                             column: 5
                             StyledTextField {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
@@ -1742,6 +1746,9 @@ Item {
                         DelegateChoice {
                             column: 6
                             StyledTextField {
+                                required property bool current
+                                selected: current
+
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemNumberFormat(model.display)
                                 onEditingFinished: {
@@ -1776,8 +1783,8 @@ Item {
                         DelegateChoice {
                             column: 7
                             StyledTextField {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemDiscountFormat(model.display)
@@ -1819,8 +1826,8 @@ Item {
                         DelegateChoice {
                             column: 8
                             StyledTextField {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 readOnly: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
@@ -1831,8 +1838,8 @@ Item {
                         DelegateChoice {
                             column: 9
                             StyledKeyDescrComboBox {
-                                required property bool selected
                                 required property bool current
+                                selected: current
 
                                 id: invoice_item_vat
                                 popupMinWidth: 300  * Stylesheet.pixelScaleRatio
@@ -2166,6 +2173,10 @@ Item {
                                 invoiceItemsTable.focus = true
                             }
                         }
+                    }
+
+                    Label {
+                        text: "Pos: " + invoiceItemsTable.currentRow + ", " + invoiceItemsTable.currentColumn
                     }
 
                     Item {

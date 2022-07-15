@@ -32,7 +32,7 @@ TextField {
 
    background: Rectangle {
       color: Stylesheet.baseColor
-      border.color: borderless ? Stylesheet.baseColor : textField.activeFocus || selected ? "#354793" : "#bdbebf"
+      border.color: textField.activeFocus || selected ? "#354793" : borderless ? Stylesheet.baseColor : "#bdbebf"
       border.width: 1
       radius: 2.0 * Stylesheet.pixelScaleRatio
    }
