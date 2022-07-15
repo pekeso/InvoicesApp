@@ -1589,6 +1589,13 @@ Item {
                                         setDocumentModified()
                                     }
                                 }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
+                                }
                             }
                         }
 
@@ -1602,6 +1609,7 @@ Item {
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: updateText && model.display ? Banana.Converter.toLocaleDateFormat( model.display) : ""
                                 readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
+
                                 onEditingFinished: {
                                     if (modified) {
                                         if (invoiceItemsTable.isNewRow(row)) {
@@ -1631,9 +1639,17 @@ Item {
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
+
                                 onPressed: {
                                     if (!appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")) {
                                         dlgLicense.visible = true
+                                    }
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
                                     }
                                 }
                             }
@@ -1685,6 +1701,13 @@ Item {
                                         invoiceItemsTable.signalUpdateRowHeights++
                                     }
                                 }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
+                                }
                             }
                         }
 
@@ -1714,6 +1737,13 @@ Item {
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
                                 }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
+                                }
                             }
                         }
 
@@ -1739,6 +1769,13 @@ Item {
                                         modified = false
                                     }
                                     focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
                                 }
                             }
                         }
@@ -1776,6 +1813,13 @@ Item {
                                     }
 
                                     focus = false // call at the end, if not with the tab key the edited text is lost
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
                                 }
                             }
                         }
@@ -1832,6 +1876,13 @@ Item {
                                 readOnly: true
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemTotalFormat(model.display, model.row)
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
+                                }
                             }
                         }
 
@@ -1866,6 +1917,13 @@ Item {
                                         calculateInvoice()
                                     }
 
+                                }
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
                                 }
 
                                 function getDisplayText() {
@@ -1949,6 +2007,13 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
+
+                                onFocusChanged: {
+                                    if (focus) {
+                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                                    }
+                                }
                             }
                         }
                     }

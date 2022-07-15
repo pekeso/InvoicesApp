@@ -33,7 +33,7 @@ Item {
 
     property int result: 0;
 
-    Keys.onEscapePressed: {
+    Keys.onEscapePressed: function(event) {
         focus = true
         if (invoice.isModified) {
             cancelConfirmDialog.open()
