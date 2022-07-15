@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2022-07-07
+// @pubdate = 2022-07-15
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -32,10 +32,12 @@ var JsAction = class JsAction {
         this.version = '1.0';
 
         this.getUiFileName = function() {
-            if (Banana.compareVersion(Banana.application.version, "10.0.13.22188") < 0)
-                return 'ui/qt5/DlgInvoice.qml';
-            else
+            if (Banana.application.qtVersion &&
+                    Banana.compareVersion(Banana.application.qtVersion, "6.0.0") > 0) {
                 return 'ui/DlgInvoice.qml';
+            } else {
+                return 'ui/qt5/DlgInvoice.qml';
+            }
         }
     }
 
