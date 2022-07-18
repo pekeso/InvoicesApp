@@ -1509,6 +1509,13 @@ Item {
                     property int signalUpdateRowHeights: 1
                     property int signalUpdateTableHeight: 1
 
+                    Connections {
+                        target: appSettings
+                        function onFieldsVisibilityChanged() {
+                            invoiceItemsTable.forceLayout()
+                        }
+                    }
+
                     columnWidthProvider: function(column) {
                         //TODO: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
                         let header = invoiceItemsModel.headers[column]
@@ -1516,6 +1523,12 @@ Item {
                             let settingIdColumnVisible = 'show_' + header.id
                             let settingIdColumnWidth = 'width_' + header.id
                             let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
+                            if (settingIdColumnVisible in viewAppearance) {
+                                let visible = viewAppearance[settingIdColumnVisible]
+                                if (!visible) {
+                                    return 0
+                                }
+                            }
                             if (settingIdColumnWidth in viewAppearance) {
                                 let width = viewAppearance[settingIdColumnWidth]
                                 if (width > 10) {
@@ -2105,6 +2118,7 @@ Item {
                         //                            }
                         //                        }
                         //                        updateColDescrWidth()
+                        invoiceItemsTable.forceLayout()
                     }
 
                     // Just for binding visible column count change with updateColDescrWidth

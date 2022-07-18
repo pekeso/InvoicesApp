@@ -37,7 +37,12 @@ QtObject {
     property bool modified: false
     property var data: Settings.getDefaultSettings()
 
-    // Signals (counters used as signals in qml binding)
+    // Signals
+    // Some are made available as signal and as counter
+    // Use one of them and not both, if not you well get a double notifications
+    // N.B.: Counters are used as signals in qml binding
+
+    signal fieldsVisibilityChanged
 
     property int signalViewsSettingsChanged: 1
     property int signalFieldsVisibilityChanged: 1
@@ -60,6 +65,7 @@ QtObject {
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function loadSettings() {
@@ -67,6 +73,7 @@ QtObject {
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function resetSettings() {
@@ -74,6 +81,7 @@ QtObject {
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function setSettings(newSettings) {
@@ -83,6 +91,7 @@ QtObject {
             modified = true
             signalViewsSettingsChanged++
             signalFieldsVisibilityChanged++
+            fieldsVisibilityChanged()
         }
     }
 
@@ -105,6 +114,7 @@ QtObject {
     function setInvoiceFieldVisible(fieldId, viewId, value) {
         data.interface.invoice.views[viewId].appearance[fieldId] = value
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
         modified = true
     }
 
