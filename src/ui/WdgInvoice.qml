@@ -1379,6 +1379,7 @@ Item {
                     model: invoiceItemsModel
                     syncView: invoiceItemsTable
 
+                    Layout.fillWidth: parent.width
                     Layout.topMargin: Stylesheet.defaultMargin
 
                     delegate: DelegateChooser {
@@ -1495,7 +1496,7 @@ Item {
                     id: invoiceItemsTable
                     model: invoiceItemsModel
 
-                    Layout.fillWidth: true
+                    Layout.fillWidth: parent.width
                     Layout.minimumHeight: getTableHeigth()
 
                     rowSpacing: 2
@@ -2034,13 +2035,12 @@ Item {
 
                     Timer {
                         id: updateColumnDescrWidhtTimer
-                        interval: 500
+                        interval: 100
                         repeat: false
                         onTriggered: invoiceItemsTable.updateColDescrWidth()
                     }
 
                     onWidthChanged: {
-                        console.log("start timer descr width")
                         updateColumnDescrWidhtTimer.restart()
                     }
 
@@ -2094,7 +2094,7 @@ Item {
 
                     function updateColDescrWidth() {
                         let colDescriptionIndex = 3
-                        let availableWidth = width - contentWidth + columnWidthProvider(colDescriptionIndex)
+                        let availableWidth = parent.width - contentWidth + columnWidthProvider(colDescriptionIndex)
                         let newColDescriptionWidth = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
                         let headerColDescription = invoiceItemsModel.headers[colDescriptionIndex]
                         let columnWidthId = 'width_' + headerColDescription.id
