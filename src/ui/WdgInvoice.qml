@@ -41,7 +41,7 @@ Item {
                                      appSettings.view_id_base
 
     onCurrentViewChanged: {
-        invoiceItemsTable.updateColumnsWidths()
+       invoiceItemsTable.forceLayout()
     }
 
     function createInvoiceFromEstimate() {
@@ -1465,6 +1465,9 @@ Item {
 
                         onReleased: function(event) {
                             isDragging = false
+                            if (dragColumnNo !== 3) {
+                                invoiceItemsTable.updateColDescrWidth()
+                            }
                         }
 
                         onIsDraggingChanged: {
@@ -1474,8 +1477,7 @@ Item {
                             dragColumnNo = -1
                             let colPos = 0;
                             for (let c = 0; c < horizontalHeader.columns; ++c) {
-                                dragColumnWidth = horizontalHeader.columnWidth(c)
-                                colPos += dragColumnWidth + horizontalHeader.columnSpacing
+                                colPos += horizontalHeader.columnWidth(c) + horizontalHeader.columnSpacing
                                 if (Math.abs(colPos - posx) < 7) {
                                     dragColumnNo = c
                                     return true;
@@ -1517,7 +1519,6 @@ Item {
                     }
 
                     columnWidthProvider: function(column) {
-                        //TODO: invoiceItemsTable.isColumnVisible("show_invoice_item_column_date", role)
                         let header = invoiceItemsModel.headers[column]
                         if (header) {
                             let settingIdColumnVisible = 'show_' + header.id
@@ -2039,7 +2040,8 @@ Item {
                     }
 
                     onWidthChanged: {
-                        updateColDescrWidth()
+                        console.log("start timer descr width")
+                        updateColumnDescrWidhtTimer.restart()
                     }
 
                     function isColumnVisible(fieldId, dataRole) {
@@ -2091,54 +2093,13 @@ Item {
                     }
 
                     function updateColDescrWidth() {
-                        //                        let visColCount = getVisibleColumnCount() // just for binding
-                        //                        let colDescription = null
-                        //                        let availableWidth = viewport.width - 5
-                        //                        for (let i = 0; i < columns; ++i) {
-                        //                            let col = getColumn(i)
-                        //                            if (col.role !== "description") {
-                        //                                if (col.visible) {
-                        //                                    availableWidth -= col.width
-                        //                                }
-                        //                            } else {
-                        //                                colDescription = col
-                        //                            }
-                        //                        }
-
-                        //                        if (colDescription) {
-                        //                            colDescription.width = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
-                        //                        }
-                    }
-
-                    function updateColumnsWidths() {
-                        //                        for (let i = 0; i < columns; ++i) {
-                        //                            let col = getColumn(i)
-                        //                            if (col.role !== "description") {
-                        //                                col.updateColumnWidth()
-                        //                            }
-                        //                        }
-                        //                        updateColDescrWidth()
+                        let colDescriptionIndex = 3
+                        let availableWidth = width - contentWidth + columnWidthProvider(colDescriptionIndex)
+                        let newColDescriptionWidth = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
+                        let headerColDescription = invoiceItemsModel.headers[colDescriptionIndex]
+                        let columnWidthId = 'width_' + headerColDescription.id
+                        saveInvoiceItemColumnWidth(columnWidthId, availableWidth)
                         invoiceItemsTable.forceLayout()
-                    }
-
-                    // Just for binding visible column count change with updateColDescrWidth
-                    property int visibleColumnCount : getVisibleColumnCount()
-
-                    onVisibleColumnCountChanged: {
-                        //                        updateColDescrWidth()
-                    }
-
-                    function getVisibleColumnCount() {
-                        let c = 0
-                        //                        if (itemRowNrColumn.visible) c++
-                        //                        if (itemNumberColumn.visible) c++
-                        //                        if (itemDateColumn.visible) c++
-                        //                        if (itemDescriptionColumn.visible) c++
-                        //                        if (itemQuantityColumn.visible) c++
-                        //                        if (itemUnitColumn.visible) c++
-                        //                        if (itemDiscountColumn.visible) c++
-                        //                        if (itemVatRateColumn.visible) c++
-                        return c
                     }
 
                     function getTableHeigth() {
