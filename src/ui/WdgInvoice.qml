@@ -2034,15 +2034,8 @@ Item {
                         }
                     }
 
-                    Timer {
-                        id: updateColumnDescrWidhtTimer
-                        interval: 100
-                        repeat: false
-                        onTriggered: invoiceItemsTable.updateColDescrWidth()
-                    }
-
                     onWidthChanged: {
-                        updateColumnDescrWidhtTimer.restart()
+                        invoiceItemsTable.updateColDescrWidth()
                     }
 
                     function isColumnVisible(fieldId, dataRole) {

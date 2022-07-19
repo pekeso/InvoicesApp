@@ -61,7 +61,7 @@ QtObject {
     }
 
     function clearSettings() {
-        data = {}
+        data = Settings.getDefaultSettings()
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
