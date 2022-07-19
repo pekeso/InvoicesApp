@@ -2299,9 +2299,10 @@ Item {
                             StyledTextField {
                                 id: discount_amount
                                 Layout.alignment: Qt.AlignRight
+                                Layout.preferredWidth: 100 * Stylesheet.pixelScaleRatio
                                 readOnly: invoice.isReadOnly
                                 text: invoice.json ? getDiscount() : ""
-                                placeholderText: hovered ? qsTr("30% or 30.00") : ""
+                                placeholderText: hovered && !text ? qsTr("30% or 30.00") : ""
                                 horizontalAlignment: Text.AlignRight
 
                                 onEditingFinished: {
