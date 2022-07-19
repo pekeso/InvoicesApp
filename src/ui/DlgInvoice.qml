@@ -117,6 +117,10 @@ Item {
         invoice.setInvoice(json)
         wdgInvoice.updateView()
         updateTitle()
+        // Hack for qt6, if currentIndex is set to 0 at the component load, the WdgInvoice panel is not
+        // correctly layouted and some items are overlapping one over the other,
+        // therefore we set it to 1 at the beginning and then to 0 when the invoice is set
+        tabBar.currentIndex = 0
     }
 
     function setPosition(tabPos) {
@@ -128,7 +132,7 @@ Item {
     }
 
     function showHelp() {
-        if (tabBar.currentIndex == 1) {
+        if (tabBar.currentIndex === 1) {
             Banana.Ui.showHelp("dlginvoiceedit::settings");
         } else {
             Banana.Ui.showHelp("dlginvoiceedit");
@@ -160,7 +164,6 @@ Item {
 
     Invoice {
         id: invoice
-
         onInvoiceChanged: {
             updateTitle()
         }
@@ -240,6 +243,11 @@ Item {
         anchors.top: messageBar.visible ? messageBar.bottom : parent.top
         anchors.leftMargin: -1 // Don't draw left button border
         anchors.topMargin: tabBarTopMargin
+
+        // Hack for qt6, if currentIndex is set to 0 at the component load, the WdgInvoice panel is not
+        // correctly layouted and some items are overlapping one over the other,
+        // therefore we set it to 1 at the beginning and then to 0 when the invoice is set
+        currentIndex: 1
 
         StyledTabButton {
             text: qsTr("Invoice")
