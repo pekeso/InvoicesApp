@@ -1607,7 +1607,7 @@ Item {
 
                                 onFocusChanged: {
                                     if (focus) {
-                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        let index = invoiceItemsModel.index(row, column)
                                         invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
                                     }
                                 }
@@ -1936,7 +1936,7 @@ Item {
 
                                 onFocusChanged: {
                                     if (focus) {
-                                        let index = invoiceItemsModel.index(model.row, model.column)
+                                        let index = invoiceItemsModel.index(row, column)
                                         invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
                                     }
                                 }
