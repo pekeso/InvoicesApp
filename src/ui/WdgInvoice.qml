@@ -1444,7 +1444,7 @@ Item {
                             if (isDragging) {
                                 cursorShape = Qt.SplitHCursor
                                 let newColWidth = dragColumnWidth + (event.x - dragInitialPos)
-                                if (newColWidth > 40) {
+                                if (newColWidth >= 20) {
                                     let header = invoiceItemsModel.headers[dragColumnNo]
                                     let columnWidthId = 'width_' + header.id
                                     saveInvoiceItemColumnWidth(columnWidthId, newColWidth)
@@ -1461,6 +1461,7 @@ Item {
                             if (isOverDragHandle(event.x)) {
                                 isDragging = true
                                 dragInitialPos = event.x
+                                dragColumnWidth = invoiceItemsTable.columnWidth(dragColumnNo)
                             }
                         }
 
@@ -1478,7 +1479,7 @@ Item {
                             dragColumnNo = -1
                             let colPos = 0;
                             for (let c = 0; c < horizontalHeader.columns; ++c) {
-                                colPos += horizontalHeader.columnWidth(c) + horizontalHeader.columnSpacing
+                                colPos += horizontalHeader.columnWidth(c) + horizontalHeader.columnSpacing - 1.5
                                 if (Math.abs(colPos - posx) < 7) {
                                     dragColumnNo = c
                                     return true;
