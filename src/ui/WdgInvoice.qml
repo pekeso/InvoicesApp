@@ -1472,13 +1472,12 @@ Item {
                             }
                         }
 
-                        onIsDraggingChanged: {
-                        }
-
                         function isOverDragHandle(posx) {
                             dragColumnNo = -1
                             let colPos = 0;
                             for (let c = 0; c < horizontalHeader.columns; ++c) {
+                                // N.B.: why 1.5? could not explain why we should insert that, but it is working
+                                // if not the drag zone is shifted towards the right
                                 colPos += horizontalHeader.columnWidth(c) + horizontalHeader.columnSpacing - 1.5
                                 if (Math.abs(colPos - posx) < 7) {
                                     dragColumnNo = c
