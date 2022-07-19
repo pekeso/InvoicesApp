@@ -1378,6 +1378,7 @@ Item {
                     id: horizontalHeader
                     model: invoiceItemsModel
                     syncView: invoiceItemsTable
+                    reuseItems: false
 
                     Layout.fillWidth: parent.width
                     Layout.topMargin: Stylesheet.defaultMargin
@@ -1495,6 +1496,7 @@ Item {
                     // Items table
                     id: invoiceItemsTable
                     model: invoiceItemsModel
+                    reuseItems: false
 
                     Layout.fillWidth: parent.width
                     Layout.minimumHeight: getTableHeigth()
@@ -1505,7 +1507,6 @@ Item {
                     flickableDirection: Flickable.AutoFlickIfNeeded
                     pointerNavigationEnabled: true
                     keyNavigationEnabled: true
-                    reuseItems: true
 
                     selectionModel: ItemSelectionModel {}
 
@@ -1516,6 +1517,59 @@ Item {
                         target: appSettings
                         function onFieldsVisibilityChanged() {
                             invoiceItemsTable.forceLayout()
+                        }
+                    }
+
+                    Keys.onPressed: function(event) {
+                        let curItem = null
+                        if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return || event.key === Qt.Key_Tab) {
+                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                            if (curItem.contentItem) {
+                                curItem.contentItem.focus = false
+                            }
+                            if (curItem) {
+                                curItem.focus = false
+                            }
+                            event.accepted = true
+                            if (event.modifiers & Qt.ShiftModifier) {
+                                invoiceItemsTable.selectPreviousItem()
+                            } else {
+                                invoiceItemsTable.selectNextItem()
+                            }
+                        } else if (event.key === Qt.Key_Backspace) {
+                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                            if (curItem) {
+                                if ('text' in curItem) {
+                                    // we are on a textfield or textarea
+                                    curItem.focus = true
+                                    curItem.text = ""
+                                    event.accepted = true
+                                } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
+                                    // we are on a combobox
+                                    curItem.focus = true
+                                    curItem.contentItem.focus = true
+                                    curItem.contentItem.text = ""
+                                    event.accepted = true
+                                }
+                            }
+                        } else if (/[A-Za-z0-9\-\.,]+/.test(event.text)) {
+                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                            if (curItem) {
+                                if ('text' in curItem) {
+                                    // we are on a textfield or textarea
+                                    curItem.focus = true
+                                    curItem.text = event.text
+                                    curItem.cursorPosition = 1
+                                    event.accepted = true
+                                } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
+                                    // we are on a combobox
+                                    curItem.focus = true
+                                    curItem.contentItem.focus = true
+                                    curItem.contentItem.text = event.text
+                                    curItem.contentItem.cursorPosition = 1
+                                    event.accepted = true
+                                }
+                            }
                         }
                     }
 
@@ -1680,8 +1734,15 @@ Item {
                                 text: model.display
 
                                 Keys.onTabPressed: function (event) {
-                                    // Steal tab press, it is not nice because the navigation doesn't work but ...
-                                    invoiceItemsTable.itemAtCell(model.column + 1, model.row).focus = true
+                                    // Steal tab key
+                                    if (focus) {
+                                        focus = false
+                                    }
+                                    if (event.modifiers & Qt.ShiftModifier) {
+                                        invoiceItemsTable.selectPreviousItem()
+                                    } else {
+                                        invoiceItemsTable.selectNextItem()
+                                    }
                                     event.accepted = true;
                                 }
 
@@ -2037,40 +2098,6 @@ Item {
                         invoiceItemsTable.updateColDescrWidth()
                     }
 
-                    function isColumnVisible(fieldId, dataRole) {
-                        if (appSettings.signalFieldsVisibilityChanged) {
-                            if (currentView === appSettings.view_id_full) {
-                                return true // In full view all items are visible
-                            }
-                            let viewAppearance = appSettings.data.interface.invoice.views[currentView].appearance
-                            if (fieldId in viewAppearance) {
-                                if (viewAppearance[fieldId]) {
-                                    return true
-                                } else if (viewAppearance.show_invoice_fields_if_not_empty) {
-                                    if (dataRole) {
-                                        for (let i = 0; i < invoiceItemsModel.rowCount; ++i) {
-                                            let data = invoiceItemsModel.getRow(i)[dataRole]
-                                            if (data)
-                                                return true
-                                        }
-                                    }
-                                    return false
-                                } else {
-                                    return false
-                                }
-                            } else {
-                                console.log("appearance flag '" + fieldId + "' in view '" + currentView + "' not found")
-                            }
-                        }
-                        return true;
-                    }
-
-                    function isNewRow(row) {
-                        if (row >= invoice.json.items.length) {
-                            return true
-                        }
-                        return false
-                    }
 
                     function appendNewRow() {
                         // Add new item in invoice, will be set next
@@ -2083,16 +2110,6 @@ Item {
                         let newRowItem = invoiceItemToModelItem(newItem, '*');
                         invoiceItemsModel.appendRow(newRowItem)
                         signalUpdateTableHeight++
-                    }
-
-                    function updateColDescrWidth() {
-                        let colDescriptionIndex = 3
-                        let availableWidth = parent.width - contentWidth + columnWidthProvider(colDescriptionIndex)
-                        let newColDescriptionWidth = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
-                        let headerColDescription = invoiceItemsModel.headers[colDescriptionIndex]
-                        let columnWidthId = 'width_' + headerColDescription.id
-                        saveInvoiceItemColumnWidth(columnWidthId, availableWidth)
-                        invoiceItemsTable.forceLayout()
                     }
 
                     function getTableHeigth() {
@@ -2130,6 +2147,88 @@ Item {
                         return maxVisibleItems
                     }
 
+                    function isNewRow(row) {
+                        if (row >= invoice.json.items.length) {
+                            return true
+                        }
+                        return false
+                    }
+
+                    function selectNextItem() {
+                        let nextItem = null
+                        let nextRow = invoiceItemsTable.currentRow
+                        let nextColumn = 0
+                        // Find next item on the same row
+                        for (nextColumn = invoiceItemsTable.currentColumn + 1; nextColumn <  invoiceItemsTable.columns; ++nextColumn) {
+                            if (invoiceItemsTable.columnWidth(nextColumn) > 0) {
+                                nextItem  = invoiceItemsTable.itemAtCell(nextColumn, nextRow)
+                                if (nextItem) {
+                                    break;
+                                }
+                            }
+                        }
+                        // Find next item on the next row
+                        if (!nextItem) {
+                            nextRow++
+                            for (nextColumn = 0; nextColumn <  invoiceItemsTable.columns; ++nextColumn) {
+                                if (invoiceItemsTable.columnWidth(nextColumn) > 0) {
+                                    nextItem  = invoiceItemsTable.itemAtCell(nextColumn, nextRow)
+                                    if (nextItem) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (nextItem) {
+                            let index = invoiceItemsModel.index(nextRow, nextColumn)
+                            invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                            return nextItem
+                        }
+                        return null
+                    }
+
+                    function selectPreviousItem() {
+                        let prevItem = null
+                        let prevRow = invoiceItemsTable.currentRow
+                        let prevColumn = 0
+                        // Find previous item on the same row
+                        for (prevColumn = invoiceItemsTable.currentColumn - 1; prevColumn >= 0; --prevColumn) {
+                            if (invoiceItemsTable.columnWidth(prevColumn) > 0) {
+                                prevItem  = invoiceItemsTable.itemAtCell(prevColumn, prevRow)
+                                if (prevItem) {
+                                    break;
+                                }
+                            }
+                        }
+                        // Find previous item on the previous row
+                        if (!prevItem) {
+                            prevRow--
+                            for (prevColumn = invoiceItemsTable.columns - 1; prevColumn >= 0; --prevColumn) {
+                                if (invoiceItemsTable.columnWidth(prevColumn) > 0) {
+                                    prevItem  = invoiceItemsTable.itemAtCell(prevColumn, prevRow)
+                                    if (prevItem) {
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (prevItem) {
+                            let index = invoiceItemsModel.index(prevRow, prevColumn)
+                            invoiceItemsTable.selectionModel.setCurrentIndex(index, ItemSelectionModel.SelectCurrent)
+                            return prevItem
+                        }
+                        return null
+                    }
+
+                    function updateColDescrWidth() {
+                        let colDescriptionIndex = 3
+                        let availableWidth = parent.width - contentWidth + columnWidthProvider(colDescriptionIndex)
+                        let newColDescriptionWidth = Math.max(200 * Stylesheet.pixelScaleRatio, availableWidth)
+                        let headerColDescription = invoiceItemsModel.headers[colDescriptionIndex]
+                        let columnWidthId = 'width_' + headerColDescription.id
+                        saveInvoiceItemColumnWidth(columnWidthId, availableWidth)
+                        invoiceItemsTable.forceLayout()
+                    }
                 }
 
                 RowLayout { // Items button bar
