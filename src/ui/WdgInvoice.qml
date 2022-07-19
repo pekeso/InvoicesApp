@@ -245,10 +245,10 @@ Item {
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: Stylesheet.defaultMargin
-        spacing: Stylesheet.defaultMargin
 
         RowLayout { // Views bar
             spacing: 20 * Stylesheet.pixelScaleRatio
+            Layout.fillWidth: true
 
             StyledLabel{
                 text: qsTr("Views:")
@@ -338,11 +338,11 @@ Item {
             id: scrollView
             clip: true
 
-            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
-
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.topMargin: Stylesheet.defaultMargin
+
+            ScrollBar.vertical.policy: ScrollBar.AlwaysOn
 
             ColumnLayout {
                 width: scrollView.availableWidth - scrollView.ScrollBar.vertical.width - Stylesheet.defaultMargin
@@ -357,8 +357,8 @@ Item {
                         id: invoice_info
                         columns: 2
 
-                        Layout.alignment:  Qt.AlignBottom
                         Layout.fillWidth: true
+                        Layout.alignment:  Qt.AlignBottom
 
                         StyledLabel{
                             text: qsTr("Invoice No")
@@ -2033,15 +2033,8 @@ Item {
                         }
                     }
 
-                    Timer {
-                        id: updateColumnDescrWidhtTimer
-                        interval: 100
-                        repeat: false
-                        onTriggered: invoiceItemsTable.updateColDescrWidth()
-                    }
-
                     onWidthChanged: {
-                        updateColumnDescrWidhtTimer.restart()
+                        invoiceItemsTable.updateColDescrWidth()
                     }
 
                     function isColumnVisible(fieldId, dataRole) {
@@ -2299,9 +2292,10 @@ Item {
                             StyledTextField {
                                 id: discount_amount
                                 Layout.alignment: Qt.AlignRight
+                                Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
                                 readOnly: invoice.isReadOnly
                                 text: invoice.json ? getDiscount() : ""
-                                placeholderText: hovered ? qsTr("30% or 30.00") : ""
+                                placeholderText: hovered && !text ? qsTr("30% or 30.00") : ""
                                 horizontalAlignment: Text.AlignRight
 
                                 onEditingFinished: {
@@ -3341,7 +3335,7 @@ Item {
                 console.log("appearance flag '" + fieldId + "' in view '" + currentView + "' not found")
             }
         }
-        return true;
+        return true
     }
 
     function saveInvoiceItemColumnWidth(columnId, width) {
