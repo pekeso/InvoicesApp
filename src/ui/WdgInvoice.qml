@@ -676,31 +676,9 @@ Item {
                         }
 
                         StyledLabel{
-                            text: qsTr("Customer ref.")
-                            Layout.minimumWidth: 100 * Stylesheet.pixelScaleRatio
-                            visible: invoice_customer_reference.visible
-                        }
-
-                        StyledTextField {
-                            id: invoice_customer_reference
-                            Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
-                            Layout.fillWidth: true
-                            visible: focus || isInvoiceFieldVisible("show_invoice_customer_reference", text)
-                            readOnly: invoice.isReadOnly
-                            text: invoice.json && invoice.json.document_info.customer_reference ? invoice.json.document_info.customer_reference : ""
-                            onEditingFinished: {
-                                if (modified) {
-                                    invoice.json.document_info.customer_reference = text
-                                    setDocumentModified()
-                                }
-                            }
-                        }
-
-                        StyledLabel{
                             Layout.columnSpan: 2
                             height: Stylesheet.defaultMargin
-                            visible: invoice_customer_reference.visible |
-                                     invoice_custom_field_1.visible |
+                            visible: invoice_custom_field_1.visible |
                                      invoice_custom_field_2.visible |
                                      invoice_custom_field_3.visible |
                                      invoice_custom_field_4.visible |
@@ -953,8 +931,7 @@ Item {
                         StyledLabel{
                             Layout.columnSpan: 2
                             height: Stylesheet.defaultMargin
-                            visible: invoice_customer_reference.visible |
-                                     invoice_custom_field_1.visible |
+                            visible: invoice_custom_field_1.visible |
                                      invoice_custom_field_2.visible |
                                      invoice_custom_field_3.visible |
                                      invoice_custom_field_4.visible |

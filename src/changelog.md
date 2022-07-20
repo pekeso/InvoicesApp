@@ -11,6 +11,8 @@
   * The items columns Quantitiy and Unit price are visible per default
   * The field deposit is visible per default
   * For existing files those settings remain unchanged
+* [Enhancement] Field customer reference removed, use instead custom fields
+  
 
 ## 2022-06-30
 

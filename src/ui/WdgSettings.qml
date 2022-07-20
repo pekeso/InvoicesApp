@@ -909,29 +909,6 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Customer reference")
-                        Layout.fillWidth: true
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
-                        viewId: appSettings.view_id_base
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
-                        viewId: appSettings.view_id_short
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
-                        viewId: appSettings.view_id_long
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
                         text: qsTr("Invoice title")
                         Layout.fillWidth: true
                     }
