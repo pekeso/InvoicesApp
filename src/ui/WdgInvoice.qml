@@ -247,9 +247,14 @@ Item {
         anchors.margins: Stylesheet.defaultMargin
         spacing: Stylesheet.defaultMargin
 
+        // Hack for qt6, to resolve overlapping items after dialog load
+        visible: appSettings.loaded
+
         RowLayout { // Views bar
             spacing: 20 * Stylesheet.pixelScaleRatio
-            visible: appSettings.loaded // Hack for qt6 for overlapping widgets
+
+            // Hack for qt6, to resolve overlapping items after dialog load
+            visible: appSettings.loaded
 
             StyledLabel{
                 text: qsTr("Views:")
