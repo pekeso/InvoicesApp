@@ -13,7 +13,7 @@
 // limitations under the License.
 
 const _settings_id = "invoices";
-const _settings_version = "1.0.2";
+const _settings_version = "1.0.3";
 
 function saveSettings(settings) {
     settings.creator = getCreatorInfo();
@@ -83,6 +83,36 @@ function upgradeSettings(settings) {
             }
         }
 
+        if (Banana.compareVersion(settings.version, '1.0.3') < 0) {
+            // Insert show property for address business unit fields
+            let invoiceViews = settings.interface.invoice.views;
+            if (invoiceViews['short'] && !invoiceViews['short'].title) {
+                invoiceViews['short'].title = qsTr("Short")
+            }
+            if (invoiceViews['long'] && !invoiceViews['long'].title) {
+                invoiceViews['long'].title = qsTr("Long")
+            }
+        }
+
+        // TODO: in a future version rename the view 'short' to 'custom1' and 'long' to custom2
+        // It is not done now because the settings have to be compatible with previous versions
+        // of the Estimate and Invoice versions
+        /*
+        if (Banana.compareVersion(settings.version, '1.0.3' !!!) < 0) {
+
+            // Insert show property for address business unit fields
+            let invoiceViews = settings.interface.invoice.views;
+            if ('short' in invoiceViews) {
+                invoiceViews['custom1'] = invoiceViews['short'];
+                delete invoiceViews['short'];
+            }
+            if ('long' in invoiceViews) {
+                invoiceViews['custom2'] = invoiceViews['long'];
+                delete invoiceViews['long'];
+            }
+       }
+       */
+
         settings.version = _settings_version;
     }
 
@@ -142,7 +172,7 @@ function getDefaultSettings() {
                             'show_invoice_order_date': false,
                             'show_invoice_customer_reference': false,
                             'show_invoice_title': true,
-                            'show_invoice_begin_text': false,
+                            'show_invoice_begin_text': true,
                             'show_invoice_end_text': true,
                             'show_invoice_internal_notes': true,
                             'show_invoice_summary': true,
@@ -162,11 +192,11 @@ function getDefaultSettings() {
                             'show_invoice_address_business_unit_2': false,
                             'show_invoice_address_business_unit_3': false,
                             'show_invoice_address_business_unit_4': false,
-                            'show_invoice_address_courtesy': false,
+                            'show_invoice_address_courtesy': true,
                             'show_invoice_address_first_and_last_name': true,
                             'show_invoice_address_street': true,
-                            'show_invoice_address_extra': false,
-                            'show_invoice_address_postbox': false,
+                            'show_invoice_address_extra': true,
+                            'show_invoice_address_postbox': true,
                             'show_invoice_address_country_and_locality': true,
                             'show_invoice_address_phone_and_email': false,
                             'show_invoice_address_vat_and_fiscal_number': false,
@@ -174,7 +204,7 @@ function getDefaultSettings() {
                             'show_invoice_item_column_row_number': true,
                             'show_invoice_item_column_number': true,
                             'show_invoice_item_column_date': false,
-                            'show_invoice_item_column_quantity': false,
+                            'show_invoice_item_column_quantity': true,
                             'show_invoice_item_column_unit': false,
                             'show_invoice_item_column_discount': false,
 
@@ -191,13 +221,13 @@ function getDefaultSettings() {
                             'show_invoice_discount': true,
                             'show_invoice_vat': false,
                             'show_invoice_rounding': false,
-                            'show_invoice_deposit': false,
+                            'show_invoice_deposit': true,
                             'show_invoice_summary': false
                         }
                     },
                     'short': {
                         'title': null,
-                        'visible': true,
+                        'visible': false,
                         'appearance': {
                             'invoce_max_visible_items_without_scrolling': 0,
                             'show_invoice_fields_if_not_empty': false,
@@ -269,7 +299,7 @@ function getDefaultSettings() {
                     },
                     'long': {
                         'title': null,
-                        'visible': true,
+                        'visible': false,
                         'appearance': {
                             'invoce_max_visible_items_without_scrolling': 0,
                             'show_invoice_fields_if_not_empty': false,

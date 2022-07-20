@@ -27,14 +27,15 @@ QtObject {
 
     readonly property var default_views_titles: {
         "base": qsTr("Base"),
-        "short": qsTr("Short"),
-        "long": qsTr("Long"),
+        "short": qsTr("Custom 1"),
+        "long": qsTr("Custom 2"),
         "full": qsTr("Complete")
     }
 
     // Current settings data
 
     property bool modified: false
+    property bool loaded: false
     property var data: Settings.getDefaultSettings()
 
     // Signals
@@ -71,6 +72,7 @@ QtObject {
     function loadSettings() {
         data = Settings.getSettings()
         modified = true
+        loaded = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
         fieldsVisibilityChanged()

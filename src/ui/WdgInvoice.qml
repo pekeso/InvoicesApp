@@ -191,7 +191,7 @@ Item {
                 'width': 100
             },
             {
-                'id': 'invoice_item_column_dicount',
+                'id': 'invoice_item_column_discount',
                 'align': Text.AlignRight,
                 'role':  'discount',
                 'title': qsTr("Discount"),
@@ -249,6 +249,7 @@ Item {
 
         RowLayout { // Views bar
             spacing: 20 * Stylesheet.pixelScaleRatio
+            visible: appSettings.loaded // Hack for qt6 for overlapping widgets
 
             StyledLabel{
                 text: qsTr("Views:")

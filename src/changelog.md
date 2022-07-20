@@ -2,6 +2,18 @@
  
 ## 2022-06-30
 
+* [Enhancement] Adapt to Qt6
+* [Enhancement] Simplify and reorganize views for new files
+  * Only the views Base and Full are visible per default
+  * The available views are called Base, Custom 1, Custom 2 and Full
+  * The field Begin text is visible per default
+  * The address fields Prefix, Extra and PO and visible per default
+  * The items columns Quantitiy and Unit price are visible per default
+  * The field deposit is visible per default
+  * For existing files those settings remain unchanged
+
+## 2022-06-30
+
 * [RELEASE DEV] Released as Dev
 * [Fix] Fix number input in locale format does not validate
 
