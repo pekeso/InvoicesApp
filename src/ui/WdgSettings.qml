@@ -505,7 +505,7 @@ Item {
                         property string viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
@@ -518,7 +518,7 @@ Item {
                         property string viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
@@ -531,7 +531,7 @@ Item {
                         property string viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
