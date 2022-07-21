@@ -131,6 +131,10 @@ QtObject {
         }
     }
 
+    function setIsReadOnly(readOnly) {
+        isReadOnly = readOnly
+    }
+
     function setDocumentChange(doc) {
         docChange = doc
     }

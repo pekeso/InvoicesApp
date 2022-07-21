@@ -396,6 +396,7 @@ Item {
                             id: invoice_language
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: isInvoiceFieldVisible("show_invoice_language")
+                            enabled: !invoice.isReadOnly
 
                             editable: true
                             model: languagesModel
@@ -462,6 +463,7 @@ Item {
                             id: invoice_vat_mode
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: isInvoiceFieldVisible("show_invoice_vat_mode")
+                            enabled: !invoice.isReadOnly
 
                             editable: false
                             model: vatModesModel
@@ -546,6 +548,7 @@ Item {
                             id: invoice_due_date
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_due_date", text)
+                            readOnly: invoice.isReadOnly
 
                             text: getDate()
 
@@ -637,6 +640,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_decimals")
                             text: invoice.json && invoice.json.document_info.decimals_amounts ? invoice.json.document_info.decimals_amounts : ""
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -659,6 +663,7 @@ Item {
                             text: invoice.json && invoice.json.document_info.rounding_total ?
                                       Banana.Converter.toLocaleNumberFormat(invoice.json.document_info.rounding_total) : ""
                             Layout.preferredWidth: 300 * Stylesheet.pixelScaleRatio
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -972,6 +977,7 @@ Item {
                             id: ivoice_begin_text
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_begin_text", text)
+                            readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.document_info && invoice.json.document_info.text_begin
                                   ? invoice.json.document_info.text_begin  : ""
 
@@ -996,6 +1002,7 @@ Item {
                             id: ivoice_notes
                             Layout.fillWidth: true
                             visible: focus || isInvoiceFieldVisible("show_invoice_end_text", text)
+                            readOnly: invoice.isReadOnly
                             text: invoice.json && invoice.json.note && invoice.json.note[0] &&
                                   invoice.json.note[0].description ? invoice.json.note[0].description : ""
 
@@ -1034,6 +1041,7 @@ Item {
                             popupMinWidth: 400  * Stylesheet.pixelScaleRatio
                             popupAlign: Qt.AlignRight
 
+                            enabled: !invoice.isReadOnly
                             editable: true
                             model: customerAddressesModel
                             textRole: "descr"
@@ -1073,6 +1081,7 @@ Item {
                         StyledTextField {
                             id: address_business_name
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_business", text)
+                            readOnly: invoice.isReadOnly
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Business name")
                             onEditingFinished: {
@@ -1162,6 +1171,7 @@ Item {
                         StyledTextField {
                             id: address_courtesy
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_courtesy", text)
+                            readOnly: invoice.isReadOnly
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Prefix")
                             onEditingFinished: {
@@ -1177,6 +1187,7 @@ Item {
                                 id: address_first_name
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_first_and_last_name", text)
+                                readOnly: invoice.isReadOnly
                                 placeholderText: qsTr("First name")
                                 onEditingFinished: {
                                     if (modified) {
@@ -1190,6 +1201,7 @@ Item {
                                 id: address_last_name
                                 Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
                                 visible: focus || isInvoiceFieldVisible("show_invoice_address_first_and_last_name", text)
+                                readOnly: invoice.isReadOnly
                                 placeholderText: qsTr("Last name")
                                 onEditingFinished: {
                                     if (modified) {
@@ -1204,6 +1216,7 @@ Item {
                             id: address_address1
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_street", text)
+                            readOnly: invoice.isReadOnly
                             placeholderText: qsTr("Street")
                             onEditingFinished: {
                                 if (modified) {
@@ -1216,6 +1229,7 @@ Item {
                         StyledTextField {
                             id: address_address2
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_extra", text)
+                            readOnly: invoice.isReadOnly
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Extra")
                             onEditingFinished: {
@@ -1229,6 +1243,7 @@ Item {
                         StyledTextField {
                             id: address_address3
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_postbox", text)
+                            readOnly: invoice.isReadOnly
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("P.O.Box")
                             onEditingFinished: {
@@ -1246,6 +1261,7 @@ Item {
                                 placeholderText: qsTr("CC")
                                 ToolTip.visible: hovered
                                 ToolTip.text: qsTr("Country code")
+                                readOnly: invoice.isReadOnly
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1265,6 +1281,7 @@ Item {
                                 placeholderText: qsTr("Zip")
                                 ToolTip.visible: hovered
                                 ToolTip.text: qsTr("Postal code")
+                                readOnly: invoice.isReadOnly
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1278,6 +1295,7 @@ Item {
                                 id: address_city
                                 Layout.preferredWidth: 188 * Stylesheet.pixelScaleRatio
                                 placeholderText: qsTr("City")
+                                readOnly: invoice.isReadOnly
                                 onEditingFinished: {
                                     if (modified) {
                                         invoice.json.customer_info.city = text
@@ -1293,6 +1311,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_phone")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Phone")
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -1307,6 +1326,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_email")
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Email")
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -1321,6 +1341,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_number", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("VAT number")
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -1335,6 +1356,7 @@ Item {
                             visible: focus || isInvoiceFieldVisible("show_invoice_address_fiscal_number", text)
                             Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
                             placeholderText: qsTr("Fiscal number")
+                            readOnly: invoice.isReadOnly
 
                             onEditingFinished: {
                                 if (modified) {
@@ -1478,8 +1500,8 @@ Item {
                     columnSpacing: 5 * Stylesheet.pixelScaleRatio
 
                     flickableDirection: Flickable.AutoFlickIfNeeded
-                    pointerNavigationEnabled: true
-                    keyNavigationEnabled: true
+                    pointerNavigationEnabled: !invoice.isReadOnly
+                    keyNavigationEnabled: !invoice.isReadOnly
 
                     selectionModel: ItemSelectionModel {}
 
@@ -1496,52 +1518,64 @@ Item {
                     Keys.onPressed: function(event) {
                         let curItem = null
                         if (event.key === Qt.Key_Enter || event.key === Qt.Key_Return || event.key === Qt.Key_Tab) {
-                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
-                            if (curItem.contentItem) {
-                                curItem.contentItem.focus = false
-                            }
-                            if (curItem) {
-                                curItem.focus = false
-                            }
-                            event.accepted = true
-                            if (event.modifiers & Qt.ShiftModifier) {
-                                invoiceItemsTable.selectPreviousItem()
+                            if (!invoice.isReadOnly) {
+                                curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                                if (curItem.contentItem) {
+                                    curItem.contentItem.focus = false
+                                }
+                                if (curItem) {
+                                    curItem.focus = false
+                                }
+                                event.accepted = true
+                                if (event.modifiers & Qt.ShiftModifier) {
+                                    invoiceItemsTable.selectPreviousItem()
+                                } else {
+                                    invoiceItemsTable.selectNextItem()
+                                }
                             } else {
-                                invoiceItemsTable.selectNextItem()
+                                event.accepted = true
                             }
                         } else if (event.key === Qt.Key_Backspace) {
-                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
-                            if (curItem) {
-                                if ('text' in curItem) {
-                                    // we are on a textfield or textarea
-                                    curItem.focus = true
-                                    curItem.text = ""
-                                    event.accepted = true
-                                } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
-                                    // we are on a combobox
-                                    curItem.focus = true
-                                    curItem.contentItem.focus = true
-                                    curItem.contentItem.text = ""
-                                    event.accepted = true
+                            if (!invoice.isReadOnly) {
+                                curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                                if (curItem) {
+                                    if ('text' in curItem) {
+                                        // we are on a textfield or textarea
+                                        curItem.focus = true
+                                        curItem.text = ""
+                                        event.accepted = true
+                                    } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
+                                        // we are on a combobox
+                                        curItem.focus = true
+                                        curItem.contentItem.focus = true
+                                        curItem.contentItem.text = ""
+                                        event.accepted = true
+                                    }
                                 }
+                            } else {
+                                event.accepted = true
                             }
                         } else if (/[A-Za-z0-9\-\.,]+/.test(event.text)) {
-                            curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
-                            if (curItem) {
-                                if ('text' in curItem) {
-                                    // we are on a textfield or textarea
-                                    curItem.focus = true
-                                    curItem.text = event.text
-                                    curItem.cursorPosition = 1
-                                    event.accepted = true
-                                } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
-                                    // we are on a combobox
-                                    curItem.focus = true
-                                    curItem.contentItem.focus = true
-                                    curItem.contentItem.text = event.text
-                                    curItem.contentItem.cursorPosition = 1
-                                    event.accepted = true
+                            if (!invoice.isReadOnly) {
+                                curItem = invoiceItemsTable.itemAtCell(invoiceItemsTable.currentColumn, invoiceItemsTable.currentRow)
+                                if (curItem) {
+                                    if ('text' in curItem) {
+                                        // we are on a textfield or textarea
+                                        curItem.focus = true
+                                        curItem.text = event.text
+                                        curItem.cursorPosition = 1
+                                        event.accepted = true
+                                    } else if (curItem.contentItem && ('text' in curItem.contentItem)) {
+                                        // we are on a combobox
+                                        curItem.focus = true
+                                        curItem.contentItem.focus = true
+                                        curItem.contentItem.text = event.text
+                                        curItem.contentItem.cursorPosition = 1
+                                        event.accepted = true
+                                    }
                                 }
+                            } else {
+                                event.accepted = true
                             }
                         }
                     }
@@ -1595,6 +1629,7 @@ Item {
 
                                 popupMinWidth: 300 * Stylesheet.pixelScaleRatio
                                 editable: true
+                                enabled: !invoice.isReadOnly
                                 model: itemsModel
                                 textRole: "key"
                                 filterEnabled: true
@@ -1650,7 +1685,7 @@ Item {
                                 property int updateText: 1  // Binding for updating the text
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: updateText && model.display ? Banana.Converter.toLocaleDateFormat( model.display) : ""
-                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
+                                readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_date")
 
                                 onEditingFinished: {
                                     if (modified) {
@@ -1705,6 +1740,7 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
+                                readOnly: invoice.isReadOnly
 
                                 Keys.onTabPressed: function (event) {
                                     // Steal tab key
@@ -1768,6 +1804,8 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display ? Banana.Converter.toLocaleNumberFormat(model.display) : ""
+                                readOnly: invoice.isReadOnly
+
                                 onEditingFinished: {
                                     if (modified) {
                                         if (invoiceItemsTable.isNewRow(row)) {
@@ -1804,6 +1842,8 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
+                                readOnly: invoice.isReadOnly
+
                                 onEditingFinished: {
                                     if (modified) {
                                         if (invoiceItemsTable.isNewRow(row)) {
@@ -1837,6 +1877,8 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemNumberFormat(model.display)
+                                readOnly: invoice.isReadOnly
+
                                 onEditingFinished: {
                                     if (modified) {
                                         if (invoiceItemsTable.isNewRow(row)) {
@@ -1882,7 +1924,7 @@ Item {
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: toLocaleItemDiscountFormat(model.display)
                                 placeholderText: hovered ? qsTr("30% or 30.00") : ""
-                                readOnly: !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")
+                                readOnly: invoice.isReadOnly || !appSettings.meetInvoiceFieldLicenceRequirement("show_invoice_item_column_discount")
                                 onEditingFinished: {
                                     if (modified) {
                                         if (invoiceItemsTable.isNewRow(row)) {
@@ -1951,6 +1993,7 @@ Item {
                                 model: taxRatesModel
                                 textRole: "key"
                                 editable: true // set to true to make tab navitation working
+                                enabled: !invoice.isReadOnly
 
                                 onCurrentKeySet: function(key, isExistingKey) {
                                     // NB.: can't use model.row bz the widget has his hown model property, use simply row instead
@@ -2056,6 +2099,7 @@ Item {
 
                                 horizontalAlignment: invoiceItemsModel.headers[model.column].align
                                 text: model.display
+                                readOnly: invoice.isReadOnly
 
                                 onFocusChanged: {
                                     if (focus) {
@@ -2206,6 +2250,7 @@ Item {
 
                 RowLayout { // Items button bar
                     Layout.fillWidth: true
+                    visible: !invoice.isReadOnly
 
                     StyledButton {
                         text: qsTr("Add")
@@ -2688,6 +2733,7 @@ Item {
                     Layout.fillWidth: true
                     visible: focus || isInvoiceFieldVisible("show_invoice_internal_notes", text)
                     text: invoice.json && invoice.json.internalNote ? invoice.json.internalNote : ""
+                    readOnly: invoice.isReadOnly
                     onEditingFinished: {
                         if (modified) {
                             invoice.json.internalNote = text

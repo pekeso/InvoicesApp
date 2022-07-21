@@ -91,7 +91,9 @@ Item {
                 title = qsTr("New invoice %1").arg(invoice.json.document_info.number)
             }
         }
-        if (invoice.isModified) {
+        if (invoice.isReadOnly) {
+            title += " [" + qsTr("Read only") + "]"
+        } else if (invoice.isModified) {
             title += " *"
         }
         return title
@@ -111,6 +113,11 @@ Item {
 
     function setIsEstimate(estimate) {
         invoice.setIsEstimate(estimate)
+    }
+
+    function setIsReadOnly(readOnly) {
+        invoice.isReadOnly = readOnly
+        updateTitle()
     }
 
     function setInvoice(json) {
@@ -408,14 +415,13 @@ Item {
         }
 
         StyledButton {
-            text: invoice.isReadOnly ? qsTr("Edit") : qsTr("Save")
+            text: qsTr("Save")
+            visible: !invoice.isReadOnly
             enabled: invoice.isModified
             onClicked: {
                 // Acquire focus, if a text field is in edit mode it will commit changes
                 focus = true
-                if (invoice.isReadOnly) {
-                    invoice.isReadOnly = false
-                } else {
+                if (!invoice.isReadOnly) {
                     invoice.save()
                     result = 1
                     closeDialog()
@@ -424,11 +430,11 @@ Item {
         }
 
         StyledButton {
-            text: invoice.isModified ? qsTr("Cancel") : qsTr("Close")
+            text: invoice.isModified && !invoice.isReadOnly ? qsTr("Cancel") : qsTr("Close")
             onClicked: {
                 // Acquire focus, if a text field is in edit mode it will commit changes
                 focus = true
-                if (invoice.isModified) {
+                if (invoice.isModified && !invoice.isReadOnly) {
                     cancelConfirmDialog.open()
                 } else {
                     closeDialog()

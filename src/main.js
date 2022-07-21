@@ -411,6 +411,32 @@ var JsAction = class JsAction {
     settings() {
     }
 
+    /**
+     * Show the invoice in read only mode.
+     */
+    show(tabPos) {
+        var invoiceObj = invoiceObjGet(tabPos);
+        if (!invoiceObj) {
+            return;
+        }
+
+        var rowObj = null;
+        var table = Banana.document.table(tabPos.tableName);
+        if (tabPos.rowNr >= 0 && tabPos.rowNr < table.rowCount) {
+            rowObj = table.row(tabPos.rowNr);
+        }
+
+        var editor = Banana.Ui.createQml(this.getUiFileName());
+        editor.qmlObject.setInvoice(invoiceObj);
+        editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setIsReadOnly(true);
+        if (tabPos.tableName === "Estimates") {
+            editor.qmlObject.setIsEstimate(true);
+        }
+
+        // Open dialog
+        editor.exec();
+    }
 
     // API JsInvoicesAction
 

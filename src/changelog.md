@@ -2,6 +2,8 @@
  
 ## 2022-07-21
 
+The following changes are only available with the latest BananaPlus version (10.0.13.201 or newer).
+
 * [Enhancement] Adapt to Qt6
 * [Enhancement] Simplify and reorganize views for new files
   * Only the views Base and Full are visible per default
@@ -13,6 +15,7 @@
   * For existing files those settings remain unchanged
 * [Enhancement] Field Customer reference removed, use instead custom fields
 * [Enhancement] Fields Phone/Email and Vat-/Fiscal-Number separated
+* [Enhancement] Let open protected invoices and estimates in read only mode
   
 ## 2022-06-30
 
