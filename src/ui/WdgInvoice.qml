@@ -1288,68 +1288,58 @@ Item {
 
                         }
 
-                        RowLayout {
-                            Layout.alignment:  Qt.AlignBottom
-                            visible: address_email.visible || address_phone.visible
+                        StyledTextField {
+                            id: address_phone
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_phone")
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Phone")
 
-                            StyledTextField {
-                                id: address_email
-                                visible: focus || isInvoiceFieldVisible("show_invoice_address_phone_and_email")
-                                Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
-                                placeholderText: qsTr("Email")
-
-                                onEditingFinished: {
-                                    if (modified) {
-                                        invoice.json.customer_info.email = text
-                                        setDocumentModified()
-                                    }
-                                }
-                            }
-
-                            StyledTextField {
-                                id: address_phone
-                                visible: focus || isInvoiceFieldVisible("show_invoice_address_phone_and_email")
-                                Layout.preferredWidth: 157 * Stylesheet.pixelScaleRatio
-                                placeholderText: qsTr("Phone")
-
-                                onEditingFinished: {
-                                    if (modified) {
-                                        invoice.json.customer_info.phone = text
-                                        setDocumentModified()
-                                    }
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.phone = text
+                                    setDocumentModified()
                                 }
                             }
                         }
 
-                        RowLayout {
-                            Layout.alignment:  Qt.AlignBottom
-                            visible: address_vat_number.visible || address_fiscal_number.visible
+                        StyledTextField {
+                            id: address_email
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_email")
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Email")
 
-                            StyledTextField {
-                                id: address_vat_number
-                                visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_and_fiscal_number", text)
-                                Layout.preferredWidth: 158 * Stylesheet.pixelScaleRatio
-                                placeholderText: qsTr("VAT number")
-
-                                onEditingFinished: {
-                                    if (modified) {
-                                        invoice.json.customer_info.vat_number = text
-                                        setDocumentModified()
-                                    }
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.email = text
+                                    setDocumentModified()
                                 }
                             }
+                        }
 
-                            StyledTextField {
-                                id: address_fiscal_number
-                                visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_and_fiscal_number", text)
-                                Layout.preferredWidth: 157 * Stylesheet.pixelScaleRatio
-                                placeholderText: qsTr("Fiscal number")
+                        StyledTextField {
+                            id: address_vat_number
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_vat_number", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("VAT number")
 
-                                onEditingFinished: {
-                                    if (modified) {
-                                        invoice.json.customer_info.fiscal_number = text
-                                        setDocumentModified()
-                                    }
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.vat_number = text
+                                    setDocumentModified()
+                                }
+                            }
+                        }
+
+                        StyledTextField {
+                            id: address_fiscal_number
+                            visible: focus || isInvoiceFieldVisible("show_invoice_address_fiscal_number", text)
+                            Layout.preferredWidth: 320 * Stylesheet.pixelScaleRatio
+                            placeholderText: qsTr("Fiscal number")
+
+                            onEditingFinished: {
+                                if (modified) {
+                                    invoice.json.customer_info.fiscal_number = text
+                                    setDocumentModified()
                                 }
                             }
                         }

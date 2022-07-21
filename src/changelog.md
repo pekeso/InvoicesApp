@@ -1,6 +1,6 @@
 # Changelog
  
-## 2022-06-30
+## 2022-07-21
 
 * [Enhancement] Adapt to Qt6
 * [Enhancement] Simplify and reorganize views for new files
@@ -11,9 +11,9 @@
   * The items columns Quantitiy and Unit price are visible per default
   * The field deposit is visible per default
   * For existing files those settings remain unchanged
-* [Enhancement] Field customer reference removed, use instead custom fields
+* [Enhancement] Field Customer reference removed, use instead custom fields
+* [Enhancement] Fields Phone/Email and Vat-/Fiscal-Number separated
   
-
 ## 2022-06-30
 
 * [RELEASE DEV] Released as Dev

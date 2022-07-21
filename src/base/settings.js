@@ -76,21 +76,36 @@ function upgradeSettings(settings) {
             // Insert show property for address business unit fields
             let invoiceViews = settings.interface.invoice.views;
             for (const viewName in invoiceViews) {
-                invoiceViews[viewName].appearence.show_invoice_address_business_unit = false;
-                invoiceViews[viewName].appearence.show_invoice_address_business_unit_2 = false;
-                invoiceViews[viewName].appearence.show_invoice_address_business_unit_3 = false;
-                invoiceViews[viewName].appearence.show_invoice_address_business_unit_4 = false;
+                invoiceViews[viewName].appearance.show_invoice_address_business_unit = false;
+                invoiceViews[viewName].appearance.show_invoice_address_business_unit_2 = false;
+                invoiceViews[viewName].appearance.show_invoice_address_business_unit_3 = false;
+                invoiceViews[viewName].appearance.show_invoice_address_business_unit_4 = false;
             }
         }
 
         if (Banana.compareVersion(settings.version, '1.0.3') < 0) {
-            // Insert show property for address business unit fields
+            // Views 'Short' and 'Long' where renamed to 'Custom 1' and 'Custom 2'
+            // Set title for existings settings so that it seem they are not renamed
             let invoiceViews = settings.interface.invoice.views;
             if (invoiceViews['short'] && !invoiceViews['short'].title) {
                 invoiceViews['short'].title = qsTr("Short")
             }
             if (invoiceViews['long'] && !invoiceViews['long'].title) {
                 invoiceViews['long'].title = qsTr("Long")
+            }
+
+            // Adress fields phone/email and vat number/fiscal number where separated
+            // copy the settings from the old property to the news properties
+            for (const viewName in invoiceViews) {
+                let appearance = invoiceViews[viewName].appearance
+                appearance.show_invoice_address_phone = appearance.show_invoice_address_phone_and_email;
+                appearance.show_invoice_address_email = appearance.show_invoice_address_phone_and_email;
+                // Don't delete, if not the those felds are not showed under qt5 version
+                // delete appearance.show_invoice_address_phone_and_email;
+                appearance.show_invoice_address_vat_number = appearance.show_invoice_address_vat_and_fiscal_number;
+                appearance.show_invoice_address_fiscal_number = appearance.show_invoice_address_vat_and_fiscal_number;
+                // Don't delete, if not the those felds are not showed under qt5 version
+                // delete appearance.show_invoice_address_vat_and_fiscal_number;
             }
         }
 
@@ -197,8 +212,12 @@ function getDefaultSettings() {
                             'show_invoice_address_extra': true,
                             'show_invoice_address_postbox': true,
                             'show_invoice_address_country_and_locality': true,
-                            'show_invoice_address_phone_and_email': false,
-                            'show_invoice_address_vat_and_fiscal_number': false,
+                            'show_invoice_address_phone': false,
+                            'show_invoice_address_email': false,
+                            'show_invoice_address_phone_and_email': false, // deprecated
+                            'show_invoice_address_vat_number': false,
+                            'show_invoice_address_fiscal_number': false,
+                            'show_invoice_address_vat_and_fiscal_number': false, // deprecated
 
                             'show_invoice_item_column_row_number': true,
                             'show_invoice_item_column_number': true,
@@ -268,8 +287,12 @@ function getDefaultSettings() {
                             'show_invoice_address_extra': false,
                             'show_invoice_address_postbox': false,
                             'show_invoice_address_country_and_locality': true,
-                            'show_invoice_address_phone_and_email': false,
-                            'show_invoice_address_vat_and_fiscal_number': false,
+                            'show_invoice_address_phone': false,
+                            'show_invoice_address_email': false,
+                            'show_invoice_address_phone_and_email': false, // deprecated
+                            'show_invoice_address_vat_number': false,
+                            'show_invoice_address_fiscal_number': false,
+                            'show_invoice_address_vat_and_fiscal_number': false, // deprecated
 
                             'show_invoice_item_column_row_number': true,
                             'show_invoice_item_column_number': true,
@@ -339,8 +362,12 @@ function getDefaultSettings() {
                             'show_invoice_address_extra': true,
                             'show_invoice_address_postbox': true,
                             'show_invoice_address_country_and_locality': true,
-                            'show_invoice_address_phone_and_email': false,
-                            'show_invoice_address_vat_and_fiscal_number': false,
+                            'show_invoice_address_phone': false,
+                            'show_invoice_address_email': false,
+                            'show_invoice_address_phone_and_email': false, // deprecated
+                            'show_invoice_address_vat_number': false,
+                            'show_invoice_address_fiscal_number': false,
+                            'show_invoice_address_vat_and_fiscal_number': false, // deprecated
 
                             'show_invoice_item_column_row_number': true,
                             'show_invoice_item_column_number': true,

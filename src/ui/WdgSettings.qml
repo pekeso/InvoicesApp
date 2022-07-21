@@ -1527,47 +1527,93 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Email and phone")
+                        text: qsTr("Email")
                         Layout.fillWidth: true
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledLabel{
-                        text: qsTr("VAT and fiscal number")
+                        text: qsTr("Phone")
                         Layout.fillWidth: true
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("VAT number")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Fiscal number")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                     }
