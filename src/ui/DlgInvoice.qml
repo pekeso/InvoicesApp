@@ -302,6 +302,7 @@ Item {
         WdgSource {
             id: wdgSource
             format: "json"
+            isReadOnly: invoice.isReadOnly
 
             onRevertRequested: {
                 wdgSource.clearError()

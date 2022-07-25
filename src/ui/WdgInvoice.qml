@@ -62,7 +62,7 @@ Item {
     }
 
     function duplicateInvoice() {
-        if (invoice.isModified) {
+        if (invoice.isModified && !invoice.isReadOnly) {
             invoice.save()
         }
         invoice.setType(invoice.type_invoice)
@@ -70,6 +70,8 @@ Item {
         invoice.tabPos.rowNr = Banana.document.table(invoice.tabPos.tableName).rowCount
 
         invoice.isNewDocument = true
+        invoice.isReadOnly = false
+
         updateView()
         setDocumentModified()
 

@@ -1,6 +1,6 @@
 # Changelog
  
-## 2022-07-21
+## 2022-07-25
 
 The following changes are only available with the latest BananaPlus version (10.0.13.201 or newer).
 
@@ -13,8 +13,8 @@ The following changes are only available with the latest BananaPlus version (10.
   * The items columns Quantitiy and Unit price are visible per default
   * The field deposit is visible per default
   * For existing files those settings remain unchanged
-* [Enhancement] Field Customer reference removed, use instead custom fields
-* [Enhancement] Fields Phone/Email and Vat-/Fiscal-Number separated
+* [Enhancement] Remove field Customer reference (custom fields are used instead)
+* [Enhancement] Separate fields Phone/Email and Vat-/Fiscal-Number
 * [Enhancement] Let open protected invoices and estimates in read only mode
   
 ## 2022-06-30

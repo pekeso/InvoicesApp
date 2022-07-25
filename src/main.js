@@ -337,8 +337,6 @@ var JsAction = class JsAction {
             return null;
         }
 
-        //Banana.Ui.showText(JSON.stringify(docChange.getDocChange(), null, "   "));
-
         return docChange.getDocChange();
     }
 
@@ -426,9 +424,12 @@ var JsAction = class JsAction {
             rowObj = table.row(tabPos.rowNr);
         }
 
+        var docChange = new DocumentChange();
+
         var editor = Banana.Ui.createQml(this.getUiFileName());
         editor.qmlObject.setInvoice(invoiceObj);
         editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setDocumentChange(docChange);
         editor.qmlObject.setIsReadOnly(true);
         if (tabPos.tableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
@@ -436,6 +437,15 @@ var JsAction = class JsAction {
 
         // Open dialog
         editor.exec();
+
+        // The editor could return a DocumentChange object in some cases
+        // even if the object is read only, for example if a copy of the
+        // document have to be created
+        if (docChange.isEmpty()) {
+            return null;
+        }
+
+        return docChange.getDocChange();
     }
 
     // API JsInvoicesAction
