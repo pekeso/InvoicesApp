@@ -133,6 +133,7 @@ QtObject {
 
     function setIsReadOnly(readOnly) {
         isReadOnly = readOnly
+        invoiceChanged()
     }
 
     function setDocumentChange(doc) {

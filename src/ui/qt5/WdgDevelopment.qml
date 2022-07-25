@@ -130,7 +130,6 @@ Item {
                 }
 
                 StyledSwitch {
-                    id: showUpdatedVersionInstalledSwitch
                     enabled: Banana.application.isInternal
                     checked: appSettings.isNotificationVisible("show_updated_version_installed")
                     onToggled: {
