@@ -2328,7 +2328,8 @@ Item {
                     }
 
                     Label {
-                        text: "Pos: " + invoiceItemsTable.currentRow + ", " + invoiceItemsTable.currentColumn
+                        visible: appSettings.isInternalVersion()
+                        text: "Cur.pos.: " + invoiceItemsTable.currentRow + ", " + invoiceItemsTable.currentColumn
                     }
 
                     Item {
@@ -3066,6 +3067,7 @@ Item {
         updateViewAddress()
         updateViewVatMode()
         updateViewItems()
+        invoiceItemsTable.updateColDescrWidth();
     }
 
     function updateViewAddress() {
