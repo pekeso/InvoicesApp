@@ -81,7 +81,8 @@ var JsAction = class JsAction {
                     }
                     var rows = table.findRows(rowIdIs);
                     if (rows.length > 0) {
-                        var newRowId = table.progressiveNumber('RowId');
+                        let isEstimate = tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates";
+                        var newRowId = invoiceGetNextNumber(isEstimate);
                         try {
                             var invoiceFieldObj = JSON.parse(rows[0].value("InvoiceData"));
                             invoiceObj = JSON.parse(invoiceFieldObj.invoice_json);
@@ -324,7 +325,7 @@ var JsAction = class JsAction {
             editor.qmlObject.setIsModified(true);
             editor.qmlObject.setIsNew(true);
         }
-        if (tabPos.tableName === "Estimates") {
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
         }
 
@@ -431,7 +432,7 @@ var JsAction = class JsAction {
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
         editor.qmlObject.setIsReadOnly(true);
-        if (tabPos.tableName === "Estimates") {
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
         }
 
@@ -502,7 +503,7 @@ var JsAction = class JsAction {
         editor.qmlObject.setDocumentChange(docChange);
         editor.qmlObject.setIsModified(true);
         editor.qmlObject.setIsNew(true);
-        if (tabPos.tableName === "Estimates") {
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
         }
 

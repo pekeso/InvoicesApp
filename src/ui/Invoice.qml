@@ -81,13 +81,29 @@ QtObject {
         Invoice.invoiceUpdateCreatorInfo(invoice.json);
         Invoice.invoiceUpdateSupplierInfo(invoice.json)
 
-        var invoiceRow = invoiceRowGet(invoice.tabPos)
-        var changedRowFields = invoiceChangedFieldsGet(invoice.json, invoiceRow)
-        var invoiceDataField = invoiceUpdatedInvoiceDataFieldGet(invoice.tabPos, invoice.json)
-        changedRowFields["InvoiceData"] = invoiceDataField
+        if (isNewDocument) {
+            // new invoice / estimate
+            let changedRowFields = invoiceChangedFieldsGet(invoice.json, null)
+            let invoiceDataField = invoiceUpdatedInvoiceDataFieldGet(null, invoice.json)
+            changedRowFields["InvoiceData"] = invoiceDataField
 
-        if (invoiceRow) {
+            if (docChangeRowAddAdded)
+                docChange.removeLastOperation();
+
+            docChange.addOperationRowAdd(tabPos.tableName, changedRowFields);
+            docChange.setOperationCursorMove(
+                        tabPos.tableName,
+                        Banana.document.table(tabPos.tableName).rowCount,
+                        "RowId");
+            docChangeRowAddAdded = true
+
+        } else {
             // existing invoice / estimate
+            let invoiceRow = invoiceRowGet(invoice.tabPos)
+            let changedRowFields = invoiceChangedFieldsGet(invoice.json, invoiceRow)
+            let invoiceDataField = invoiceUpdatedInvoiceDataFieldGet(tabPos, invoice.json)
+            changedRowFields["InvoiceData"] = invoiceDataField
+
             if (docChangeRowModifyAdded)
                 invoice.docChange.removeLastOperation()
 
@@ -96,17 +112,7 @@ QtObject {
                         invoice.tabPos.rowNr,
                         changedRowFields);
             docChangeRowAddAdded = true;
-        } else {
-            // new invoice / estimate
-            if (docChangeRowAddAdded)
-                docChange.removeLastOperation();
 
-            docChange.addOperationRowAdd(tabPos.tableName, changedRowFields);
-            docChange.setOperationCursorMove(
-                        tabPos.tableName,
-                        invoice.tabPos.rowNr,
-                        "RowId");
-            docChangeRowAddAdded = true
         }
 
         setIsModified(false)

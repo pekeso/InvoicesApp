@@ -51,9 +51,11 @@ Item {
         invoice.setType(invoice.type_invoice)
         invoice.json = Invoice.invoiceCreateFromEstimateObj(invoice.json)
         invoice.tabPos.tableName = "Invoices"
-        invoice.tabPos.rowNr = Banana.document.table("Invoices").rowCount
+        invoice.tabPos.rowNr = -1
 
         invoice.isNewDocument = true
+        invoice.isReadOnly = false
+
         updateView()
         setDocumentModified()
 
@@ -67,7 +69,11 @@ Item {
         }
         invoice.setType(invoice.type_invoice)
         invoice.json = Invoice.invoiceDuplicateObj(invoice.json, invoice.tabPos)
-        invoice.tabPos.rowNr = Banana.document.table(invoice.tabPos.tableName).rowCount
+        invoice.tabPos.rowNr = -1
+        if (invoice.tabPos.tableName === "Archive" || invoice.tabPos.tableName === "Templates" ||
+                invoice.tabPos.tableName === "Extract") {
+            invoice.tabPos.tableName = invoice.tabPos.parentTableName
+        }
 
         invoice.isNewDocument = true
         invoice.isReadOnly = false
