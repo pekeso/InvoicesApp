@@ -1,6 +1,6 @@
 # Changelog
  
-## 2022-07-25
+## 2022-08-05
 
 The following changes are only available with the latest BananaPlus version (10.0.13.201 or newer).
 
@@ -16,6 +16,8 @@ The following changes are only available with the latest BananaPlus version (10.
 * [Enhancement] Remove field Customer reference (custom fields are used instead)
 * [Enhancement] Separate fields Phone/Email and Vat-/Fiscal-Number
 * [Enhancement] Let open protected invoices and estimates in read only mode
+* [Enhancement] Add command print delivery note (it works only with xxx layout)
+* [Enhancement] Add command print reminder (it works only with xxx layout)
   
 ## 2022-06-30
 

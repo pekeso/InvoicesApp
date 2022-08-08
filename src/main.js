@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2022-07-21
+// @pubdate = 2022-08-05
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -359,6 +359,20 @@ var JsAction = class JsAction {
             }
             return null;
 
+        } else if (commandId === "print_delivery_note") {
+            var invoiceObj = invoiceObjGet(fromTabPos);
+            if (invoiceObj) {
+                invoicePrintDeliveryNote(invoiceObj);
+            }
+            return null;
+
+        } else if (commandId === "print_reminder") {
+            var invoiceObj = invoiceObjGet(fromTabPos);
+            if (invoiceObj) {
+                invoicePrintReminder(invoiceObj);
+            }
+            return null;
+
         }
 
         return null;
@@ -372,7 +386,21 @@ var JsAction = class JsAction {
         return [
             {
                 id: "print",
-                descr: qsTr("Print invoice")
+                descr: qsTr("Print invoice"),
+                enabled: true,
+                menu: true,
+            },
+            {
+                id: "print_delivery_note",
+                descr: qsTr("Print delivery note"),
+                enabled: true,
+                menu: true,
+            },
+            {
+                id: "print_reminder",
+                descr: qsTr("Print payment reminder"),
+                enabled: true,
+                menu: true,
             }
         ];
     }

@@ -462,6 +462,24 @@ function invoicePrint(invoiceObj) {
     }
 }
 
+function invoicePrintDeliveryNote(invoiceObj) {
+    if (invoiceObj) {
+        let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
+        invoicePrepareForPrinting(printedJsonObj);
+        printedJsonObj.document_info.status = "delivery_note"
+        Banana.document.printInvoice(JSON.stringify(printedJsonObj));
+    }
+}
+
+function invoicePrintReminder(invoiceObj) {
+    if (invoiceObj) {
+        let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
+        invoicePrepareForPrinting(printedJsonObj);
+        printedJsonObj.document_info.status = "reminder_1"
+        Banana.document.printInvoice(JSON.stringify(printedJsonObj));
+    }
+}
+
 /**
  * Adapt for printing via invoice templates
  */
