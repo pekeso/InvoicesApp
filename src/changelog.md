@@ -1,5 +1,9 @@
 # Changelog
  
+## 2022-09-19
+
+* [Fix] Fix error opening invoice editor when new invoice title is empty
+
 ## 2022-05-11
 
 * [RELEASE DEV] Released as Dev
