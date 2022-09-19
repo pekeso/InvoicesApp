@@ -169,7 +169,7 @@ function invoiceGetTitle(isEstimate, nr, lang) {
             }
         }
         if (!descrNewInvoice) {
-            let trLang = Banana.document.application.substring(0,2);
+            let trLang = Banana.document.locale.substring(0,2);
             if (translationExists(settings, trId, trLang)) {
                 descrNewInvoice = getTranslatedText(settings, trId, trLang)
             }

@@ -1,6 +1,6 @@
 # Changelog
- 
-## 2022-08-05
+
+## 2022-09-20
 
 The following changes are only available with the latest BananaPlus version (10.0.13.201 or newer).
 
@@ -19,6 +19,11 @@ The following changes are only available with the latest BananaPlus version (10.
 * [Enhancement] Add command print delivery note (it works only with xxx layout)
 * [Enhancement] Add command print reminder (it works only with xxx layout)
   
+
+## 2022-09-19
+
+* [Fix] Fix error opening invoice editor when new invoice title is empty
+
 ## 2022-06-30
 
 * [RELEASE DEV] Released as Dev
