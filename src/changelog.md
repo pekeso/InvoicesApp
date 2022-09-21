@@ -1,6 +1,6 @@
 # Changelog
 
-## 2022-09-20
+## 2022-09-21
 
 The following changes are only available with the latest BananaPlus version (10.0.13.201 or newer).
 
@@ -18,7 +18,10 @@ The following changes are only available with the latest BananaPlus version (10.
 * [Enhancement] Let open protected invoices and estimates in read only mode
 * [Enhancement] Add command print delivery note (it works only with xxx layout)
 * [Enhancement] Add command print reminder (it works only with xxx layout)
-  
+ 
+## 2022-09-21
+
+* [Fix] Fix invoice number is not udpated when changed in the invoice / estimates table
 
 ## 2022-09-19
 
