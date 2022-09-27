@@ -148,4 +148,59 @@ QtObject {
     function setType(tp) {
         type = tp
     }
+
+    function setVatMode(vatMode) {
+        if (json && json.document_info.vat_mode !== vatMode) {
+            // We will copy the unit price to the new mode (inclusive or excluve mwst)
+            // The unit price will not change, but the invoice total with recalculated
+            // if not the unit price is changed and from the experience this is not user friendly
+            if (vatMode === "vat_excl") {
+                // Copy displayed unit price to item unit price vat exlusive
+                if (json.document_info.vat_mode !== "vat_excl") {
+                    for (var i = 0; i < json.items.length; ++i) {
+                        if (json.items[i].unit_price.amount_vat_inclusive) {
+                            json.items[i].unit_price.amount_vat_exclusive = json.items[i].unit_price.amount_vat_inclusive;
+                        } else if (json.items[i].unit_price.calculated_amount_vat_inclusive) {
+                            json.items[i].unit_price.amount_vat_exclusive = json.items[i].unit_price.calculated_amount_vat_inclusive;
+                        }
+                        json.items[i].unit_price.amount_vat_inclusive = null;
+                    }
+                } else { // json.document_info.vat_mode === "vat_excl"
+                    for (var i = 0; i < json.items.length; ++i) {
+                        if (json.items[i].unit_price.amount_vat_exclusive) {
+                            // Nothing to do
+                        } else if (json.items[i].unit_price.calculated_amount_vat_exclusive) {
+                            json.items[i].unit_price.amount_vat_exclusive = json.items[i].unit_price.calculated_amount_vat_exclusive;
+                        }
+                        json.items[i].unit_price.amount_vat_inclusive = null;
+                     }
+                }
+            } else { // vatMode === "vat_none" | "vat_incl"
+                // Copy displayed unit price to item unit price vat inclusive
+                if (json.document_info.vat_mode === "vat_excl") {
+                    // Copy unit price vat exclusive to vat inclusive
+                    for (var i = 0; i < json.items.length; ++i) {
+                        if (json.items[i].unit_price.amount_vat_exclusive) {
+                            json.items[i].unit_price.amount_vat_inclusive = json.items[i].unit_price.amount_vat_exclusive;
+                        } else if (json.items[i].unit_price.calculated_amount_vat_exclusive) {
+                            json.items[i].unit_price.amount_vat_inclusive = json.items[i].unit_price.calculated_amount_vat_exclusive;
+                        }
+                        json.items[i].unit_price.amount_vat_exclusive = null;
+                    }
+                } else { // json.document_info.vat_mode === "vat_none" | "vat_incl"
+                     for (var i = 0; i < json.items.length; ++i) {
+                        if (json.items[i].unit_price.amount_vat_inclusive) {
+                            // Nothing to do
+                        } else if (json.items[i].unit_price.calculated_amount_vat_inclusive) {
+                            json.items[i].unit_price.amount_vat_inclusive = json.items[i].unit_price.calculated_amount_vat_inclusive;
+                        }
+                        json.items[i].unit_price.amount_vat_exclusive = null;
+                     }
+                }
+            }
+            json.document_info.vat_mode = vatMode;
+            setIsModified(true);
+        }
+    }
+
 }

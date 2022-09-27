@@ -365,8 +365,7 @@ Item {
                             }
 
                             onCurrentKeySet: function(key, isExistingKey) {
-                                invoice.json.document_info.vat_mode = key
-                                setDocumentModified()
+                                invoice.setVatMode(key)
                                 calculateInvoice()
                             }
 
