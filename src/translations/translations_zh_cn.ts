@@ -1067,7 +1067,7 @@ Would you like to upgrade to the Advanced plan?</source>
     <message>
         <location filename="../ui/WdgSettings.qml" line="155"/>
         <source>Default VAT code</source>
-        <translation>默认增值税代码</translation>
+        <translation>默认的增值税代码</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="253"/>
