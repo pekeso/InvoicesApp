@@ -1243,7 +1243,7 @@ Möchten Sie auf den Advanced-Plan upgraden?</translation>
     <message>
         <location filename="../ui/WdgSettings.qml" line="155"/>
         <source>Default VAT code</source>
-        <translation>Standard-MwSt-Code</translation>
+        <translation>Standardeinstellung MWST-Code</translation>
     </message>
     <message>
         <location filename="../ui/WdgSettings.qml" line="253"/>
