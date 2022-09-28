@@ -17,7 +17,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import "../base/settings.js" as Settings
-
+import "../base/vatcodes.js" as VatCodes
 import "./components"
 
 Item {
@@ -42,6 +42,14 @@ Item {
 
     VatModesModel {
         id: vatModesModel
+    }
+
+    ListModel {
+        id: taxCodesModel
+    }
+
+    Component.onCompleted: {
+        loadTaxCodes()
     }
 
     ScrollView {
@@ -137,6 +145,39 @@ Item {
 
                         onCurrentKeySet: function(key, isExistingKey) {
                             appSettings.data.new_documents.vat_mode = key
+                            appSettings.modified = true
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: qsTr("Default VAT code")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledKeyDescrComboBox {
+                        id: settings_default_vat_code
+                        implicitWidth: stylePropertyWidth
+
+                        model: taxCodesModel
+                        editable: false
+                        textRole: "descr"
+                        listItemTextIncludesKey: true
+                        displayTextIncludesKey: true
+                        displayTextIncludesDescr: false;
+
+                        Connections {
+                            target: appSettings
+                            function onDataChanged() {
+                                if (appSettings.data.new_documents.default_vat_code) {
+                                    settings_default_vat_code.setCurrentKey(appSettings.data.new_documents.default_vat_code)
+                                }
+                            }
+                        }
+
+                        onCurrentKeySet: function(key, isExistingKey) {
+                            appSettings.data.new_documents.default_vat_code = key
                             appSettings.modified = true
                         }
                     }
@@ -2097,6 +2138,20 @@ Item {
             return text + " (" + qsTr("Advanced plan") + ")"
         }
         return text
+    }
+
+    function loadTaxCodes() {
+        taxCodesModel.clear();
+        taxCodesModel.append(
+                    {
+                        'key': "",
+                        'descr' : "",
+                        'rate': ""
+                    })
+        var vatCodes = VatCodes.vatCodesGet()
+        for (var i = 0; i < vatCodes.length; ++i) {
+            taxCodesModel.append(vatCodes[i]);
+        }
     }
 
     function meetLicenceRequirement(fieldId) {

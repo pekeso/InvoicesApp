@@ -37,6 +37,9 @@ StyledComboBox {
     // If true the display text include the key
     property bool displayTextIncludesKey: false
 
+    // If true the display text include the key
+    property bool displayTextIncludesDescr: true
+
     // If true the ComboBox filter the model items
     property bool filterEnabled: false
 
@@ -368,7 +371,10 @@ StyledComboBox {
     function setDisplayText(key, descr) {
         if (textRole === "descr") {
             if (displayTextIncludesKey) {
-                displayText = key + "   " + descr;
+                displayText = key ;
+                if (displayTextIncludesDescr) {
+                    displayText += "   " + descr;
+                }
             } else if (descr) {
                 displayText = descr;
             } else {

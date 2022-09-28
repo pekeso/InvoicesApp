@@ -1352,8 +1352,22 @@ Item {
                                             var item = Items.itemGet(itemId, vatExclusive)
                                             if (item) {
                                                 var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
-                                                if (vatCode)
+                                                if (vatCode) {
                                                     item.unit_price.vat_rate = vatCode.rate
+                                                } else {
+                                                    // Fill with the default vat amount
+                                                    let hasAmount = item.unit_price.amount_vat_inclusive ||
+                                                        item.unit_price.amount_vat_exclusive;
+                                                    if (hasAmount && !isVatModeVatNone && !item.unit_price.vat_rate) {
+                                                        if (appSettings.data.new_documents.default_vat_code) {
+                                                            item.unit_price.vat_code = appSettings.data.new_documents.default_vat_code
+                                                            var defaultVatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
+                                                            if (defaultVatCode) {
+                                                                item.unit_price.vat_rate = defaultVatCode.rate
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             } else {
                                                 item = emptyInvoiceItem()
                                             }
@@ -1634,17 +1648,27 @@ Item {
                                 onEditingFinished: {
                                     if (modified) {
                                         if (styleData.row >= 0 && styleData.row < invoice.json.items.length) {
+                                            let item = invoice.json.items[styleData.row];
                                             let internalAmountFormat = text ? toInternalItemNumberFormat(text) : ""
                                             if (isVatModeVatInclusive) {
-                                                invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = internalAmountFormat
-                                                invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = null
+                                                item.unit_price.amount_vat_inclusive = internalAmountFormat
+                                                item.unit_price.amount_vat_exclusive = null
                                             } else {
-                                                invoice.json.items[styleData.row].unit_price.amount_vat_inclusive = null
-                                                invoice.json.items[styleData.row].unit_price.amount_vat_exclusive = internalAmountFormat
+                                                item.unit_price.amount_vat_inclusive = null
+                                                item.unit_price.amount_vat_exclusive = internalAmountFormat
                                             }
                                             if (internalAmountFormat && !invoice.json.items[styleData.row].quantity) {
-                                                // Set quantity if a price is set
-                                                invoice.json.items[styleData.row].quantity = "1"
+                                                // Fill quantity if a price is set
+                                                item.quantity = "1"
+                                            }
+                                            if (internalAmountFormat && !isVatModeVatNone && !item.unit_price.vat_rate) {
+                                                if (appSettings.data.new_documents.default_vat_code) {
+                                                    item.unit_price.vat_code = appSettings.data.new_documents.default_vat_code
+                                                    var vatCode = VatCodes.vatCodeGet(item.unit_price.vat_code)
+                                                    if (vatCode) {
+                                                        item.unit_price.vat_rate = vatCode.rate
+                                                    }
+                                                }
                                             }
 
                                             setDocumentModified()
@@ -2364,8 +2388,7 @@ Item {
 
                         StyledTextField {
                             id: vattotal_amount
-                            visible: isInvoiceFieldVisible("show_invoice_vat") &&
-                                     !isVatModeVatNone && !isVatModeVatInclusive
+                            visible: !isVatModeVatNone && !isVatModeVatInclusive
                             readOnly: true
                             borderless: true
                             Layout.alignment: Qt.AlignRight
