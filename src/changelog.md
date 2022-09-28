@@ -3,8 +3,9 @@
 ## 2022-09-27
 
 * [Fix] Fix changing from incl vat to excl vat or vice versa should not change the unit price.
-        This could be correct from a devlop point of view to update the unit price, 
-        but user point of view this is not logical and cause of errors.
+ This could be correct from a devlop point of view to update the unit price, 
+ but user point of view this is not logical and cause of errors.
+* [Fix] Fix entering the customer does't visualize the corresponding customer entry
 
 ## 2022-09-21
 
