@@ -221,7 +221,7 @@ Item {
             StyledLabel {
                 font.bold: true
                 //Layout.minimumWidth: 320 * Stylesheet.pixelScaleRatio
-                text: qsTr("Total") + (invoice.json && invoice.json.document_info.currency ? " " + invoice.json.document_info.currency.toLocaleUpperCase() : "") +
+                text: qsTr("Total") + (invoice.signalInvoiceChanged && invoice.json && invoice.json.document_info.currency ? " " + invoice.json.document_info.currency.toLocaleUpperCase() : "") +
                       " " + toLocaleNumberFormat(invoice.json ? invoice.json.billing_info.total_to_pay : "", true)
             }
 
@@ -2502,7 +2502,8 @@ Item {
                                 text: qsTr("Total")
                             }
                             StyledLabel{
-                                text: invoice.json && invoice.json.document_info.currency ? invoice.json.document_info.currency.toLocaleUpperCase() : ""
+                                text: invoice.signalInvoiceChanged && invoice.json && invoice.json.document_info.currency ?
+                                          invoice.json.document_info.currency.toLocaleUpperCase() : ""
                             }
                         }
 
@@ -2548,7 +2549,8 @@ Item {
                                 vatText = vatText.replace("%1", vatRateObj["vat_rate"] ? vatRateObj["vat_rate"] : "0");
                                 vatText = vatText.replace("%2", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_vat_amount"], invoice.json.document_info.decimals_amounts, true));
                                 vatText = vatText.replace("%3", Banana.Converter.toLocaleNumberFormat(vatRateObj["total_amount_vat_exclusive"], invoice.json.document_info.decimals_amounts, true));
-                                vatText = vatText.replace(/%4/g, (invoice.json.document_info.currency ? invoice.json.document_info.currency.toUpperCase() : ""));
+                                vatText = vatText.replace(/%4/g, (invoice.signalInvoiceChanged && invoice.json.document_info.currency ?
+                                                                      invoice.json.document_info.currency.toUpperCase() : ""));
                                 return vatText;
                             }
 
@@ -2567,7 +2569,7 @@ Item {
                             function getAccountingDetails() {
                                 var accDetails = ""
                                 if (invoice.json && invoice.json.accounting_info) {
-                                    if (invoice.json.document_info.currency !== appAccountingSettings.value("base_currency", "CHF")) {
+                                    if (invoice.signalInvoiceChanged && invoice.json.document_info.currency !== appAccountingSettings.value("base_currency", "CHF")) {
                                         // Accounting amount 1'200 EUR (1 EUR / 1.2 CHF)
                                         var amount_acc_currency = Banana.Converter.toLocaleNumberFormat(invoice.json.accounting_info.amount)
                                         var multiplier = invoice.json.accounting_info.multiplier ? invoice.json.accounting_info.multiplier : "1.00"

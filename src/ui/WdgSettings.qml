@@ -25,6 +25,7 @@ Item {
 
     required property Invoice invoice
     required property AppSettings appSettings
+    required property WdgInvoice wdgInvoice
 
     // Style properties
     property int stylePropertyWidth: 220 * Stylesheet.pixelScaleRatio
@@ -70,6 +71,12 @@ Item {
                 StyledLabel{
                     text: qsTr("New documents")
                     font.bold: true
+                }
+
+                StyledLabel{
+                    wrapMode: Text.WordWrap
+                    width: scrollView.availableWidth
+                    text: qsTr("Changes to the following settings are applied to the current document and to future documents. If you only wish to change the current document use the Invoice tab.")
                 }
 
                 RowLayout {
@@ -146,6 +153,8 @@ Item {
                         onCurrentKeySet: function(key, isExistingKey) {
                             appSettings.data.new_documents.vat_mode = key
                             appSettings.modified = true
+                            invoice.setVatMode(key)
+                            wdgInvoice.calculateInvoice()
                         }
                     }
                 }
@@ -196,6 +205,8 @@ Item {
                             if (modified) {
                                 appSettings.data.new_documents.currency = text
                                 appSettings.modified = true
+                                invoice.json.document_info.currency = text
+                                invoice.setIsModified(true)
                                 focus = false
                             }
                         }
@@ -220,6 +231,9 @@ Item {
                                 } else {
                                     appSettings.data.new_documents.decimals_amounts = decimals
                                     appSettings.modified = true
+                                    invoice.json.document_info.decimals_amounts = decimals
+                                    invoice.setIsModified(true)
+                                    wdgInvoice.calculateInvoice()
                                 }
                                 focus = false
                             }
@@ -239,9 +253,12 @@ Item {
                         validator: DoubleValidator{bottom: 0.00; top: 1.00; decimals: 24;}
                         onEditingFinished: {
                             if (modified) {
-                                appSettings.data.new_documents.rounding_total =
-                                        Banana.Converter.toInternalNumberFormat(text)
+                                let rouding = Banana.Converter.toInternalNumberFormat(text)
+                                appSettings.data.new_documents.rounding_total =rouding
                                 appSettings.modified = true
+                                invoice.json.document_info.rounding_total = rouding
+                                invoice.setIsModified(true)
+                                wdgInvoice.calculateInvoice()
                                 focus = false
                             }
                         }
