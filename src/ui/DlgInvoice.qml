@@ -292,6 +292,7 @@ Item {
             id: wdgAppSettings
             invoice: invoice
             appSettings: appSettings
+            wdgInvoice: wdgInvoice
         }
 
         WdgSource {

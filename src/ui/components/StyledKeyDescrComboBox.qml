@@ -37,6 +37,9 @@ StyledComboBox {
     // If true the display text include the key
     property bool displayTextIncludesKey: false
 
+    // If true the display text include the key
+    property bool displayTextIncludesDescr: true
+
     // If true the ComboBox filter the model items
     property bool filterEnabled: false
 
@@ -157,9 +160,13 @@ StyledComboBox {
 
         onFocusChanged: {
             if (focus) {
+                control.selectAll()
                 popup.open()
-                popup.listView.positionViewAtBeginning()
-                updateCurrentIndex(displayText)
+                if (currentKeyIndex >= 0) {
+                    popup.listView.positionViewAtIndex(currentKeyIndex, ListView.Beginning)
+                } else {
+                    popup.listView.positionViewAtIndex(0, ListView.Beginning)
+                }
             }
         }
     }
@@ -182,13 +189,6 @@ StyledComboBox {
                 control.currentKeySet(item.key, true);
                 popup.close()
             }
-        }
-    }
-
-    Connections {
-        target: popup
-        function onOpened() {
-            updateCurrentIndex(displayText)
         }
     }
 
@@ -241,7 +241,7 @@ StyledComboBox {
 
         filter.running = true
 
-        let text = control.editText
+        let text = control.editText.trim()
 
         if (!text.toLowerCase().startsWith(filter.lastFilterText)) {
             if (filter.unfilteredModel) {
@@ -251,28 +251,37 @@ StyledComboBox {
         }
         filter.lastFilterText = text
 
-        if (!text || findPartialKey(text) >= 0) {
+        if (!text) {
             if (filter.unfilteredModel) {
                 model = filter.unfilteredModel
                 filter.unfilteredModel = null
             }
+            popup.listView.positionViewAtIndex(0, ListView.Beginning)
         } else {
-            if (!filter.unfilteredModel) {
-                filter.unfilteredModel = model
-            }
-            filteredModel.clear()
-            for (let i = 0; i < filter.unfilteredModel.count; ++i) {
-                let obj = filter.unfilteredModel.get(i);
-                if (textMatchSearch(obj.descr, text)) {
-                    filteredModel.append(obj)
-                } else if (obj.search && textMatchSearch(obj.search, text)) {
-                    filteredModel.append(obj)
+            let partialKeyIndex = findPartialKey(text)
+            if (partialKeyIndex >= 0) {
+                if (!filter.unfilteredModel) {
+                    filter.unfilteredModel = model
                 }
+                popup.listView.positionViewAtIndex(partialKeyIndex, ListView.Beginning)
+            } else {
+                filteredModel.clear()
+                if (!filter.unfilteredModel) {
+                    filter.unfilteredModel = model
+                }
+                for (let i = 0; i < filter.unfilteredModel.count; ++i) {
+                    let obj = filter.unfilteredModel.get(i);
+                    if (textMatchSearch(obj.descr, text)) {
+                        filteredModel.append(obj)
+                    } else if (obj.search && textMatchSearch(obj.search, text)) {
+                        filteredModel.append(obj)
+                    }
+                }
+                model = filteredModel
+                popup.listView.positionViewAtIndex(0, ListView.Beginning)
             }
-            model = filteredModel
         }
 
-        updateCurrentIndex(text)
         filter.running = false
     }
 
@@ -362,7 +371,10 @@ StyledComboBox {
     function setDisplayText(key, descr) {
         if (textRole === "descr") {
             if (displayTextIncludesKey) {
-                displayText = key + "   " + descr;
+                displayText = key ;
+                if (displayTextIncludesDescr) {
+                    displayText += "   " + descr;
+                }
             } else if (descr) {
                 displayText = descr;
             } else {
@@ -378,7 +390,6 @@ StyledComboBox {
         if (index < 0)
             index = findPartialKey(text) // Highlight first partial match
         if (index >= 0) {
-
             currentHighlightIndex = index
             popup.listView.positionViewAtIndex(index, ListView.Beginning)
         } else {

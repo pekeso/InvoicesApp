@@ -17,7 +17,7 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import "../base/settings.js" as Settings
-
+import "../base/vatcodes.js" as VatCodes
 import "./components"
 
 Item {
@@ -25,6 +25,7 @@ Item {
 
     required property Invoice invoice
     required property AppSettings appSettings
+    required property WdgInvoice wdgInvoice
 
     // Style properties
     property int stylePropertyWidth: 220 * Stylesheet.pixelScaleRatio
@@ -42,6 +43,14 @@ Item {
 
     VatModesModel {
         id: vatModesModel
+    }
+
+    ListModel {
+        id: taxCodesModel
+    }
+
+    Component.onCompleted: {
+        loadTaxCodes()
     }
 
     ScrollView {
@@ -62,6 +71,12 @@ Item {
                 StyledLabel{
                     text: qsTr("New documents")
                     font.bold: true
+                }
+
+                StyledLabel{
+                    wrapMode: Text.WordWrap
+                    width: scrollView.availableWidth
+                    text: qsTr("Changes to the following settings are applied to the current document and to future documents. If you only wish to change the current document use the Invoice tab.")
                 }
 
                 RowLayout {
@@ -138,6 +153,41 @@ Item {
                         onCurrentKeySet: function(key, isExistingKey) {
                             appSettings.data.new_documents.vat_mode = key
                             appSettings.modified = true
+                            invoice.setVatMode(key)
+                            wdgInvoice.calculateInvoice()
+                        }
+                    }
+                }
+
+                RowLayout {
+                    StyledLabel{
+                        text: qsTr("Default VAT code")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledKeyDescrComboBox {
+                        id: settings_default_vat_code
+                        implicitWidth: stylePropertyWidth
+
+                        model: taxCodesModel
+                        editable: false
+                        textRole: "descr"
+                        listItemTextIncludesKey: true
+                        displayTextIncludesKey: true
+                        displayTextIncludesDescr: false;
+
+                        Connections {
+                            target: appSettings
+                            function onDataChanged() {
+                                if (appSettings.data.new_documents.default_vat_code) {
+                                    settings_default_vat_code.setCurrentKey(appSettings.data.new_documents.default_vat_code)
+                                }
+                            }
+                        }
+
+                        onCurrentKeySet: function(key, isExistingKey) {
+                            appSettings.data.new_documents.default_vat_code = key
+                            appSettings.modified = true
                         }
                     }
                 }
@@ -155,6 +205,8 @@ Item {
                             if (modified) {
                                 appSettings.data.new_documents.currency = text
                                 appSettings.modified = true
+                                invoice.json.document_info.currency = text
+                                invoice.setIsModified(true)
                                 focus = false
                             }
                         }
@@ -179,6 +231,9 @@ Item {
                                 } else {
                                     appSettings.data.new_documents.decimals_amounts = decimals
                                     appSettings.modified = true
+                                    invoice.json.document_info.decimals_amounts = decimals
+                                    invoice.setIsModified(true)
+                                    wdgInvoice.calculateInvoice()
                                 }
                                 focus = false
                             }
@@ -198,9 +253,12 @@ Item {
                         validator: DoubleValidator{bottom: 0.00; top: 1.00; decimals: 24;}
                         onEditingFinished: {
                             if (modified) {
-                                appSettings.data.new_documents.rounding_total =
-                                        Banana.Converter.toInternalNumberFormat(text)
+                                let rouding = Banana.Converter.toInternalNumberFormat(text)
+                                appSettings.data.new_documents.rounding_total =rouding
                                 appSettings.modified = true
+                                invoice.json.document_info.rounding_total = rouding
+                                invoice.setIsModified(true)
+                                wdgInvoice.calculateInvoice()
                                 focus = false
                             }
                         }
@@ -2097,6 +2155,20 @@ Item {
             return text + " (" + qsTr("Advanced plan") + ")"
         }
         return text
+    }
+
+    function loadTaxCodes() {
+        taxCodesModel.clear();
+        taxCodesModel.append(
+                    {
+                        'key': "",
+                        'descr' : "",
+                        'rate': ""
+                    })
+        var vatCodes = VatCodes.vatCodesGet()
+        for (var i = 0; i < vatCodes.length; ++i) {
+            taxCodesModel.append(vatCodes[i]);
+        }
     }
 
     function meetLicenceRequirement(fieldId) {
