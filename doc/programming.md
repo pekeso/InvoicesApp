@@ -53,12 +53,7 @@ More precisely:
 * Where the code has been modified to bypass a framework or api error
 * Where I spent a lot of time to find a solution
 
-### Tests
-
-Where possible and sensible implement tests.
-
-Our philosophy, before changing the code, check that a corresponding test function is implemented, if not insert it.  
-If I change a line of code, through the tests I must be able to feel sure that all the rest of the application works correctly.
+## Developement
 
 ## Environment
 
@@ -79,3 +74,19 @@ To devlop the Estimate and Invoices extension you need the following tools:
   * Disable the installed InvoiceApp
   * Add the local InvoiceApp InvoiceApp/src/ch.banana.application.invoice.default.sbaa to the extensions
 * Open an invoice and test your modifications
+
+### Translations
+
+To update the translations:
+
+* In Qt Creator build the target InvoiceApp/lpudate
+* Open the files *.tx with Qt Linguist
+* Insert the translations
+* Build the project InvoiceApp
+
+### Tests
+
+Where possible and sensible implement tests.
+
+Our philosophy, before changing the code, check that a corresponding test function is implemented, if not insert it.  
+If I change a line of code, through the tests I must be able to feel sure that all the rest of the application works correctly.
