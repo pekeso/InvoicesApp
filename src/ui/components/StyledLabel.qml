@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick.Controls 2.15
+import QtQuick.Controls
 
 /**
  * The StyledLabel component update the text color on the fly

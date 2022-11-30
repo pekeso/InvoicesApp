@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Window
 
 import "./components"
 
@@ -96,7 +96,7 @@ Item {
 
             RowLayout {
                 StyledLabel {
-                    text: "Test with advanced plan license disabled"
+                    text: "Disable advaced plan license"
                     Layout.fillWidth: true
                 }
 
@@ -109,7 +109,7 @@ Item {
 
             RowLayout {
                 StyledLabel {
-                    text: "Test with isInternal flag disabled"
+                    text: "Disable isInternal flag"
                     Layout.fillWidth: true
                 }
 
@@ -125,16 +125,30 @@ Item {
 
             RowLayout {
                 StyledLabel {
-                    text: "Test with updated version notification visible"
+                    text: "Show version notification bar"
                     Layout.fillWidth: true
                 }
 
                 StyledSwitch {
-                    id: showUpdatedVersionInstalledSwitch
                     enabled: Banana.application.isInternal
                     checked: appSettings.isNotificationVisible("show_updated_version_installed")
                     onToggled: {
                         appSettings.setNotificationVisible("show_updated_version_installed", checked)
+                    }
+                }
+            }
+
+            RowLayout {
+                StyledLabel {
+                    text: "Switch invoice read only flag"
+                    Layout.fillWidth: true
+                }
+
+                StyledSwitch {
+                    enabled: Banana.application.isInternal
+                    checked: invoice.isReadOnly
+                    onToggled: {
+                        invoice.setIsReadOnly(!invoice.isReadOnly)
                     }
                 }
             }

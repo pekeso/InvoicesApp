@@ -52,5 +52,39 @@
         <file>base/invoices.js</file>
         <file>ui/components/StyledKeyDescrComboBox.qml</file>
         <file>ui/DlgPixelMetrics.qml</file>
+        <file>ui/qt5/components/check-mark.png</file>
+        <file>ui/qt5/components/NotificationPopUp.qml</file>
+        <file>ui/qt5/components/qmldir</file>
+        <file>ui/qt5/components/SearchBar.qml</file>
+        <file>ui/qt5/components/SimpleMessageDialog.qml</file>
+        <file>ui/qt5/components/StyledBranchIndicator.qml</file>
+        <file>ui/qt5/components/StyledButton.qml</file>
+        <file>ui/qt5/components/StyledCheckBox.qml</file>
+        <file>ui/qt5/components/StyledComboBox.qml</file>
+        <file>ui/qt5/components/StyledKeyDescrComboBox.qml</file>
+        <file>ui/qt5/components/StyledLabel.qml</file>
+        <file>ui/qt5/components/StyledRadioButton.qml</file>
+        <file>ui/qt5/components/StyledScrollableTextArea.qml</file>
+        <file>ui/qt5/components/StyledSettingsSwitch.qml</file>
+        <file>ui/qt5/components/StyledSwitch.qml</file>
+        <file>ui/qt5/components/StyledTabBar.qml</file>
+        <file>ui/qt5/components/StyledTabButton.qml</file>
+        <file>ui/qt5/components/StyledTextArea.qml</file>
+        <file>ui/qt5/components/StyledTextField.qml</file>
+        <file>ui/qt5/components/Stylesheet.qml</file>
+        <file>ui/qt5/AppSettings.qml</file>
+        <file>ui/qt5/DevSettings.qml</file>
+        <file>ui/qt5/DlgEditSource.qml</file>
+        <file>ui/qt5/DlgInvoice.qml</file>
+        <file>ui/qt5/DlgLincense.qml</file>
+        <file>ui/qt5/DlgPixelMetrics.qml</file>
+        <file>ui/qt5/DlgTranslations.qml</file>
+        <file>ui/qt5/Invoice.qml</file>
+        <file>ui/qt5/VatModesModel.qml</file>
+        <file>ui/qt5/WdgChangelog.qml</file>
+        <file>ui/qt5/WdgDevelopment.qml</file>
+        <file>ui/qt5/WdgInvoice.qml</file>
+        <file>ui/qt5/WdgSettings.qml</file>
+        <file>ui/qt5/WdgSource.qml</file>
     </qresource>
 </RCC>

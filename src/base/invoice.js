@@ -120,7 +120,7 @@ function invoiceCreateFromEstimateObj(estimateObj) {
     if (!estimateObj)
         return null;
 
-    estimateObj.document_info.number = Banana.document.table("Invoices").progressiveNumber();
+    estimateObj.document_info.number = invoiceGetNextNumber(false);
     estimateObj.document_info.doc_type = "10";
     invoiceSetDate(estimateObj, new Date().toISOString().substring(0,10));
     invoiceUpdateCreatorInfo(estimateObj);
@@ -213,10 +213,16 @@ function invoiceDuplicateObj(invoiceObj, tabPos) {
     if (!invoiceObj)
          return null;
 
+    let tableName = tabPos.tableName;
+    if (tabPos.tableName === "Archive" || tabPos.tableName === "Templates" ||
+                    tabPos.tableName === "Extract") {
+        tableName = tabPos.parentTableName;
+    }
     var settingsNewDocs = getSettings().new_documents;
-    invoiceObj.document_info.number = Banana.document.table(tabPos.tableName).progressiveNumber();
+    let isEstimate = invoiceIsEstimate(invoiceObj);
+    invoiceObj.document_info.number = invoiceGetNextNumber(isEstimate);
     invoiceObj.document_info.date = new Date().toISOString().substring(0,10);
-    var due_date_days = invoiceIsEstimate(invoiceObj) ?
+    var due_date_days = isEstimate ?
                 Number(settingsNewDocs.estimate_validity_days) :
                 Number(settingsNewDocs.payment_term_days);
     invoiceObj.payment_info.due_date = dateAdd(invoiceObj.document_info.date, due_date_days);
@@ -270,6 +276,9 @@ function invoiceObjGet(tabPos) {
 }
 
 function invoiceRowGet(tabPos) {
+    if (!tabPos || !tabPos.tableName || tabPos.rowNr < 0) {
+        return null;
+    }
     var table = Banana.document.table(tabPos.tableName);
     if (table && tabPos.listName !== "Base") {
         table = table.list(tabPos.listName);
@@ -282,12 +291,14 @@ function invoiceRowGet(tabPos) {
 
 function invoiceUpdatedInvoiceDataFieldGet(tabPos, invoiceObj) {
     var invoiceFieldObj = {};
-    var row = invoiceRowGet(tabPos);
-    if (row) {
-        try {
-            invoiceFieldObj = JSON.parse(row.value("InvoiceData"));
-        } catch(e) {
+    if (tabPos) {
+        var row = invoiceRowGet(tabPos);
+        if (row) {
+            try {
+                invoiceFieldObj = JSON.parse(row.value("InvoiceData"));
+            } catch(e) {
 
+            }
         }
     }
     // Save as string, because getMapValue can't handle json data
@@ -447,6 +458,24 @@ function invoicePrint(invoiceObj) {
     if (invoiceObj) {
         let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
         invoicePrepareForPrinting(printedJsonObj);
+        Banana.document.printInvoice(JSON.stringify(printedJsonObj));
+    }
+}
+
+function invoicePrintDeliveryNote(invoiceObj) {
+    if (invoiceObj) {
+        let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
+        invoicePrepareForPrinting(printedJsonObj);
+        printedJsonObj.document_info.status = "delivery_note"
+        Banana.document.printInvoice(JSON.stringify(printedJsonObj));
+    }
+}
+
+function invoicePrintReminder(invoiceObj) {
+    if (invoiceObj) {
+        let printedJsonObj = JSON.parse(JSON.stringify(invoiceObj));
+        invoicePrepareForPrinting(printedJsonObj);
+        printedJsonObj.document_info.status = "reminder_1"
         Banana.document.printInvoice(JSON.stringify(printedJsonObj));
     }
 }

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import QtQuick.Window
 
-import "./components" 1.0
+import "./components"
 import "../base/languages.js" as Languages
 import "../base/settings.js" as Settings
 

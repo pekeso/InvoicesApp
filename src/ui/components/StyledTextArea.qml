@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import "." 1.0
+import "."
 
 TextArea {
    id: textArea
@@ -28,31 +28,32 @@ TextArea {
 
    background: Rectangle {
       color: Stylesheet.baseColor
-      border.color: textArea.activeFocus ? "#354793" : "#bdbebf"
+      border.color: textArea.activeFocus | selected ? "#354793" : "#bdbebf"
       border.width: 1
       radius: 2.0 * Stylesheet.pixelScaleRatio
    }
 
 
    property bool modified: false
+   property bool selected: false
    property var contextMenu: baseContextMenu
    property bool _copyAllOnCopy: false
 
    signal textEdited()
 
-   onTextChanged: {
+   onTextChanged: function() {
       if (focus) {
          textArea.textEdited()
          modified = true
       }
    }
 
-   onFocusChanged: {
+   onFocusChanged: function() {
        if (focus)
            modified = false
    }
 
-   Keys.onEscapePressed:{
+   Keys.onEscapePressed: function(event) {
        undo()
        modified = false
        focus = false

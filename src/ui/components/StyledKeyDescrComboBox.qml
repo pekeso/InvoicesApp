@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
 /**
  * The StyledKeyDescrComboBox use a model with the members 'key', 'value' and 'search'.
@@ -107,7 +107,7 @@ StyledComboBox {
                     control.setDisplayText(item.key, item.descr);
                     control.currentKeySet(item.key, true);
                 } else {
-                    if (popup.visible && currentHighlightIndex >= 0) {
+                    if (control.popup.visible && currentHighlightIndex >= 0) {
                         // An item is hightlighted in the popup
                         if (debugOut)
                             console.log("ComboBox highlightedIndex: " + currentHighlightIndex)
@@ -150,7 +150,7 @@ StyledComboBox {
                 control.popup.open()
             }
             control.currentHighlightIndex = -1
-            popup.listView.positionViewAtBeginning()
+            control.popup.listView.positionViewAtBeginning()
             control.modified = true
             if (filterEnabled) {
                 filterModelTimer.restart()
@@ -161,11 +161,11 @@ StyledComboBox {
         onFocusChanged: {
             if (focus) {
                 control.selectAll()
-                popup.open()
+                control.popup.open()
                 if (currentKeyIndex >= 0) {
-                    popup.listView.positionViewAtIndex(currentKeyIndex, ListView.Beginning)
+                    control.popup.listView.positionViewAtIndex(currentKeyIndex, ListView.Beginning)
                 } else {
-                    popup.listView.positionViewAtIndex(0, ListView.Beginning)
+                    control.popup.listView.positionViewAtIndex(0, ListView.Beginning)
                 }
             }
         }
@@ -173,7 +173,7 @@ StyledComboBox {
 
     delegate: ItemDelegate {
         text: listItemTextIncludesKey ? key + "\t" + descr : descr
-        width: popup.listView.width
+        width: control.popup.listView.width
         font.bold: currentKeyIndex === index
         highlighted: currentHighlightIndex === index
         MouseArea {
@@ -187,7 +187,7 @@ StyledComboBox {
                 undoKey = item.key
                 control.setDisplayText(item.key, item.descr);
                 control.currentKeySet(item.key, true);
-                popup.close()
+                control.popup.close()
             }
         }
     }
@@ -218,7 +218,7 @@ StyledComboBox {
     Keys.onDownPressed: {
         if (currentHighlightIndex + 1 < model.count) {
             currentHighlightIndex += 1
-            popup.listView.positionViewAtIndex(currentHighlightIndex, ListView.Contain)
+            control.popup.listView.positionViewAtIndex(currentHighlightIndex, ListView.Contain)
             textField.modified = true
             let item = model.get(currentHighlightIndex)
             setDisplayText(item.key, item.descr)
@@ -228,7 +228,7 @@ StyledComboBox {
     Keys.onUpPressed: {
         if (currentHighlightIndex > 0) {
             currentHighlightIndex -= 1
-            popup.listView.positionViewAtIndex(currentHighlightIndex, ListView.Contain)
+            control.popup.listView.positionViewAtIndex(currentHighlightIndex, ListView.Contain)
             textField.modified = true
             let item = model.get(currentHighlightIndex)
             setDisplayText(item.key, item.descr)
@@ -256,14 +256,14 @@ StyledComboBox {
                 model = filter.unfilteredModel
                 filter.unfilteredModel = null
             }
-            popup.listView.positionViewAtIndex(0, ListView.Beginning)
+            control.popup.listView.positionViewAtIndex(0, ListView.Beginning)
         } else {
             let partialKeyIndex = findPartialKey(text)
             if (partialKeyIndex >= 0) {
                 if (!filter.unfilteredModel) {
                     filter.unfilteredModel = model
                 }
-                popup.listView.positionViewAtIndex(partialKeyIndex, ListView.Beginning)
+                control.popup.listView.positionViewAtIndex(partialKeyIndex, ListView.Beginning)
             } else {
                 filteredModel.clear()
                 if (!filter.unfilteredModel) {
@@ -278,7 +278,7 @@ StyledComboBox {
                     }
                 }
                 model = filteredModel
-                popup.listView.positionViewAtIndex(0, ListView.Beginning)
+                control.popup.listView.positionViewAtIndex(0, ListView.Beginning)
             }
         }
 
@@ -391,10 +391,10 @@ StyledComboBox {
             index = findPartialKey(text) // Highlight first partial match
         if (index >= 0) {
             currentHighlightIndex = index
-            popup.listView.positionViewAtIndex(index, ListView.Beginning)
+            control.popup.listView.positionViewAtIndex(index, ListView.Beginning)
         } else {
             currentHighlightIndex = -1
-            popup.listView.positionViewAtIndex(0, ListView.Beginning)
+            control.popup.listView.positionViewAtIndex(0, ListView.Beginning)
         }
     }
 

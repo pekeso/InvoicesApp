@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
+import QtQuick
 
 ListModel {
     ListElement {key: "vat_none"; descr: qsTr("No VAT")}

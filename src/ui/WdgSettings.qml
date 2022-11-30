@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import "../base/settings.js" as Settings
 import "../base/vatcodes.js" as VatCodes
@@ -154,40 +154,40 @@ Item {
                             appSettings.data.new_documents.vat_mode = key
                             appSettings.modified = true
                             invoice.setVatMode(key)
-                            wdgInvoice.calculateInvoice()
-                        }
-                    }
-                }
+                             wdgInvoice.calculateInvoice()
+                         }
+                     }
+                 }
 
-                RowLayout {
-                    StyledLabel{
-                        text: qsTr("Default VAT code")
-                        Layout.fillWidth: true
-                    }
+                 RowLayout {
+                     StyledLabel{
+                         text: qsTr("Default VAT code")
+                         Layout.fillWidth: true
+                     }
 
-                    StyledKeyDescrComboBox {
-                        id: settings_default_vat_code
-                        implicitWidth: stylePropertyWidth
+                     StyledKeyDescrComboBox {
+                         id: settings_default_vat_code
+                         implicitWidth: stylePropertyWidth
 
-                        model: taxCodesModel
-                        editable: false
-                        textRole: "descr"
-                        listItemTextIncludesKey: true
-                        displayTextIncludesKey: true
-                        displayTextIncludesDescr: false;
+                         model: taxCodesModel
+                         editable: false
+                         textRole: "descr"
+                         listItemTextIncludesKey: true
+                         displayTextIncludesKey: true
+                         displayTextIncludesDescr: false;
 
-                        Connections {
-                            target: appSettings
-                            function onDataChanged() {
-                                if (appSettings.data.new_documents.default_vat_code) {
-                                    settings_default_vat_code.setCurrentKey(appSettings.data.new_documents.default_vat_code)
-                                }
-                            }
-                        }
+                         Connections {
+                             target: appSettings
+                             function onDataChanged() {
+                                 if (appSettings.data.new_documents.default_vat_code) {
+                                     settings_default_vat_code.setCurrentKey(appSettings.data.new_documents.default_vat_code)
+                                 }
+                             }
+                         }
 
-                        onCurrentKeySet: function(key, isExistingKey) {
-                            appSettings.data.new_documents.default_vat_code = key
-                            appSettings.modified = true
+                         onCurrentKeySet: function(key, isExistingKey) {
+                             appSettings.data.new_documents.default_vat_code = key
+                             appSettings.modified = true
                         }
                     }
                 }
@@ -563,7 +563,7 @@ Item {
                         property string viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
@@ -576,7 +576,7 @@ Item {
                         property string viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
@@ -589,7 +589,7 @@ Item {
                         property string viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                         text: appSettings.getSettingsViewTitle(viewId)
-                        placeholderText: appSettings.getDefaultViewTitle(viewId)
+                        placeholderText: !text ? appSettings.getDefaultViewTitle(viewId) : ""
                         onEditingFinished:  {
                             if (modified) {
                                 appSettings.setViewTitle(viewId, text)
@@ -962,29 +962,6 @@ Item {
 
                     StyledSettingsSwitch {
                         flagId: "show_invoice_order_date"
-                        viewId: appSettings.view_id_long
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledLabel{
-                        text: qsTr("Customer reference")
-                        Layout.fillWidth: true
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
-                        viewId: appSettings.view_id_base
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
-                        viewId: appSettings.view_id_short
-                        Layout.alignment: Qt.AlignHCenter
-                    }
-
-                    StyledSettingsSwitch {
-                        flagId: "show_invoice_customer_reference"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                     }
@@ -1608,47 +1585,93 @@ Item {
                     }
 
                     StyledLabel{
-                        text: qsTr("Email and phone")
+                        text: qsTr("Email")
                         Layout.fillWidth: true
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_phone_and_email"
+                        flagId: "show_invoice_address_email"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledLabel{
-                        text: qsTr("VAT and fiscal number")
+                        text: qsTr("Phone")
                         Layout.fillWidth: true
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
                         viewId: appSettings.view_id_base
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
                         viewId: appSettings.view_id_short
                         Layout.alignment: Qt.AlignHCenter
                     }
 
                     StyledSettingsSwitch {
-                        flagId: "show_invoice_address_vat_and_fiscal_number"
+                        flagId: "show_invoice_address_phone"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("VAT number")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_vat_number"
+                        viewId: appSettings.view_id_long
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledLabel{
+                        text: qsTr("Fiscal number")
+                        Layout.fillWidth: true
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
+                        viewId: appSettings.view_id_base
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
+                        viewId: appSettings.view_id_short
+                        Layout.alignment: Qt.AlignHCenter
+                    }
+
+                    StyledSettingsSwitch {
+                        flagId: "show_invoice_address_fiscal_number"
                         viewId: appSettings.view_id_long
                         Layout.alignment: Qt.AlignHCenter
                     }
@@ -2116,7 +2139,7 @@ Item {
         modality: Qt.WindowModal
         programLanguage: root.programLanguage
         documentLanguage: root.documentLanguage
-        appSettings: appSettings
+        appSettings: root.appSettings
         trId: ""
         onTranslationChanged: {
             invoice.setIsModified(true)

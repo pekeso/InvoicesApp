@@ -13,7 +13,7 @@ This page explain you what you need to create and use a custom estimates and inv
 
 ### For newbies
 
-If you never create a Banana Extension or you never use Qt, we suggest you take a look at the following tutorials:
+If you have never created a Banana Extension or you have never used Qt, we suggest you take a look at the following tutorials:
 
 * [Qt - QML tutorial](https://doc.qt.io/qt-5/qml-tutorial.html)
 * [Banana.ch - Build your first Extension](https://www.banana.ch/doc/en/node/9324)
@@ -30,7 +30,7 @@ The following frameworks and API are used in this project:
 
 ### Programming conventions
 
-As basis we used the [Qt Coding Style](https://wiki.qt.io/Qt_Coding_Style).
+We use the [Qt Coding Style](https://wiki.qt.io/Qt_Coding_Style).
 
 More precisely:
 
@@ -43,7 +43,7 @@ More precisely:
 
 ### Comments
 
-As best rule insert all  comments and notes that could be useful to those who will go to resume the code in a few months or a few years.
+As best rule insert all comments and notes that could be useful to the programmers who will go to resume the code in a few months or a few years.
 
 More precisely:
 
@@ -52,6 +52,37 @@ More precisely:
 * Where the solution was found through trials and not through the documentation
 * Where the code has been modified to bypass a framework or api error
 * Where I spent a lot of time to find a solution
+
+## Developement
+
+## Environment
+
+To devlop the Estimate and Invoices extension you need the following tools:
+
+* BananaPlus installed on you PC
+* A valid advanced plan subscription for BananaPlus
+* [Qt 6.4.0](www.qt.io) or newer installed on your PC
+
+## First steps
+
+* Clone the [Repository InvoiceApp](https://github.com/BananaAccounting/InvoicesApp) on your pc
+* Open in Qt Creator the file InvoicesApp/src/CMakeLists.txt
+* Modify the source code of the extension
+  * For example you can modify the file ch.banana.application.invoice.default.sbaa/ui/DlgInvoice.aml adding a label in the upper part of the dialog
+* In Qt Creator build the project InvoiceApp
+* In BananaPlus go to the Manage extensions dialog
+  * Disable the installed InvoiceApp
+  * Add the local InvoiceApp InvoiceApp/src/ch.banana.application.invoice.default.sbaa to the extensions
+* Open an invoice and test your modifications
+
+### Translations
+
+To update the translations:
+
+* In Qt Creator build the target InvoiceApp/lpudate
+* Open the files *.tx with Qt Linguist
+* Insert the translations
+* Build the project InvoiceApp
 
 ### Tests
 

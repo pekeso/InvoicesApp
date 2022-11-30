@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Window 2.15
-import QtQuick.Controls 1.4 as QuickControls14
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Layouts
 
 import "."
 import "./components"
@@ -34,7 +33,7 @@ Item {
 
     property int result: 0;
 
-    Keys.onEscapePressed: {
+    Keys.onEscapePressed: function(event) {
         focus = true
         if (invoice.isModified) {
             cancelConfirmDialog.open()
@@ -92,7 +91,9 @@ Item {
                 title = qsTr("New invoice %1").arg(invoice.json.document_info.number)
             }
         }
-        if (invoice.isModified) {
+        if (invoice.isReadOnly) {
+            title += " [" + qsTr("Read only") + "]"
+        } else if (invoice.isModified) {
             title += " *"
         }
         return title
@@ -114,6 +115,11 @@ Item {
         invoice.setIsEstimate(estimate)
     }
 
+    function setIsReadOnly(readOnly) {
+        invoice.isReadOnly = readOnly
+        updateTitle()
+    }
+
     function setInvoice(json) {
         invoice.setInvoice(json)
         wdgInvoice.updateView()
@@ -129,7 +135,7 @@ Item {
     }
 
     function showHelp() {
-        if (tabBar.currentIndex == 1) {
+        if (tabBar.currentIndex === 1) {
             Banana.Ui.showHelp("dlginvoiceedit::settings");
         } else {
             Banana.Ui.showHelp("dlginvoiceedit");
@@ -161,7 +167,6 @@ Item {
 
     Invoice {
         id: invoice
-
         onInvoiceChanged: {
             updateTitle()
         }
@@ -298,6 +303,7 @@ Item {
         WdgSource {
             id: wdgSource
             format: "json"
+            isReadOnly: invoice.isReadOnly
 
             onRevertRequested: {
                 wdgSource.clearError()
@@ -411,14 +417,13 @@ Item {
         }
 
         StyledButton {
-            text: invoice.isReadOnly ? qsTr("Edit") : qsTr("Save")
+            text: qsTr("Save")
+            visible: !invoice.isReadOnly
             enabled: invoice.isModified
             onClicked: {
                 // Acquire focus, if a text field is in edit mode it will commit changes
                 focus = true
-                if (invoice.isReadOnly) {
-                    invoice.isReadOnly = false
-                } else {
+                if (!invoice.isReadOnly) {
                     invoice.save()
                     result = 1
                     closeDialog()
@@ -427,11 +432,11 @@ Item {
         }
 
         StyledButton {
-            text: invoice.isModified ? qsTr("Cancel") : qsTr("Close")
+            text: invoice.isModified && !invoice.isReadOnly ? qsTr("Cancel") : qsTr("Close")
             onClicked: {
                 // Acquire focus, if a text field is in edit mode it will commit changes
                 focus = true
-                if (invoice.isModified) {
+                if (invoice.isModified && !invoice.isReadOnly) {
                     cancelConfirmDialog.open()
                 } else {
                     closeDialog()

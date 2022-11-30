@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import "." 1.0
+import "."
 
 TextField {
    id: textField
@@ -32,7 +32,7 @@ TextField {
 
    background: Rectangle {
       color: Stylesheet.baseColor
-      border.color: borderless ? Stylesheet.baseColor : textField.activeFocus || selected ? "#354793" : "#bdbebf"
+      border.color: textField.activeFocus || selected ? "#354793" : borderless ? Stylesheet.baseColor : "#bdbebf"
       border.width: 1
       radius: 2.0 * Stylesheet.pixelScaleRatio
    }
@@ -42,16 +42,18 @@ TextField {
 
    property bool _copyAllOnCopy: false
 
-   Keys.onReturnPressed: focus = false
+   Keys.onReturnPressed: function(event) {
+       focus = false
+   }
 
-   Keys.onEscapePressed:{
+   Keys.onEscapePressed: function(event){
        undo()
        modified = false
        focus = false
        event.accepted = true
    }
 
-   Keys.onReleased: {
+   Keys.onReleased: function(event) {
       if (event.key === Qt.Key_Home) {
          cursorPosition = 0
          event.accepted = true
@@ -64,16 +66,17 @@ TextField {
    // If the text is widther than the widget we have to position the cursor to 0
    // so that the begin of the text is showed, if not the text is aligned to the right
    autoScroll: focus
-   onEditingFinished: {
+
+   onEditingFinished: function() {
        cursorPosition = 0
        ensureVisible(0)
    }
 
-   onTextEdited: {
+   onTextEdited: function() {
        modified = true
    }
 
-   onFocusChanged: {
+   onFocusChanged: function() {
        if (!focus) {
            modified = false
        }

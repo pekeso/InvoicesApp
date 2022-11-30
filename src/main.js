@@ -14,7 +14,7 @@
 
 // @id = ch.banana.application.invoice.default
 // @api = 1.0
-// @pubdate = 2022-09-29
+// @pubdate = 2022-12-01
 // @publisher = Banana.ch SA
 // @description = Estimates and Invoices extension
 // @doctype = *
@@ -30,7 +30,15 @@ var JsAction = class JsAction {
 
     constructor() {
         this.version = '1.0';
-        this.uiFileName = 'ui/DlgInvoice.qml';
+
+        this.getUiFileName = function() {
+            if (Banana.application.qtVersion &&
+                    Banana.compareVersion(Banana.application.qtVersion, "6.0.0") > 0) {
+                return 'ui/DlgInvoice.qml';
+            } else {
+                return 'ui/qt5/DlgInvoice.qml';
+            }
+        }
     }
 
     // API JsBanAction
@@ -73,7 +81,8 @@ var JsAction = class JsAction {
                     }
                     var rows = table.findRows(rowIdIs);
                     if (rows.length > 0) {
-                        var newRowId = table.progressiveNumber('RowId');
+                        let isEstimate = tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates";
+                        var newRowId = invoiceGetNextNumber(isEstimate);
                         try {
                             var invoiceFieldObj = JSON.parse(rows[0].value("InvoiceData"));
                             invoiceObj = JSON.parse(invoiceFieldObj.invoice_json);
@@ -309,7 +318,7 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml(this.uiFileName);
+        var editor = Banana.Ui.createQml(this.getUiFileName());
         editor.qmlObject.setInvoice(invoiceObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
@@ -320,7 +329,7 @@ var JsAction = class JsAction {
             editor.qmlObject.setIsModified(true);
             editor.qmlObject.setIsNew(true);
         }
-        if (tabPos.tableName === "Estimates") {
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
         }
 
@@ -332,8 +341,6 @@ var JsAction = class JsAction {
         if (docChange.isEmpty()) {
             return null;
         }
-
-        //Banana.Ui.showText(JSON.stringify(docChange.getDocChange(), null, "   "));
 
         return docChange.getDocChange();
     }
@@ -356,6 +363,20 @@ var JsAction = class JsAction {
             }
             return null;
 
+        } else if (commandId === "print_delivery_note") {
+            var invoiceObj = invoiceObjGet(fromTabPos);
+            if (invoiceObj) {
+                invoicePrintDeliveryNote(invoiceObj);
+            }
+            return null;
+
+        } else if (commandId === "print_reminder") {
+            var invoiceObj = invoiceObjGet(fromTabPos);
+            if (invoiceObj) {
+                invoicePrintReminder(invoiceObj);
+            }
+            return null;
+
         }
 
         return null;
@@ -369,7 +390,21 @@ var JsAction = class JsAction {
         return [
             {
                 id: "print",
-                descr: qsTr("Print invoice")
+                descr: qsTr("Print invoice"),
+                enabled: true,
+                menu: true,
+            },
+            {
+                id: "print_delivery_note",
+                descr: qsTr("Print delivery note"),
+                enabled: true,
+                menu: true,
+            },
+            {
+                id: "print_reminder",
+                descr: qsTr("Print payment reminder"),
+                enabled: true,
+                menu: true,
             }
         ];
     }
@@ -407,6 +442,44 @@ var JsAction = class JsAction {
     settings() {
     }
 
+    /**
+     * Show the invoice in read only mode.
+     */
+    show(tabPos) {
+        var invoiceObj = invoiceObjGet(tabPos);
+        if (!invoiceObj) {
+            return;
+        }
+
+        var rowObj = null;
+        var table = Banana.document.table(tabPos.tableName);
+        if (tabPos.rowNr >= 0 && tabPos.rowNr < table.rowCount) {
+            rowObj = table.row(tabPos.rowNr);
+        }
+
+        var docChange = new DocumentChange();
+
+        var editor = Banana.Ui.createQml(this.getUiFileName());
+        editor.qmlObject.setInvoice(invoiceObj);
+        editor.qmlObject.setPosition(tabPos);
+        editor.qmlObject.setDocumentChange(docChange);
+        editor.qmlObject.setIsReadOnly(true);
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
+            editor.qmlObject.setIsEstimate(true);
+        }
+
+        // Open dialog
+        editor.exec();
+
+        // The editor could return a DocumentChange object in some cases
+        // even if the object is read only, for example if a copy of the
+        // document have to be created
+        if (docChange.isEmpty()) {
+            return null;
+        }
+
+        return docChange.getDocChange();
+    }
 
     // API JsInvoicesAction
 
@@ -422,7 +495,7 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        var editor = Banana.Ui.createQml("Invoice", this.getUiFileName());
         editor.qmlObject.setInvoice(invoiceObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
@@ -456,13 +529,13 @@ var JsAction = class JsAction {
 
         var docChange = new DocumentChange();
 
-        var editor = Banana.Ui.createQml("Invoice", this.uiFileName);
+        var editor = Banana.Ui.createQml("Invoice", this.getUiFileName());
         editor.qmlObject.setInvoice(duplicatedObj);
         editor.qmlObject.setPosition(tabPos);
         editor.qmlObject.setDocumentChange(docChange);
         editor.qmlObject.setIsModified(true);
         editor.qmlObject.setIsNew(true);
-        if (tabPos.tableName === "Estimates") {
+        if (tabPos.tableName === "Estimates" || tabPos.parentTableName === "Estimates") {
             editor.qmlObject.setIsEstimate(true);
         }
 

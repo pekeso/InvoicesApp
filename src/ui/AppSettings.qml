@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import QtQuick 2.0
+import QtQuick
 
 import "../base/settings.js" as Settings
 
@@ -27,17 +27,23 @@ QtObject {
 
     readonly property var default_views_titles: {
         "base": qsTr("Base"),
-        "short": qsTr("Short"),
-        "long": qsTr("Long"),
+        "short": qsTr("Custom 1"),
+        "long": qsTr("Custom 2"),
         "full": qsTr("Complete")
     }
 
     // Current settings data
 
     property bool modified: false
+    property bool loaded: false
     property var data: Settings.getDefaultSettings()
 
-    // Signals (counters used as signals in qml binding)
+    // Signals
+    // Some are made available as signal and as counter
+    // Use one of them and not both, if not you well get a double notifications
+    // N.B.: Counters are used as signals in qml binding
+
+    signal fieldsVisibilityChanged
 
     property int signalViewsSettingsChanged: 1
     property int signalFieldsVisibilityChanged: 1
@@ -56,17 +62,20 @@ QtObject {
     }
 
     function clearSettings() {
-        data = {}
+        data = Settings.getDefaultSettings()
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function loadSettings() {
         data = Settings.getSettings()
         modified = true
+        loaded = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function resetSettings() {
@@ -74,6 +83,7 @@ QtObject {
         modified = true
         signalViewsSettingsChanged++
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
     }
 
     function setSettings(newSettings) {
@@ -83,6 +93,7 @@ QtObject {
             modified = true
             signalViewsSettingsChanged++
             signalFieldsVisibilityChanged++
+            fieldsVisibilityChanged()
         }
     }
 
@@ -105,6 +116,7 @@ QtObject {
     function setInvoiceFieldVisible(fieldId, viewId, value) {
         data.interface.invoice.views[viewId].appearance[fieldId] = value
         signalFieldsVisibilityChanged++
+        fieldsVisibilityChanged()
         modified = true
     }
 
