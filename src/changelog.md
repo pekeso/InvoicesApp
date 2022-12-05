@@ -2,6 +2,8 @@
 
 ## 2022-12-01
 
+Common changes:
+
 * [RELEASE DEV] Released as Dev
 * [RELEASE DEV] Released as Stable
 * [Fix] Fix changing from incl vat to excl vat or vice versa should not change the unit price.
@@ -14,8 +16,9 @@
 * [Enhancement] New setting default, the default vat code is set to per default to all new invoice items.
 * [Enhancement] Adapt to Qt6
 
-The following changes are only available with the latest BananaPlus Insider version (10.0.13.320 or newer).
+Changes availables only with the latest BananaPlus Insider version (10.0.13.340 or newer).
 
+* [Fix] Fix progressive estimates and invoices number with alpha-numeric formats like "INV034" or "2022-034"
 * [Enhancement] Simplify and reorganize views for new files
   * Only the views Base and Full are visible per default
   * The available views are called Base, Custom 1, Custom 2 and Full

@@ -131,21 +131,27 @@ function invoiceCreateFromEstimateObj(estimateObj) {
 function invoiceGetNextNumber(isEstimate) {
     let table = Banana.document.table(isEstimate ? "Estimates" : "Invoices");
     if (table) {
-        let nextNumber = 0;
-        for (let i = 0; i < table.rowCount; ++i) {
-            let rowId = Number(table.value(i, 'RowId'))
-            if (rowId > nextNumber)
-                nextNumber = rowId;
-        }
-        let archiveTable = table.list('Archive')
-        if (archiveTable) {
-            for (let i = 0; i < archiveTable.rowCount; ++i) {
-                let rowId = Number(archiveTable.value(i, 'RowId'))
+        console.log(Banana.application.apiVersion);
+        if  (Banana.application.apiVersion &&
+                (Banana.compareVersion(Banana.application.apiVersion, "1.2.2") >= 0)) {
+            return table.progressiveNumber('RowId', true);
+        } else {
+            let nextNumber = 0;
+            for (let i = 0; i < table.rowCount; ++i) {
+                let rowId = Number(table.value(i, 'RowId'))
                 if (rowId > nextNumber)
                     nextNumber = rowId;
             }
+            let archiveTable = table.list('Archive')
+            if (archiveTable) {
+                for (let i = 0; i < archiveTable.rowCount; ++i) {
+                    let rowId = Number(archiveTable.value(i, 'RowId'))
+                    if (rowId > nextNumber)
+                        nextNumber = rowId;
+                }
+            }
+            return (nextNumber + 1).toString();
         }
-        return (nextNumber + 1).toString();
     }
     return "1";
 }
