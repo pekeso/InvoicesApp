@@ -1,11 +1,12 @@
 # Changelog
 
-## 2022-12-01
+## 2022-12-06
+
+* [RELEASE STABLE] Released as Stable
+* [RELEASE DEV] Released as Dev
 
 Common changes:
 
-* [RELEASE DEV] Released as Dev
-* [RELEASE DEV] Released as Stable
 * [Fix] Fix changing from incl vat to excl vat or vice versa should not change the unit price.
  This could be correct from a develop point of view to update the unit price, 
  but from a user point of view this is not logical and a cause of errors.
