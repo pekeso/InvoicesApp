@@ -1266,8 +1266,9 @@ Item {
                                 id: address_country_code
                                 Layout.preferredWidth: 50 * Stylesheet.pixelScaleRatio
                                 placeholderText: qsTr("CC")
-                                ToolTip.visible: hovered
-                                ToolTip.text: qsTr("Country code")
+                                //NB.: disable tooltips because crashing the app when closing the dialog
+                                //ToolTip.visible: hovered
+                                //ToolTip.text: qsTr("Country code")
                                 readOnly: invoice.isReadOnly
 
                                 onEditingFinished: {
@@ -1286,8 +1287,9 @@ Item {
                                 id: address_postal_code
                                 Layout.preferredWidth: 60 * Stylesheet.pixelScaleRatio
                                 placeholderText: qsTr("Zip")
-                                ToolTip.visible: hovered
-                                ToolTip.text: qsTr("Postal code")
+                                //NB.: disable tooltips because crashing the app when closing the dialog
+                                //ToolTip.visible: hovered
+                                //ToolTip.text: qsTr("Postal code")
                                 readOnly: invoice.isReadOnly
 
                                 onEditingFinished: {
