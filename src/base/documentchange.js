@@ -18,7 +18,7 @@
  */
 var DocumentChange = class DocumentChange {
 
-    constructor() {
+    constructor(height, width) {
         this.jsonDoc = {};
         this.jsonDoc.data = [];
         this.jsonDoc.creator = {};
