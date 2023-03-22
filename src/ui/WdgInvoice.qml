@@ -2536,8 +2536,7 @@ Item {
 
                         StyledTextField {
                             id: vattotal_amount
-                            visible: isInvoiceFieldVisible("show_invoice_vat") &&
-                                     !isVatModeVatNone && !isVatModeVatInclusive
+                            visible: !isVatModeVatNone && !isVatModeVatInclusive
                             readOnly: true
                             borderless: true
                             Layout.alignment: Qt.AlignRight
