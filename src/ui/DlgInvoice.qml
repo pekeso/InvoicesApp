@@ -145,7 +145,7 @@ Item {
     function updateTitle() {
         let title = getTitle()
         if (setTitle) {
-            setTitle(title)
+            window.setTitle(title)
         }
     }
 

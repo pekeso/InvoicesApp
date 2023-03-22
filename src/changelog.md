@@ -7,6 +7,10 @@
 
 * Fix crash when closing invoice dialog (this error occured only with the latest BananaPlus Insider version 10.0.13.340 or newer).
 
+## 2022-03-22
+
+* [Fix] Fix error opening dialog with Qt6.6
+
 ## 2022-12-06
 
 * [RELEASE STABLE] Released as Stable

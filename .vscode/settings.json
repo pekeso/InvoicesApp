@@ -1,0 +1,10 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/src",
+    "cmake.configureSettings": {
+        "BAN_QT_RCC": "/Users/lorenzo/Programmazione/Qt/6.5.0/macos/libexec/rcc",
+        "BAN_QT_LUPDATE": "/Users/lorenzo/Programmazione/Qt/6.5.0/macos/bin/lupdate",
+        "BAN_QT_LRELEASE": "/Users/lorenzo/Programmazione/Qt/6.5.0/macos/bin/lrelease",
+        "BAN_EXE_PATH": "/Applications/BananaPlusDev.app/Contents/MacOS/BananaPlusDev",
+    }
+
+}
