@@ -26,7 +26,9 @@ The following frameworks and API are used in this project:
 * [Banana.ch - Js API documentation](https://www.banana.ch/doc/en/node/4714)  
 * [Banana.ch - Invoice Json Object documentation](https://www.banana.ch/doc/en/node/8833)  
 * [Banana.ch - DocumentChange API documentation](https://www.banana.ch/doc/en/node/9641)  
-* [Banana.ch - JsAction API documentation](...)  
+* [Banana.ch - JsAction API documentation](...)  TODO
+
+* [Qt - QML Tutorial](https://doc.qt.io/qt-6/qml-tutorial.html)
 
 ### Programming conventions
 
